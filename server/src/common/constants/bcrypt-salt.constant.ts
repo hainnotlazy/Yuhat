@@ -1,0 +1,1 @@
+export const SaltRounds: string | number = 10;
