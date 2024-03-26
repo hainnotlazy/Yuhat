@@ -4,6 +4,8 @@ import { AuthService } from './auth.service';
 import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtConfigService } from 'src/config/jwt.config';
+import { LocalStrategy } from './strategies/local.strategy';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -11,8 +13,9 @@ import { JwtConfigService } from 'src/config/jwt.config';
     JwtModule.registerAsync({
       useClass: JwtConfigService
     }),
+    PassportModule
   ],
   controllers: [AuthController],
-  providers: [AuthService]
+  providers: [AuthService, LocalStrategy]
 })
 export class AuthModule {}

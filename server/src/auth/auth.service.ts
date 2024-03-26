@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException, ValidationPipe } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
-import { LoginUserDto } from 'src/users/dtos/login-user.dto';
 import { RegisterUserDto } from 'src/users/dtos/register-user.dto';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from "bcrypt";
@@ -27,26 +26,24 @@ export class AuthService {
     return await this.usersService.createUser(registerUserDto);
   }
 
-  async login(loginUserDto: LoginUserDto) {
-    const { username, password } = loginUserDto;
-
-    const user: User = ( await this.usersService.findOneByProperty({property: "username", value: username}) 
-    || await this.usersService.findOneByProperty({property: "email", value: username}));
-    
-    if (!user) {
-      throw new NotFoundException("Username or password is incorrect");
-    }
-
-    if (!this.validateUser(password, user.password)) {
-      throw new NotFoundException("Username or password is incorrect");
-    }
-
+  async login(user: User) {
     return {
       "access_token": this.generateAccessToken(user)
     };
   }
 
-  private validateUser(password: string, hashedPassword: string): boolean {
+  async validateUser(username: string, password: string) {
+    const user: User = ( await this.usersService.findOneByProperty({property: "username", value: username}) 
+    || await this.usersService.findOneByProperty({property: "email", value: username}));
+
+    if (user && this.validatePassword(password, user.password)) {
+      return user;
+    }
+
+    throw new BadRequestException("Username or password is incorrect");
+  }
+
+  private validatePassword(password: string, hashedPassword: string): boolean {
     return bcrypt.compareSync(password, hashedPassword);
   }
 
