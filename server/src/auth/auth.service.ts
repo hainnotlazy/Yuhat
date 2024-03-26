@@ -4,6 +4,7 @@ import { RegisterUserDto } from 'src/users/dtos/register-user.dto';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from "bcrypt";
 import { JwtService } from '@nestjs/jwt';
+import { IGoogleProfile } from 'src/common/interfaces/google-profile.interface';
 
 @Injectable()
 export class AuthService {
@@ -26,10 +27,20 @@ export class AuthService {
     return await this.usersService.createUser(registerUserDto);
   }
 
-  async login(user: User) {
-    return {
-      "access_token": this.generateAccessToken(user)
-    };
+  login(user: User) {
+    return this.generateAccessToken(user);
+  }
+
+  async googleLogin(googleProfile: IGoogleProfile) {
+    const { email } = googleProfile;
+
+    const userExisted = await this.usersService.findOneByProperty({property: "email", value: email});
+    if (userExisted) {
+      return this.generateAccessToken(userExisted);
+    } 
+
+    const newUser = await this.usersService.createUserByGoogle(googleProfile);
+    return this.generateAccessToken(newUser);
   }
 
   async validateUser(username: string, password: string) {
@@ -48,10 +59,11 @@ export class AuthService {
   }
 
   private generateAccessToken(user: Partial<User>) {
-    return this.jwtService.sign({
+    const accessToken = this.jwtService.sign({
       userId: user.id,
       username: user.username,
       fullname: user.fullname
-    }) 
+    });
+    return {"access_token": accessToken}
   }
 }
