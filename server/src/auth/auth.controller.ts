@@ -6,6 +6,8 @@ import { PublicRoute } from 'src/common/decorators/public-route.decorator';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { IGoogleProfile } from 'src/common/interfaces/google-profile.interface';
+import { GithubAuthGuard } from './guards/github-auth.guard';
+import { IGithubProfile } from 'src/common/interfaces/github-profile.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -30,18 +32,28 @@ export class AuthController {
   @PublicRoute()
   @UseGuards(GoogleAuthGuard)
   @Get("google")
-  async googleLogin() {
-
-  }
+  googleLogin() { }
 
   @PublicRoute()
   @UseGuards(GoogleAuthGuard)
   @Get("google/callback")
   async googleLoginCallback(@Req() req: any) {
-    const googleProfile: IGoogleProfile = req?.user;
+    const googleProfile: IGoogleProfile = req.user;
     return await this.authService.googleLogin(googleProfile);
   }
 
+  @PublicRoute()
+  @UseGuards(GithubAuthGuard)
+  @Get("github")
+  githubLogin() {}
+
+  @PublicRoute()
+  @UseGuards(GithubAuthGuard)
+  @Get("github/callback")
+  async githubLoginCallback(@Req() req: any) {
+    const githubProfile: IGithubProfile = req.user;
+    return await this.authService.githubLogin(githubProfile);
+  }
 
   @Get("whoami")
   @UseInterceptors(ClassSerializerInterceptor)

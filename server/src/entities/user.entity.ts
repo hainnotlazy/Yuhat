@@ -1,6 +1,6 @@
 import { Exclude } from "class-transformer";
 import { MaxLength, MinLength } from "class-validator";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 enum GenderTypes {
   MALE = "male",
@@ -60,4 +60,11 @@ export class User {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert()
+  generateFullnameIfNotProvided() {
+    if (!this.fullname) {
+      this.fullname = `Unnamed user ${Math.floor(Math.random() * 100000)}`;
+    }
+  }
 }

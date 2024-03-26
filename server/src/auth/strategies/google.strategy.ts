@@ -8,7 +8,6 @@ import { IGoogleProfile } from "src/common/interfaces/google-profile.interface";
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private authService: AuthService,
     private configService: ConfigService
   ) {
     super({

@@ -24,12 +24,19 @@ export class UsersService {
     return await this.userRepository.save(user);
   }
 
+  async updateUser(userId: string, updateUser: Partial<User>) {
+    const user = await this.findOneByProperty({property: "id", value: userId});
+
+    Object.assign(user, updateUser);
+    return await this.userRepository.save(user);
+  }
+
   async createUserByGoogle(newUser: Partial<User>) {
     const { fullname, avatar, email } = newUser;
 
-    // Generate random password
-    const password = this.generateRandomString(20);
-    const hashedPassword = bcrypt.hashSync(password, SaltRounds);
+    // Generate hashed random password
+    const hashedPassword = this.generateRandomHashedPassword(20);
+
 
     const user = this.userRepository.create({
       username: email,
@@ -38,6 +45,24 @@ export class UsersService {
       avatar,
       email,
       emailVerified: true
+    });
+
+    return await this.userRepository.save(user);
+  }
+
+  async createUserByGithub(newUser: Partial<User>) {
+    const { username, fullname, avatar, email, github } = newUser;
+
+    // Generate hashed random password
+    const hashedPassword = this.generateRandomHashedPassword(20);
+
+    const user = this.userRepository.create({
+      username: username,
+      password: hashedPassword,
+      fullname,
+      avatar,
+      email,
+      github,
     });
 
     return await this.userRepository.save(user);
@@ -54,7 +79,9 @@ export class UsersService {
 
   }
 
-  private generateRandomString(length) {
-    return randomBytes(length / 2).toString("hex").slice(0, length);
+  private generateRandomHashedPassword(length) {
+    const randomPassword = randomBytes(length / 2).toString("hex").slice(0, length);
+    return bcrypt.hashSync(randomPassword, SaltRounds);
   }
+
 }
