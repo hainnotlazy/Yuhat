@@ -2,11 +2,14 @@ import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Request, P
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from 'src/users/dtos/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { PublicRoute } from 'src/common/decorators/public-route.decorator';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @PublicRoute()
   @UseGuards(LocalAuthGuard)
   @Post("login")
   @HttpCode(200)
@@ -15,6 +18,7 @@ export class AuthController {
     return await this.authService.login(user);
   }
 
+  @PublicRoute()
   @UseInterceptors(ClassSerializerInterceptor)
   @Post("register")
   async register(@Body() registerUserDto: RegisterUserDto) {
@@ -22,7 +26,9 @@ export class AuthController {
   }
 
   @Get("whoami")
-  whoami() {
-    return "you are here";
+  @UseInterceptors(ClassSerializerInterceptor)
+  whoami(@CurrentUser() currentUser) {
+    const { password, ...user } = currentUser;
+    return user;
   }
 }
