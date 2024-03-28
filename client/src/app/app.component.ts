@@ -1,6 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,12 +8,11 @@ import { Observable } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   title = 'client';
-  subTitle?: Observable<Object>;
-  constructor(private httpClient: HttpClient) {
-
-  }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.subTitle = this.httpClient.get<Object>("api");
+    this.route.data.subscribe(
+      value => console.log("app component", value)
+    )
   }
 }

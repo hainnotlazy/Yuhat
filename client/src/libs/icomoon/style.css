@@ -1,0 +1,110 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?p57yi4');
+  src:  url('fonts/icomoon.eot?p57yi4#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?p57yi4') format('truetype'),
+    url('fonts/icomoon.woff?p57yi4') format('woff'),
+    url('fonts/icomoon.svg?p57yi4#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-discord:before {
+  content: "\e900";
+  color: #5865f2;
+}
+.icon-telegram .path1:before {
+  content: "\e908";
+  color: rgb(52, 170, 223);
+}
+.icon-telegram .path2:before {
+  content: "\e909";
+  margin-left: -1em;
+  color: rgb(255, 255, 255);
+}
+.icon-slack .path1:before {
+  content: "\e90a";
+  color: rgb(224, 30, 90);
+}
+.icon-slack .path2:before {
+  content: "\e90b";
+  margin-left: -1em;
+  color: rgb(224, 30, 90);
+}
+.icon-slack .path3:before {
+  content: "\e90c";
+  margin-left: -1em;
+  color: rgb(54, 197, 240);
+}
+.icon-slack .path4:before {
+  content: "\e90d";
+  margin-left: -1em;
+  color: rgb(54, 197, 240);
+}
+.icon-slack .path5:before {
+  content: "\e90e";
+  margin-left: -1em;
+  color: rgb(46, 182, 125);
+}
+.icon-slack .path6:before {
+  content: "\e90f";
+  margin-left: -1em;
+  color: rgb(46, 182, 125);
+}
+.icon-slack .path7:before {
+  content: "\e910";
+  margin-left: -1em;
+  color: rgb(236, 178, 46);
+}
+.icon-slack .path8:before {
+  content: "\e911";
+  margin-left: -1em;
+  color: rgb(236, 178, 46);
+}
+.icon-github:before {
+  content: "\e912";
+}
+.icon-yuhat_logo .path1:before {
+  content: "\e913";
+  color: rgb(56, 182, 255);
+}
+.icon-yuhat_logo .path2:before {
+  content: "\e914";
+  margin-left: -1em;
+  color: rgb(30, 62, 137);
+}
+.icon-google .path1:before {
+  content: "\e915";
+  color: rgb(66, 133, 244);
+}
+.icon-google .path2:before {
+  content: "\e916";
+  margin-left: -1em;
+  color: rgb(52, 168, 83);
+}
+.icon-google .path3:before {
+  content: "\e917";
+  margin-left: -1em;
+  color: rgb(251, 188, 5);
+}
+.icon-google .path4:before {
+  content: "\e918";
+  margin-left: -1em;
+  color: rgb(234, 67, 53);
+}

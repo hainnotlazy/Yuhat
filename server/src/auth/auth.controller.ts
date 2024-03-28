@@ -39,6 +39,8 @@ export class AuthController {
   @Get("google/callback")
   async googleLoginCallback(@Req() req: any) {
     const googleProfile: IGoogleProfile = req.user;
+
+    // FIXME: Redirect to client app with access token
     return await this.authService.googleLogin(googleProfile);
   }
 
@@ -52,6 +54,8 @@ export class AuthController {
   @Get("github/callback")
   async githubLoginCallback(@Req() req: any) {
     const githubProfile: IGithubProfile = req.user;
+    
+    // FIXME: Redirect to client app with access token
     return await this.authService.githubLogin(githubProfile);
   }
 
