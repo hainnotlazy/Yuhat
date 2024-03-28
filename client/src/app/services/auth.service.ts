@@ -37,9 +37,23 @@ export class AuthService {
   register(registerUserDto: RegisterUserDto) {
     const { username, email, password } = registerUserDto;
 
-    return this.httpClient.post("api/auth/register", {
-      username, email, password
-    })
+    return this.httpClient.post<IAuthResponse>("api/auth/register", {
+      username,
+      email: email || undefined,
+      password
+    }).pipe(
+      tap(
+        (response: IAuthResponse) => {
+          const token = response.access_token;
+          this.setAccessToken(token);
+        }
+      ),
+      catchError(
+        (err: IErrorResponse) => {
+          throw new Error(err.error.message);
+        }
+      )
+    )
   }
 
   authByGoogle() {

@@ -15,7 +15,10 @@
 
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Password</mat-label>
-      <input matInput formControlName="password" placeholder="Enter your password">
+      <input matInput formControlName="password" placeholder="Enter your password" [type]="hidePassword ? 'password' : 'text'">
+      <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" type="button">
+        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+      </button>
       <mat-error *ngFor="let error of getObjectKeys(loginForm.get('password')?.errors)">
         {{ passwordValidationMsg[error] }}
       </mat-error>
@@ -39,5 +42,7 @@
       <a routerLink=""><img src="/assets/images/slack.svg" alt="" class="max-w-8"></a>
       <a routerLink=""><img src="/assets/images/telegram.svg" alt="" class="max-w-8"></a>
     </div>
+
+    <a routerLink="/auth/register">Go to register page</a>
   </form>
 </div>

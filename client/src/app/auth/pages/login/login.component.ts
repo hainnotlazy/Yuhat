@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoginUserDto } from 'src/app/dtos/auth.dto';
+import { IValidationMessages, LoginUserDto } from 'src/app/dtos/auth.dto';
 import { AuthService } from 'src/app/services/auth.service';
-
-interface IValidationMessages {
-  [key: string]: string;
-}
 
 @Component({
   selector: 'app-login',
@@ -15,9 +11,10 @@ interface IValidationMessages {
 })
 export class LoginComponent {
   formError = "";
+  hidePassword = true;
+
   usernameRequirement = {
     minlength: 5,
-    maxlength: 50
   }
   passwordRequirement = {
     minlength: 8,
@@ -27,7 +24,6 @@ export class LoginComponent {
   usernameValidationMsg: IValidationMessages = {
     required: "Username is required",
     minlength: "Username is invalid",
-    maxlength: "Username is invalid"
   }
   passwordValidationMsg: IValidationMessages = {
     required: "Password is required",
@@ -39,7 +35,6 @@ export class LoginComponent {
     username: new FormControl("", [
       Validators.required,
       Validators.minLength(this.usernameRequirement.minlength),
-      Validators.maxLength(this.usernameRequirement.maxlength)
     ]),
     password: new FormControl("", [
       Validators.required,

@@ -20,3 +20,7 @@ export interface IErrorResponse {
     statusCode: number;
   }
 }
+
+export interface IValidationMessages {
+  [key: string]: string;
+}
