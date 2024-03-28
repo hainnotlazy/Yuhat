@@ -20,6 +20,8 @@ export class SuccessComponent implements OnInit {
       this.authService.setAccessToken(accessToken);
       this.removeCookie('access_token');
       this.router.navigate([""]);
+    } else {
+      this.router.navigate(["auth/login"]);
     }
   }
 

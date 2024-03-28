@@ -71,4 +71,8 @@ export class AuthService {
   removeAccessToken() {
     localStorage.removeItem("access_token");
   }
+
+  isAuthenticated() {
+    return !!this.getAccessToken();
+  }
 }
