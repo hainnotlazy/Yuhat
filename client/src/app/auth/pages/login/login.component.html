@@ -34,8 +34,8 @@
     </div>
 
     <div class="flex gap-6">
-      <a class="hover:scale-125 duration-300" routerLink=""><img src="/assets/images/google.svg" alt="" class="max-w-8"></a>
-      <a routerLink=""><img src="/assets/images/github.svg" alt="" class="max-w-8"></a>
+      <button type="button" class="hover:scale-125 duration-300" (click)="navigateToAuthPage('google')"><img src="/assets/images/google.svg" alt="" class="max-w-8"></button>
+      <button type="button" class="hover:scale-125 duration-300" (click)="navigateToAuthPage('github')"><img src="/assets/images/github.svg" alt="" class="max-w-8"></button>
       <a routerLink=""><img src="/assets/images/slack.svg" alt="" class="max-w-8"></a>
       <a routerLink=""><img src="/assets/images/telegram.svg" alt="" class="max-w-8"></a>
     </div>

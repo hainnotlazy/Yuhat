@@ -61,6 +61,10 @@ export class LoginComponent {
     }
   }
 
+  navigateToAuthPage(provider: string) {
+    window.location.href = `http://localhost:3000/api/auth/${provider}`;
+  }
+
   onSubmit() {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value as LoginUserDto).subscribe(

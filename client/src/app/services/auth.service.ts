@@ -3,12 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginUserDto, RegisterUserDto } from '../dtos/auth.dto';
 import { catchError, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private httpClient: HttpClient) { }
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router
+  ) { }
 
   login(loginUserDto: LoginUserDto) {
     const { username, password } = loginUserDto;
@@ -36,6 +40,10 @@ export class AuthService {
     return this.httpClient.post("api/auth/register", {
       username, email, password
     })
+  }
+
+  authByGoogle() {
+    return this.router.navigate(["http://localhost:3000/api/auth/google"]);
   }
 
   getAccessToken() {

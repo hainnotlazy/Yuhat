@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Request, Post, UseGuards, UseInterceptors, Req } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Request, Post, UseGuards, UseInterceptors, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from 'src/users/dtos/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -37,11 +37,17 @@ export class AuthController {
   @PublicRoute()
   @UseGuards(GoogleAuthGuard)
   @Get("google/callback")
-  async googleLoginCallback(@Req() req: any) {
+  async googleLoginCallback(@Req() req: any, @Res() res: any) {
     const googleProfile: IGoogleProfile = req.user;
 
     // FIXME: Redirect to client app with access token
-    return await this.authService.googleLogin(googleProfile);
+    const accessToken = await this.authService.googleLogin(googleProfile);
+    res.cookie("access_token", accessToken, {
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 60 * 1000
+    })
+    return res.redirect("http://localhost:4200/auth/success")
   }
 
   @PublicRoute()
@@ -52,11 +58,17 @@ export class AuthController {
   @PublicRoute()
   @UseGuards(GithubAuthGuard)
   @Get("github/callback")
-  async githubLoginCallback(@Req() req: any) {
+  async githubLoginCallback(@Req() req: any, @Res() res: any) {
     const githubProfile: IGithubProfile = req.user;
     
     // FIXME: Redirect to client app with access token
-    return await this.authService.githubLogin(githubProfile);
+    const accessToken = await this.authService.githubLogin(githubProfile);
+    res.cookie("access_token", accessToken, {
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 60 * 1000
+    })
+    return res.redirect("http://localhost:4200/auth/success")
   }
 
   @Get("whoami")
