@@ -1,20 +1,20 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, NotFoundException, Param, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, NotFoundException, Param, Put, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from 'src/entities/user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import path, { extname, join } from 'path';
+import { extname, join } from 'path';
 import { existsSync, unlinkSync } from 'fs';
+import { ChangePasswordDto } from './dtos/change-password.dto';
+import { compareSync } from "bcrypt";
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  // View current user
   @Get("")
-  @UseInterceptors(ClassSerializerInterceptor)
   async getCurrentUser(@CurrentUser() currentUser: User) {
 
     return Object.assign(
@@ -24,7 +24,6 @@ export class UsersController {
   }
 
   @Get("/:id")
-  @UseInterceptors(ClassSerializerInterceptor)
   async findUser(@Param("id") userId: string) {
     try {
       const foundUser = await this.usersService.findOneByProperty({property: "id", value: userId});
@@ -41,9 +40,7 @@ export class UsersController {
     }
   }
 
-  // Edit current user
   @Put()
-  @UseInterceptors(ClassSerializerInterceptor)
   @UseInterceptors(FileInterceptor("avatar", {
     storage: diskStorage({ 
       destination: './resources/images',
@@ -72,8 +69,12 @@ export class UsersController {
     );
   }
 
-
   // Change password
-
-
+  @Put("change-password")
+  async changePassword(@CurrentUser() currentUser: User, @Body() body: ChangePasswordDto) {
+    return Object.assign(
+      new User(),
+      await this.usersService.changePassword(currentUser.id, body)
+    )
+  }
 }

@@ -23,3 +23,10 @@ export interface UpdateUserDto {
   gender?: string;
   avatar?: File;
 }
+
+export interface ChangePasswordDto {
+  [key: string]: any;
+  password: string;
+  newPassword: string;
+  passwordConfirmation: string;
+}

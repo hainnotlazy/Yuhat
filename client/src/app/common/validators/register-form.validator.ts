@@ -6,4 +6,10 @@ export class RegisterFormValidator {
 
     return password === passwordConfirmation ? null : { passwordNotMatch: true }
   }
+
+  static changePasswordMatched(form: AbstractControl) {
+    const { newPassword, passwordConfirmation } = form.value;
+
+    return newPassword === passwordConfirmation ? null : { passwordNotMatch: true }
+  }
 }

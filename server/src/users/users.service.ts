@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from "bcrypt";
 import { SaltRounds } from 'src/common/constants/bcrypt-salt.constant';
 import { randomBytes } from 'crypto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -32,8 +33,25 @@ export class UsersService {
       throw new NotFoundException("User not found!");
     }
 
+    if (updateUser.password) {
+      updateUser.password = bcrypt.hashSync(updateUser.password, SaltRounds);
+    }
     Object.assign(user, updateUser);
     return await this.userRepository.save(user);
+  }
+
+  async changePassword(userId, changePasswordDto: ChangePasswordDto) {
+    const user = await this.findOneByProperty({property: "id", value: userId});
+
+    if (!user) {
+      throw new NotFoundException("User not found!");
+    }
+    if (!bcrypt.compareSync(changePasswordDto.password, user.password)) {
+      throw new BadRequestException("Current password is incorrect");
+    }
+
+    user.password = bcrypt.hashSync(changePasswordDto.newPassword, SaltRounds);
+    return this.userRepository.save(user);
   }
 
   async createUserByGoogle(newUser: Partial<User>) {

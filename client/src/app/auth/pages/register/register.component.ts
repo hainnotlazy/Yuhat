@@ -41,9 +41,6 @@ export class RegisterComponent {
   emailValidationMsg: IValidationMessages = {
     email: "Email is invalid"
   }
-  passwordConfirmationValidationMsg: IValidationMessages = {
-    required: "Please confirm your password"
-  }
 
   registerForm = new FormGroup({
     username: new FormControl("", [

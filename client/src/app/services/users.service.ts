@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UpdateUserDto, UserDto } from '../dtos/user.dto';
+import { ChangePasswordDto, UpdateUserDto, UserDto } from '../dtos/user.dto';
 import { catchError, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IErrorResponse } from '../dtos/auth.dto';
@@ -18,13 +18,13 @@ export class UsersService {
     return this.httpClient.get<UserDto>("api/users");
   }
 
-  updateUser(updateUser: UpdateUserDto) {
-    let { dob } = updateUser;
+  updateUser(updateUserDto: UpdateUserDto) {
+    let { dob } = updateUserDto;
     const formData = new FormData();
 
     for (const field of ["fullname", "bio", "gender", "avatar"]) {
-      if (updateUser[field]) {
-        formData.append(field, updateUser[field]);
+      if (updateUserDto[field]) {
+        formData.append(field, updateUserDto[field]);
       }
     }
     if (dob) {
@@ -65,5 +65,44 @@ export class UsersService {
         }
       )
     );
+  }
+
+  changePassword(changePasswordDto: ChangePasswordDto) {
+    const { password, newPassword } = changePasswordDto;
+
+    return this.httpClient.put("api/users/change-password", {
+      password, newPassword
+    }).pipe(
+      tap(
+        () => {
+          this.snackbar.open("Change password successfully", "x", {
+            duration: 2000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+          })
+          window.location.reload;
+        }
+      ),
+      catchError(
+        (err) => {
+          const errorMessages = err.error.message;
+          if (errorMessages && errorMessages.length > 0) {
+            this.snackbar.open(errorMessages, "x", {
+              duration: 2000,
+              horizontalPosition: "right",
+              verticalPosition: "top"
+            })
+            throw new Error(errorMessages);
+          } else {
+            this.snackbar.open("Unexpected error happened! Please try again", "x", {
+              duration: 2000,
+              horizontalPosition: "right",
+              verticalPosition: "top"
+            })
+            throw new Error("Unexpected error happened! Please try again");
+          }
+        }
+      )
+    )
   }
 }

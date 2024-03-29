@@ -38,9 +38,6 @@
       <button mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation" [attr.aria-label]="'Hide password Confirmation'" [attr.aria-pressed]="hidePasswordConfirmation" type="button">
         <mat-icon>{{hidePasswordConfirmation ? 'visibility_off' : 'visibility'}}</mat-icon>
       </button>
-      <mat-error *ngFor="let error of getObjectKeys(registerForm.get('passwordConfirmation')?.errors)">
-        {{ passwordValidationMsg[error] }}
-      </mat-error>
     </mat-form-field>
 
     <p class="text-red-600" *ngIf="formError">{{ formError }}</p>

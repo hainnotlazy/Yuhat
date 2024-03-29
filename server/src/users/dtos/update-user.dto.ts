@@ -4,18 +4,16 @@ import { IsDate, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
-  @MinLength(3)
-  @MaxLength(255)
+  @MinLength(3, { message: "Fullname must have more than 3 characters" })
+  @MaxLength(255, { message: "Fullname must have less than 255 characters" })
   fullname: string;
 
   @IsOptional()
   @IsString()
-  @MaxLength(255)
+  @MaxLength(255, { message: "Bio must have less than 255 characters" })
   bio: string;
 
   @IsOptional()
-  // @IsDate()
-  // @Matches(/^(\d{4})-(\d{2})-(\d{2})$/)
   dob: Date;
 
   @IsOptional()

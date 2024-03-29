@@ -23,7 +23,6 @@ export class AuthController {
   }
 
   @PublicRoute()
-  @UseInterceptors(ClassSerializerInterceptor)
   @Post("register")
   async register(@Body() registerUserDto: RegisterUserDto) {
     return await this.authService.register(registerUserDto);
@@ -72,7 +71,6 @@ export class AuthController {
   }
 
   @Get("whoami")
-  @UseInterceptors(ClassSerializerInterceptor)
   whoami(@CurrentUser() currentUser) {
     const { password, ...user } = currentUser;
     return user;
