@@ -6,7 +6,6 @@ import { PublicRoute } from './common/decorators/public-route.decorator';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @PublicRoute()
   @Get()
   getHello(): Object {
     return this.appService.getHello();

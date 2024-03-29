@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth.service';
+import { setAccessToken } from 'src/app/common/utils/local-storage.utl';
 
 @Component({
   selector: 'app-success',
@@ -9,7 +9,6 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class SuccessComponent implements OnInit {
   constructor(
-    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -17,7 +16,7 @@ export class SuccessComponent implements OnInit {
     const accessToken = this.getCookie('access_token');
 
     if (accessToken) {
-      this.authService.setAccessToken(accessToken);
+      setAccessToken(accessToken);
       this.removeCookie('access_token');
       this.router.navigate([""]);
     } else {

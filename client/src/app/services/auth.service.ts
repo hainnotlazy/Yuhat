@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { LoginUserDto, RegisterUserDto } from '../dtos/auth.dto';
 import { catchError, tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { setAccessToken } from "../common/utils/local-storage.utl"
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,7 @@ export class AuthService {
       tap(
         (response: IAuthResponse) => {
           const token = response.access_token;
-          this.setAccessToken(token);
+          setAccessToken(token);
         }
       ),
       catchError(
@@ -45,7 +46,7 @@ export class AuthService {
       tap(
         (response: IAuthResponse) => {
           const token = response.access_token;
-          this.setAccessToken(token);
+          setAccessToken(token);
         }
       ),
       catchError(
@@ -58,21 +59,5 @@ export class AuthService {
 
   authByGoogle() {
     return this.router.navigate(["http://localhost:3000/api/auth/google"]);
-  }
-
-  getAccessToken() {
-    return localStorage.getItem("access_token");
-  }
-
-  setAccessToken(token: string) {
-    localStorage.setItem("access_token", token);
-  }
-
-  removeAccessToken() {
-    localStorage.removeItem("access_token");
-  }
-
-  isAuthenticated() {
-    return !!this.getAccessToken();
   }
 }
