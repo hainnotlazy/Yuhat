@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
-import { UserDto } from 'src/app/dtos/user.dto';
+import { UpdateUserDto, UserDto } from 'src/app/dtos/user.dto';
 import { UsersService } from 'src/app/services/users.service';
 import { environment } from 'src/environments/environment.development';
 
@@ -83,7 +83,7 @@ export class EditProfileComponent implements OnInit {
 
   onSubmit() {
     if (this.editProfileForm.valid) {
-
+      this.usersService.updateUser(this.editProfileForm.value as UpdateUserDto).subscribe()
     }
   }
 }

@@ -14,3 +14,12 @@ export interface UserDto {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface UpdateUserDto {
+  [key: string]: any;
+  fullname?: string;
+  bio?: string;
+  dob?: Date;
+  gender?: string;
+  avatar?: File;
+}

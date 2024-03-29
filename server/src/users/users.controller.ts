@@ -62,7 +62,7 @@ export class UsersController {
 
     // Remove old image
     const oldAvatarPath = join(__dirname, "..", "..", "resources", "images", currentUser.avatar.replace("public/", ""));
-    if (existsSync(oldAvatarPath)) {
+    if (existsSync(oldAvatarPath) && avatar) {
       unlinkSync(oldAvatarPath);
     }
 
