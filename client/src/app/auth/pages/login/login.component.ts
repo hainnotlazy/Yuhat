@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IValidationMessages, LoginUserDto } from 'src/app/dtos/auth.dto';
+import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
+import { LoginUserDto } from 'src/app/dtos/auth.dto';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({

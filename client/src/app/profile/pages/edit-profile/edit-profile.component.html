@@ -1,40 +1,42 @@
-<form [formGroup]="editProfileForm" class="p-4">
+<form [formGroup]="editProfileForm" class="p-4" (submit)="onSubmit()">
   <mat-form-field appearance="outline" class="w-full">
     <mat-label>Fullname</mat-label>
     <input matInput formControlName="fullname" placeholder="Your fullname">
-    <!-- <mat-error *ngFor="let error of getObjectKeys(loginForm.get('username')?.errors)">
-      {{ usernameValidationMsg[error] }}
-    </mat-error> -->
+    <mat-error *ngFor="let error of getObjectKeys(editProfileForm.get('fullname')?.errors)">
+      {{ fullnameValidationMsg[error] }}
+    </mat-error>
   </mat-form-field>
-
-  <mat-form-field appearance="outline" class="w-full">
-    <mat-label>Age</mat-label>
-    <input matInput formControlName="age" placeholder="Your age" type="number" max="100" min="10">
-    <!-- <mat-error *ngFor="let error of getObjectKeys(loginForm.get('username')?.errors)">
-      {{ usernameValidationMsg[error] }}
-    </mat-error> -->
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="w-full">
-    <mat-label>Bio</mat-label>
-    <textarea matInput formControlName="bio" placeholder="Your bio"></textarea>
-    <!-- <mat-error *ngFor="let error of getObjectKeys(loginForm.get('username')?.errors)">
-      {{ usernameValidationMsg[error] }}
-    </mat-error> -->
-  </mat-form-field>
-
 
   <mat-form-field appearance="outline" class="example-full-width">
     <mat-label>Date of birth</mat-label>
-    <input matInput [matDatepicker]="picker">
+    <input matInput [matDatepicker]="picker" formControlName="dob">
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker touchUi #picker></mat-datepicker>
   </mat-form-field>
 
-  <img src="" alt="">
+  <mat-radio-group formControlName="gender">
+    <mat-radio-button value="male">Male</mat-radio-button>
+    <mat-radio-button value="female">Female</mat-radio-button>
+    <mat-radio-button value="other">Other</mat-radio-button>
+  </mat-radio-group>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Bio</mat-label>
+    <textarea matInput formControlName="bio" placeholder="Your bio"></textarea>
+    <mat-error *ngFor="let error of getObjectKeys(editProfileForm.get('bio')?.errors)">
+      {{ bioValidationmsg[error] }}
+    </mat-error>
+  </mat-form-field>
+
+  <img [src]="imageUrl" class="max-w-28">
   <div>
     <label for="avatar">Avatar</label>
-    <input type="file" formControlName="avatar">
+    <input type="file" formControlName="avatar" (change)="onImageUpload($event)">
   </div>
 
+  <button type="submit" class="hover:bg-green-300 px-4 py-2 my-2 bg-green-400">Update my profile</button>
+
 </form>
+
+
+{{ editProfileForm.value | json }}

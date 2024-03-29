@@ -25,12 +25,15 @@ export class User {
   password: string;
 
   @Column({ nullable: true })
+  @MinLength(3)
+  @MaxLength(255)
   fullname: string;
 
-  @Column({ nullable: true })
-  age: number;
+  @Column({ nullable: true, type: "date" })
+  dob: Date;
 
   @Column({ nullable: true })
+  @MaxLength(255)
   bio: string;
 
   @Column({

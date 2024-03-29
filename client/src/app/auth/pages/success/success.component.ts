@@ -14,8 +14,7 @@ export class SuccessComponent implements OnInit {
 
   ngOnInit(): void {
     const accessToken = this.getCookie('access_token');
-    console.log(document.cookie);
-    console.log(accessToken);
+
     if (accessToken) {
       setAccessToken(accessToken);
       this.removeCookie('access_token');

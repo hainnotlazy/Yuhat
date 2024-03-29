@@ -21,6 +21,4 @@ export interface IErrorResponse {
   }
 }
 
-export interface IValidationMessages {
-  [key: string]: string;
-}
+

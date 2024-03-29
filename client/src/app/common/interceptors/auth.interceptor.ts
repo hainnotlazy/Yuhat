@@ -6,7 +6,6 @@ import {
   HttpInterceptor
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
 import { getAccessToken } from '../utils/local-storage.utl';
 
 @Injectable()

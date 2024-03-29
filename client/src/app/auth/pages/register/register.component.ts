@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { RegisterFormValidator } from 'src/app/common/validators/register-form.validator';
-import { IValidationMessages, RegisterUserDto } from 'src/app/dtos/auth.dto';
+import { RegisterUserDto } from 'src/app/dtos/auth.dto';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
