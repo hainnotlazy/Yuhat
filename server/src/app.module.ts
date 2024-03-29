@@ -7,6 +7,8 @@ import { TypeOrmConfigService } from './config/typeorm.config';
 import { ConfigOptions } from './config/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { ServeStaticOptions } from './config/serve-static.config';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { AuthModule } from './auth/auth.module';
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService
     }),
+    ServeStaticModule.forRoot(ServeStaticOptions),
     UsersModule,
     AuthModule
   ],

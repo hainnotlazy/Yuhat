@@ -1,17 +1,18 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss']
 })
-export class EditProfileComponent implements OnInit {
-  someMessage?: Observable<string>;
-  constructor(private httpClient: HttpClient) {}
+export class EditProfileComponent {
+  editProfileForm = new FormGroup({
+    fullname: new FormControl(""),
+    age: new FormControl(""),
+    bio: new FormControl(""),
+    gender: new FormControl(""),
+    avatar: new FormControl(""),
+  })
 
-  ngOnInit(): void {
-    this.someMessage = this.httpClient.get<string>("api");
-  }
 }
