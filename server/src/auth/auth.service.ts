@@ -26,11 +26,11 @@ export class AuthService {
     }
 
     const newUser =  await this.usersService.createUser(registerUserDto);
-    return this.generateAccessToken(newUser);
+    return { access_token: this.generateAccessToken(newUser) };
   }
 
   login(user: User) {
-    return this.generateAccessToken(user);
+    return { access_token: this.generateAccessToken(user) };
   }
 
   async googleLogin(googleProfile: IGoogleProfile) {
@@ -87,6 +87,6 @@ export class AuthService {
       username: user.username,
       fullname: user.fullname
     });
-    return {"access_token": accessToken}
+    return accessToken;
   }
 }

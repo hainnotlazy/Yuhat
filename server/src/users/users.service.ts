@@ -18,7 +18,8 @@ export class UsersService {
     const hashedPassword = bcrypt.hashSync(newUser.password, SaltRounds);
     const user = this.userRepository.create({
       ...newUser,
-      password: hashedPassword
+      password: hashedPassword,
+      avatar: "public/default-avatar.jpg"
     });
 
     return await this.userRepository.save(user);
