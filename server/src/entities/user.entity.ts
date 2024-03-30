@@ -1,6 +1,7 @@
 import { Exclude } from "class-transformer";
 import { MaxLength, MinLength } from "class-validator";
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { RoomChatParticipant } from "./room-chat-participant.entity";
 
 enum GenderTypes {
   MALE = "male",
@@ -57,6 +58,9 @@ export class User {
 
   @Column({ nullable: true })
   github: string;
+
+  @OneToMany(() => RoomChatParticipant, participant => participant.user)
+  Participants: RoomChatParticipant[];
 
   @CreateDateColumn()
   createdAt: Date;

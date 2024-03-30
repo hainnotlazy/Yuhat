@@ -8,7 +8,6 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { existsSync, unlinkSync } from 'fs';
 import { ChangePasswordDto } from './dtos/change-password.dto';
-import { compareSync } from "bcrypt";
 
 @Controller('users')
 export class UsersController {
@@ -69,7 +68,6 @@ export class UsersController {
     );
   }
 
-  // Change password
   @Put("change-password")
   async changePassword(@CurrentUser() currentUser: User, @Body() body: ChangePasswordDto) {
     return Object.assign(

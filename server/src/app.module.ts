@@ -11,6 +11,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { ServeStaticOptions } from './config/serve-static.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ChatModule } from './chat/chat.module';
+import { RoomChatModule } from './room-chat/room-chat.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { ChatModule } from './chat/chat.module';
     ServeStaticModule.forRoot(ServeStaticOptions),
     UsersModule,
     AuthModule,
-    ChatModule
+    ChatModule,
+    RoomChatModule
   ],
   controllers: [AppController],
   providers: [
