@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ServeStaticOptions } from './config/serve-static.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     }),
     ServeStaticModule.forRoot(ServeStaticOptions),
     UsersModule,
-    AuthModule
+    AuthModule,
+    ChatModule
   ],
   controllers: [AppController],
   providers: [

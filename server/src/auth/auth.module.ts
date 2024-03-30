@@ -32,5 +32,8 @@ import { GithubStrategy } from './strategies/github.strategy';
       useClass: JwtAuthGuard,
     },
   ],
+  exports: [
+    AuthService
+  ]
 })
 export class AuthModule {}

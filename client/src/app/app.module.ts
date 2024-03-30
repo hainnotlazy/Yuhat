@@ -1,4 +1,4 @@
-import { NgModule, inject } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http"
 
@@ -9,21 +9,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthInterceptor } from './common/interceptors/auth.interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
-import { getAccessToken } from './common/utils/local-storage.utl';
+import { TestComponent } from './test/test.component';
+import { SocketIoModule } from 'ngx-socket-io';
+import { JwtConfigOptions } from './config/jwt.config';
+import { SocketConfigOptions } from './config/socket-io.config';
+
 @NgModule({
   declarations: [
     AppComponent,
+    TestComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: getAccessToken,
-        allowedDomains: ["http://localhost:4200, http://localhost:3000"]
-      }
-    }),
+    JwtModule.forRoot(JwtConfigOptions),
+    SocketIoModule.forRoot(SocketConfigOptions),
     LayoutModule,
     BrowserAnimationsModule,
     MatSnackBarModule

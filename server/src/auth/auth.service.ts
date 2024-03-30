@@ -89,4 +89,11 @@ export class AuthService {
     });
     return accessToken;
   }
+
+  async getUserFromJwtToken(token: string) {
+    const payload = this.jwtService.verify(token);
+    const { userId } = payload;
+
+    return await this.usersService.findOneByProperty({property: "id", value: userId}); 
+  }
 }
