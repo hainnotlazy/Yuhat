@@ -5,6 +5,18 @@
 
 @import "libs/icomoon/style.css";
 
+* {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.text-unica-one {
+  font-family: "Unica One", sans-serif;
+}
+
+.text-poppins {
+  font-family: "Poppins", sans-serif;
+}
+
 .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
   border-right-style: hidden;
 }

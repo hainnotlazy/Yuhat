@@ -1,66 +1,91 @@
-<div class="p-4">
-  <form [formGroup]="registerForm" class="flex flex-col items-center justify-center gap-4 p-8" (submit)="onSubmit()">
-    <img src="/assets/images/yuhat.png" alt="Yuhat logo" class="max-w-32">
+<form [formGroup]="registerForm" class="flex flex-col items-center justify-center gap-4 p-8" (submit)="onSubmit()">
+  <img
+    src="/assets/images/yuhat.png"
+    alt="Yuhat logo"
+    class="max-w-32"
+    loading="eager"
+    fetchPriority="high"
+    draggable="false">
 
-    <h1 class="text-3xl font-semibold">Welcome back✌️</h1>
-    <h6>Login to continue your chats and connect with everyone</h6>
+  <h1 class="text-unica-one text-3xl font-semibold text-center">Nice to meet you✌️</h1>
+  <h6 class="text-poppins text-center text-gray-600">Don't worry! It just take a minute to dive into our world</h6>
 
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Username</mat-label>
-      <input matInput formControlName="username" placeholder="Your username">
-      <mat-error *ngFor="let error of getObjectKeys(registerForm.get('username')?.errors)">
-        {{ usernameValidationMsg[error] }}
-      </mat-error>
-    </mat-form-field>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Username</mat-label>
+    <input matInput formControlName="username" placeholder="Your username">
+    <mat-error *ngFor="let error of getObjectKeys(registerForm.get('username')?.errors)">
+      {{ usernameValidationMsg[error] }}
+    </mat-error>
+  </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Email</mat-label>
-      <input matInput formControlName="email" placeholder="Your email">
-      <mat-error *ngFor="let error of getObjectKeys(registerForm.get('email')?.errors)">
-        {{ usernameValidationMsg[error] }}
-      </mat-error>
-    </mat-form-field>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" placeholder="Your email">
+    <mat-error *ngFor="let error of getObjectKeys(registerForm.get('email')?.errors)">
+      {{ usernameValidationMsg[error] }}
+    </mat-error>
+  </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Password</mat-label>
-      <input matInput formControlName="password" placeholder="Enter your password" [type]="hidePassword ? 'password' : 'text'">
-      <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" type="button">
-        <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-      <mat-error *ngFor="let error of getObjectKeys(registerForm.get('password')?.errors)">
-        {{ passwordValidationMsg[error] }}
-      </mat-error>
-    </mat-form-field>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Password</mat-label>
+    <input matInput formControlName="password" placeholder="Enter your password"
+      [type]="hidePassword ? 'password' : 'text'">
+    <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'"
+      [attr.aria-pressed]="hidePassword" type="button">
+      <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+    <mat-error *ngFor="let error of getObjectKeys(registerForm.get('password')?.errors)">
+      {{ passwordValidationMsg[error] }}
+    </mat-error>
+  </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-full">
-      <mat-label>Password Confirmation</mat-label>
-      <input matInput formControlName="passwordConfirmation" placeholder="Confirm your password" [type]="hidePasswordConfirmation ? 'password' : 'text'">
-      <button mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation" [attr.aria-label]="'Hide password Confirmation'" [attr.aria-pressed]="hidePasswordConfirmation" type="button">
-        <mat-icon>{{hidePasswordConfirmation ? 'visibility_off' : 'visibility'}}</mat-icon>
-      </button>
-    </mat-form-field>
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Password Confirmation</mat-label>
+    <input matInput formControlName="passwordConfirmation" placeholder="Confirm your password"
+      [type]="hidePasswordConfirmation ? 'password' : 'text'">
+    <button mat-icon-button matSuffix (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
+      [attr.aria-label]="'Hide password Confirmation'" [attr.aria-pressed]="hidePasswordConfirmation" type="button">
+      <mat-icon>{{hidePasswordConfirmation ? 'visibility_off' : 'visibility'}}</mat-icon>
+    </button>
+  </mat-form-field>
 
-    <p class="text-red-600" *ngIf="formError">{{ formError }}</p>
+  <p class="-mt-4 text-red-600" *ngIf="formError">{{ formError }}</p>
 
-    <button type="submit" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 w-full">Register</button>
+  <button type="submit"
+    class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg px-5 py-2.5 text-center w-full">Register</button>
 
-    <div class="grid items-center w-full grid-cols-3 mt-4 text-gray-500">
-      <hr class="border-gray-500" />
-      <p class="text-sm text-center">OR</p>
-      <hr class="border-gray-500" />
-    </div>
+  <div class="grid items-center w-full grid-cols-3 mt-4 text-gray-500">
+    <hr class="border-gray-500" />
+    <p class="text-center">OR</p>
+    <hr class="border-gray-500" />
+  </div>
 
-    <div class="flex gap-6">
-      <button type="button" class="hover:scale-125 duration-300" (click)="navigateToAuthPage('google')"><img src="/assets/images/google.svg" alt="" class="max-w-8"></button>
-      <button type="button" class="hover:scale-125 duration-300" (click)="navigateToAuthPage('github')"><img src="/assets/images/github.svg" alt="" class="max-w-8"></button>
-      <a routerLink=""><img src="/assets/images/slack.svg" alt="" class="max-w-8"></a>
-      <a routerLink=""><img src="/assets/images/telegram.svg" alt="" class="max-w-8"></a>
-    </div>
+  <div class="flex gap-6">
+    <button type="button" class="hover:scale-125 duration-300" (click)="navigateToAuthPage('google')">
+      <img
+        class="max-w-8"
+        src="/assets/images/google.svg"
+        width="32"
+        height="32"
+        loading="eager"
+        draggable="false"
+        alt="Google login">
+    </button>
+    <button type="button" class="hover:scale-125 duration-300" (click)="navigateToAuthPage('github')">
+      <img
+        class="max-w-8"
+        src="/assets/images/github.svg"
+        width="32"
+        height="32"
+        loading="eager"
+        draggable="false"
+        alt="Github login">
+    </button>
+    <a routerLink=""><img src="/assets/images/slack.svg" alt="" class="max-w-8"></a>
+    <a routerLink=""><img src="/assets/images/telegram.svg" alt="" class="max-w-8"></a>
+  </div>
 
-    <a routerLink="/auth/login">Go to login page</a>
-  </form>
-</div>
-
-
-{{ registerForm.valid }}
-{{ registerForm.errors | json }}
+  <p class="text-start block w-full mt-2 text-gray-700">
+    Already have an account? <a class="hover:text-blue-600 font-semibold" routerLink="/auth/login">Go login</a>
+  </p>
+</form>
