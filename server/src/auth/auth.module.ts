@@ -11,6 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { GithubStrategy } from './strategies/github.strategy';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { GithubStrategy } from './strategies/github.strategy';
       useClass: JwtConfigService,
     }),
     PassportModule,
+    HttpModule
   ],
   controllers: [AuthController],
   providers: [

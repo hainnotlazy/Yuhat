@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Request, Post, UseGuards, UseInterceptors, Req, Res } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Request, Post, UseGuards, UseInterceptors, Req, Res, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from 'src/users/dtos/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -8,16 +8,22 @@ import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { IGoogleProfile } from 'src/common/interfaces/google-profile.interface';
 import { GithubAuthGuard } from './guards/github-auth.guard';
 import { IGithubProfile } from 'src/common/interfaces/github-profile.interface';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private mailerService: MailerService) {}
 
   @PublicRoute()
   @UseGuards(LocalAuthGuard)
   @Post("login")
   @HttpCode(200)
   async login(@Request() req) {
+    const recaptcha = req.body?.recaptcha;
+    if (!await this.authService.verifyRecaptcha(recaptcha)) {
+      throw new BadRequestException("Recaptcha is invalid!");
+    }
+
     const user = req.user;
     return await this.authService.login(user);
   }
@@ -74,5 +80,20 @@ export class AuthController {
   whoami(@CurrentUser() currentUser) {
     const { password, ...user } = currentUser;
     return user;
+  }
+
+  @PublicRoute()
+  @Get("mail")
+  async sendmail(@CurrentUser() currentUser) {
+    return await this.mailerService.sendMail({
+      to: "thanhhoalearn@gmail.com",
+      subject: "test send mail subject",
+      template: "verification-email",
+      context: {
+        username: "hain",
+        verificationCode: 666
+      }
+      // text: "test sending mail"
+    })
   }
 }

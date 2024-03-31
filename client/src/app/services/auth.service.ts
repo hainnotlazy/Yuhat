@@ -16,10 +16,10 @@ export class AuthService {
   ) { }
 
   login(loginUserDto: LoginUserDto) {
-    const { username, password } = loginUserDto;
+    const { username, password, recaptcha } = loginUserDto;
 
     return this.httpClient.post<IAuthResponse>("api/auth/login", {
-      username, password
+      username, password, recaptcha
     }).pipe(
       tap(
         (response: IAuthResponse) => {

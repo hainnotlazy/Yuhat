@@ -31,7 +31,9 @@
     </mat-error>
   </mat-form-field>
 
-  <p class="-mt-4 text-red-600" *ngIf="formError">{{ formError }}</p>
+  <re-captcha formControlName="recaptcha"></re-captcha>
+
+  <p class="text-red-600" *ngIf="formError">{{ formError }}</p>
 
   <button type="submit"
   class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg px-5 py-2.5 text-center w-full">

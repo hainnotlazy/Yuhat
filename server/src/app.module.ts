@@ -12,6 +12,8 @@ import { ServeStaticOptions } from './config/serve-static.config';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { ChatModule } from './chat/chat.module';
 import { RoomChatModule } from './room-chat/room-chat.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { MailerConfigService } from './config/mailer.config';
 
 @Module({
   imports: [
@@ -20,6 +22,9 @@ import { RoomChatModule } from './room-chat/room-chat.module';
       useClass: TypeOrmConfigService
     }),
     ServeStaticModule.forRoot(ServeStaticOptions),
+    MailerModule.forRootAsync({
+      useClass: MailerConfigService
+    }),
     UsersModule,
     AuthModule,
     ChatModule,

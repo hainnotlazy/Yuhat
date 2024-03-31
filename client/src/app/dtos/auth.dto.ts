@@ -1,6 +1,7 @@
 export interface LoginUserDto {
   username: string;
   password: string;
+  recaptcha: string;
 }
 
 export interface RegisterUserDto {

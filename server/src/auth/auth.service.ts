@@ -6,12 +6,16 @@ import * as bcrypt from "bcrypt";
 import { JwtService } from '@nestjs/jwt';
 import { IGoogleProfile } from 'src/common/interfaces/google-profile.interface';
 import { IGithubProfile } from 'src/common/interfaces/github-profile.interface';
+import { HttpService } from '@nestjs/axios';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private httpService: HttpService,
+    private configService: ConfigService
   ) {}
 
   async register(registerUserDto: RegisterUserDto) {
@@ -95,5 +99,25 @@ export class AuthService {
     const { userId } = payload;
 
     return await this.usersService.findOneByProperty({property: "id", value: userId}); 
+  }
+
+  async verifyRecaptcha(recaptcha: string) {
+    try {
+      const recaptchaServerKey = this.configService.get<string>("RECAPTCHA_SERVER_KEY", "yuhat-recaptcha-server-key");
+      const response = await this.httpService.post("https://www.google.com/recaptcha/api/siteverify", null, {
+        params: {
+          secret: recaptchaServerKey,
+          response: recaptcha
+        }
+      }).toPromise();
+
+      if (response.data && response.data.success) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      return false;
+    }
   }
 }

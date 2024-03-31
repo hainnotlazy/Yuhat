@@ -9,6 +9,8 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { RecaptchaModule, RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS, RecaptchaSettings, RecaptchaFormsModule } from 'ng-recaptcha';
+import { environment } from 'src/environments/environment.development';
 
 @NgModule({
   declarations: [],
@@ -22,7 +24,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatRadioModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    RecaptchaModule,
+    RecaptchaFormsModule
   ],
   exports: [
     ReactiveFormsModule,
@@ -33,7 +37,19 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatRadioModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    RecaptchaModule,
+    RecaptchaFormsModule
   ],
+  providers: [
+    {
+      provide: RECAPTCHA_LANGUAGE,
+      useValue: "en"
+    },
+    {
+      provide: RECAPTCHA_SETTINGS,
+      useValue: { siteKey: environment.recaptchaClinetKey } as RecaptchaSettings
+    }
+  ]
 })
 export class SharedModule {}

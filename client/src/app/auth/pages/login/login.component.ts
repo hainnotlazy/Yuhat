@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { LoginUserDto } from 'src/app/dtos/auth.dto';
 import { AuthService } from 'src/app/services/auth.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
+  recaptchaClientKey = environment.recaptchaClinetKey;
   formError = "";
   hidePassword = true;
 
@@ -41,6 +43,9 @@ export class LoginComponent {
       Validators.required,
       Validators.minLength(this.passwordRequirement.minlength),
       Validators.maxLength(this.passwordRequirement.maxlength)
+    ]),
+    recaptcha: new FormControl("", [
+      Validators.required
     ])
   })
 
@@ -62,6 +67,10 @@ export class LoginComponent {
   }
 
   onSubmit() {
+    if (this.loginForm.controls.recaptcha.hasError("required")) {
+      this.formError = "Please verify recaptcha!"
+    }
+
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value as LoginUserDto).subscribe(
         () => {
