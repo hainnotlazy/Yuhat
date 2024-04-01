@@ -1,4 +1,4 @@
-<form [formGroup]="editProfileForm" class="flex gap-6 p-4 my-4" (submit)="onSubmit()">
+<form [formGroup]="editProfileForm" class="md:flex-row flex flex-col items-center gap-6 p-4 my-4" (submit)="onSubmit()">
   <div class="form-image relative flex items-center justify-center">
     <div class="relative">
       <label for="input-avatar" class="bottom-6 hover:bg-gray-300 absolute right-0 px-4 py-2 bg-gray-200 border-2 border-gray-400 rounded-full cursor-pointer">
@@ -6,7 +6,7 @@
       </label>
       <img [src]="imageUrl" class="ring-slate-400 ring-4 rounded-full" draggable="false">
     </div>
-    <input id="input-avatar" type="file" accept="image/*" formControlName="avatar" (change)="onImageUpload($event)"
+    <input id="input-avatar" type="file" accept="image/*" (change)="onImageUpload($event)"
       class="absolute top-0 block w-full h-full opacity-0 cursor-pointer">
   </div>
 
@@ -49,5 +49,3 @@
     </div>
   </div>
 </form>
-
-{{ editProfileForm.value | json }}

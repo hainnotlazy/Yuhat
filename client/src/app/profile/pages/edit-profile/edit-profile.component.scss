@@ -1,11 +1,11 @@
 .form-image {
-  max-width: 400px;
+  max-width: 280px;
 
   img {
-    min-width: 400px;
-    min-height: 400px;
-    max-width: 400px;
-    max-height: 400px;
+    min-width: 280px;
+    min-height: 280px;
+    max-width: 280px;
+    max-height: 280px;
   }
 
   label {
@@ -14,5 +14,27 @@
 
   input {
     z-index: 1;
+  }
+
+  @media (min-width: 640px) {
+    max-width: 350px;
+
+    img {
+      min-width: 350px;
+      min-height: 350px;
+      max-width: 350px;
+      max-height: 350px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 400px;
+
+    img {
+      min-width: 400px;
+      min-height: 400px;
+      max-width: 400px;
+      max-height: 400px;
+    }
   }
 }
