@@ -14,6 +14,7 @@ import { ChatModule } from './chat/chat.module';
 import { RoomChatModule } from './room-chat/room-chat.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailerConfigService } from './config/mailer.config';
+import { SharedModule } from './shared/shared.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { MailerConfigService } from './config/mailer.config';
     UsersModule,
     AuthModule,
     ChatModule,
-    RoomChatModule
+    RoomChatModule,
+    SharedModule
   ],
   controllers: [AppController],
   providers: [

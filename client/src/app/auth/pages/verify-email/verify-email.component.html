@@ -1,0 +1,41 @@
+<form [formGroup]="verifyForm" class="flex flex-col items-center justify-center gap-4 p-8" (submit)="onSubmit()">
+  <img
+    class="max-w-32"
+    src="/assets/images/yuhat.png"
+    alt="Yuhat logo"
+    loading="eager"
+    fetchPriority="high"
+    draggable="false">
+
+  <h1 class="text-unica-one text-3xl font-semibold text-center">Verify Email</h1>
+  <h6 class="text-poppins text-center text-gray-600">Login to your mail to get verification code</h6>
+
+  <mat-form-field appearance="outline" class="w-full">
+    <mat-label>Verification Code</mat-label>
+    <input matInput formControlName="verificationCode" placeholder="Enter verification code" type="number">
+    <mat-error *ngFor="let error of getObjectKeys(verifyForm.get('verificationCode')?.errors)">
+      {{ verificationCodeValidationMsg[error] }}
+    </mat-error>
+  </mat-form-field>
+
+  <re-captcha formControlName="recaptcha"></re-captcha>
+
+  <p class="text-red-600" *ngIf="formError">{{ formError }}</p>
+
+  <p class="text-start block w-full">
+    Didn't receive verification code?
+    <ng-container *ngIf="canResendCode; else countdownTime">
+      <button type="button" class="hover:text-blue-600 font-semibold" (click)="sendVerificationCode()">Resend it</button>
+    </ng-container>
+    <ng-template #countdownTime>
+      <ng-container *ngIf="timeCanResendCode">
+        <span class="font-semibold text-yellow-600">Resend in {{ timeCanResendCode | countdown | async }}</span>
+      </ng-container>
+    </ng-template>
+  </p>
+  <button type="submit"
+  class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl font-medium rounded-lg px-5 py-2.5 text-center w-full">
+    Verify
+  </button>
+</form>
+

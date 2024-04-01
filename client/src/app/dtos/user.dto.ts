@@ -8,7 +8,9 @@ export interface UserDto {
   gender?: string;
   avatar?: string;
   isActive?: boolean;
+  emailVerificationCode?: number;
   emailVerified?: boolean;
+  availableTimeVerifyEmail: Date;
   email?: string;
   github?: string;
   createdAt?: Date;

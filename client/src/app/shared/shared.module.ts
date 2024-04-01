@@ -11,9 +11,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RecaptchaModule, RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS, RecaptchaSettings, RecaptchaFormsModule } from 'ng-recaptcha';
 import { environment } from 'src/environments/environment.development';
+import { CountdownPipe } from './pipes/countdown.pipe';
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    CountdownPipe
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -39,7 +42,8 @@ import { environment } from 'src/environments/environment.development';
     MatNativeDateModule,
     MatSnackBarModule,
     RecaptchaModule,
-    RecaptchaFormsModule
+    RecaptchaFormsModule,
+    CountdownPipe
   ],
   providers: [
     {

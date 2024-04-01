@@ -50,8 +50,14 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({ default: null })
+  emailVerificationCode: number;
+
   @Column({ default: false })
   emailVerified: boolean;
+
+  @Column({ nullable: true })
+  availableTimeVerifyEmail: Date;
 
   @Column({ unique: true, nullable: true })
   email: string;
@@ -72,6 +78,13 @@ export class User {
   generateFullnameIfNotProvided() {
     if (!this.fullname) {
       this.fullname = `Unnamed user ${Math.floor(Math.random() * 100000)}`;
+    }
+  }
+
+  @BeforeInsert()
+  generateEmailVerificationCode() {
+    if (this.email && !this.emailVerified) {
+      this.emailVerificationCode = Math.floor(100000 + Math.random() * 900000);
     }
   }
 }

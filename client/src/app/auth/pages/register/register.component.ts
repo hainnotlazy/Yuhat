@@ -86,7 +86,12 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       this.authService.register(this.registerForm.value as RegisterUserDto).subscribe(
         () => {
-          this.router.navigate([""]);
+          // If user register with email, redirect to verify page.
+          if (this.registerForm.get("email")?.value) {
+            this.router.navigate(["auth/verify-email"]);
+          } else {
+            this.router.navigate([""]);
+          }
         }
         ,
         (error) => {

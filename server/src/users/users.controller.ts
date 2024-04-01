@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, NotFoundException, Param, Put, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Put, UploadedFile, UseInterceptors, Post, Inject, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from 'src/entities/user.entity';
@@ -8,10 +8,14 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { existsSync, unlinkSync } from 'fs';
 import { ChangePasswordDto } from './dtos/change-password.dto';
+import { VerifyService } from 'src/shared/services/verify/verify.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private verifyService: VerifyService  
+  ) {}
 
   @Get("")
   async getCurrentUser(@CurrentUser() currentUser: User) {
@@ -74,5 +78,24 @@ export class UsersController {
       new User(),
       await this.usersService.changePassword(currentUser.id, body)
     )
+  }
+
+  @Post("send-verification-email-mail")
+  sendVerificationMail(@CurrentUser() currentUser: User) {
+    return Object.assign(
+      new User(),
+      this.usersService.sendVerificationEmailMail(currentUser.id)
+    );
+  }
+
+  @Post("verify-email")
+  async verifyEmail(@CurrentUser() currentUser: User, @Body() body: { verificationCode: string, recaptcha: string }) {
+    const { verificationCode, recaptcha } = body;
+
+    if (!await this.verifyService.verifyRecaptcha(recaptcha)) {
+      throw new BadRequestException("Recaptcha is invalid!");
+    }
+
+    return await this.usersService.verifyEmail(currentUser.id, verificationCode);
   }
 }

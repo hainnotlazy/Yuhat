@@ -8,11 +8,14 @@ import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { IGoogleProfile } from 'src/common/interfaces/google-profile.interface';
 import { GithubAuthGuard } from './guards/github-auth.guard';
 import { IGithubProfile } from 'src/common/interfaces/github-profile.interface';
-import { MailerService } from '@nestjs-modules/mailer';
+import { VerifyService } from 'src/shared/services/verify/verify.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService, private mailerService: MailerService) {}
+  constructor(
+    private authService: AuthService, 
+    private verifyService: VerifyService
+  ) {}
 
   @PublicRoute()
   @UseGuards(LocalAuthGuard)
@@ -20,7 +23,7 @@ export class AuthController {
   @HttpCode(200)
   async login(@Request() req) {
     const recaptcha = req.body?.recaptcha;
-    if (!await this.authService.verifyRecaptcha(recaptcha)) {
+    if (!await this.verifyService.verifyRecaptcha(recaptcha)) {
       throw new BadRequestException("Recaptcha is invalid!");
     }
 
@@ -80,20 +83,5 @@ export class AuthController {
   whoami(@CurrentUser() currentUser) {
     const { password, ...user } = currentUser;
     return user;
-  }
-
-  @PublicRoute()
-  @Get("mail")
-  async sendmail(@CurrentUser() currentUser) {
-    return await this.mailerService.sendMail({
-      to: "thanhhoalearn@gmail.com",
-      subject: "test send mail subject",
-      template: "verification-email",
-      context: {
-        username: "hain",
-        verificationCode: 666
-      }
-      // text: "test sending mail"
-    })
   }
 }

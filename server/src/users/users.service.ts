@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IEntityProperty } from 'src/common/interfaces/entity-property.interface';
 import { User } from 'src/entities/user.entity';
@@ -7,12 +7,14 @@ import * as bcrypt from "bcrypt";
 import { SaltRounds } from 'src/common/constants/bcrypt-salt.constant';
 import { randomBytes } from 'crypto';
 import { ChangePasswordDto } from './dtos/change-password.dto';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User> 
+    private userRepository: Repository<User> ,
+    private mailerService: MailerService
   ) {}
 
   async createUser(newUser: Partial<User>) {
@@ -87,6 +89,57 @@ export class UsersService {
       email,
       github,
     });
+
+    return await this.userRepository.save(user);
+  }
+
+  async sendVerificationEmailMail(userId: string) {
+    const user = await this.findOneByProperty({property: "id", value: userId});
+
+    if (!user) {
+      throw new NotFoundException("User not found!");
+    }
+    if (!user.email) {
+      throw new BadRequestException("User don't have email to verify!");
+    }
+    if (user.emailVerified) {
+      throw new BadRequestException("Already verified email!");
+    }
+    const remainingTimeToResendCode = Math.max(0, new Date(user.availableTimeVerifyEmail).getTime() - new Date().getTime());
+    if (remainingTimeToResendCode !== 0) {
+      throw new BadRequestException("Please wait a while before requesting a resend of the verification code!");
+    }
+
+    const sentMail = await this.mailerService.sendMail({
+      to: user.email,
+      subject: "[Yuhat] Verify your email",
+      template: "verification-email",
+      context: {
+        username: user.username,
+        verificationCode: user.emailVerificationCode
+      }
+    })
+
+    if (sentMail?.accepted?.length > 0) {
+      user.availableTimeVerifyEmail = new Date(new Date().getTime() + (15 * 60 * 1000));
+      return await this.userRepository.save(user);
+    } 
+    throw new InternalServerErrorException("Somethings went wrong when sending verification mail!");
+  }
+
+  async verifyEmail(userId: string, verificationCode: string) {
+    const user = await this.findOneByProperty({property: "id", value: userId});
+
+    if (!user) {
+      throw new NotFoundException("User not found!");
+    }
+    if (user.emailVerificationCode != verificationCode) {
+      throw new BadRequestException("Verification code is incorrect!");
+    }
+
+    user.availableTimeVerifyEmail = null;
+    user.emailVerificationCode = null;
+    user.emailVerified = true;
 
     return await this.userRepository.save(user);
   }

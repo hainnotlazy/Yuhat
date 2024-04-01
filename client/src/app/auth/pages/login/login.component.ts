@@ -79,6 +79,7 @@ export class LoginComponent {
         ,
         (error) => {
           this.formError = error.message;
+          this.loginForm.get("recaptcha")?.reset();
         }
       )
     }

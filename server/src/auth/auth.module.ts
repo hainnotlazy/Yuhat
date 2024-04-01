@@ -11,7 +11,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { GithubStrategy } from './strategies/github.strategy';
-import { HttpModule } from '@nestjs/axios';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { HttpModule } from '@nestjs/axios';
       useClass: JwtConfigService,
     }),
     PassportModule,
-    HttpModule
+    SharedModule
   ],
   controllers: [AuthController],
   providers: [

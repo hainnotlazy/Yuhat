@@ -8,6 +8,11 @@ export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const currentUrl = state.url;
 
+  // FIXME: Protect route verify email
+  if (currentUrl === "/auth/verify-email" && !jwtService.isTokenExpired()) {
+    return true;
+  }
+
   if (currentUrl.split("/")[1] === "auth") {
     if (!jwtService.isTokenExpired()) {
       router.navigate(["/dashboard"]);
