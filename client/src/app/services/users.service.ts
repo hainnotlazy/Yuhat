@@ -26,6 +26,8 @@ export class UsersService {
 
     for (const field of ["fullname", "bio", "gender", "avatar"]) {
       if (updateUserDto[field]) {
+        console.log(field);
+
         formData.append(field, updateUserDto[field]);
       }
     }

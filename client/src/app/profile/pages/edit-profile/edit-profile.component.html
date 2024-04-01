@@ -1,40 +1,53 @@
-<form [formGroup]="editProfileForm" class="p-4" (submit)="onSubmit()">
-  <mat-form-field appearance="outline" class="w-full">
-    <mat-label>Fullname</mat-label>
-    <input matInput formControlName="fullname" placeholder="Your fullname">
-    <mat-error *ngFor="let error of getObjectKeys(editProfileForm.get('fullname')?.errors)">
-      {{ fullnameValidationMsg[error] }}
-    </mat-error>
-  </mat-form-field>
-
-  <mat-form-field appearance="outline" class="example-full-width">
-    <mat-label>Date of birth</mat-label>
-    <input matInput [matDatepicker]="picker" formControlName="dob">
-    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker touchUi #picker></mat-datepicker>
-  </mat-form-field>
-
-  <mat-radio-group formControlName="gender">
-    <mat-radio-button value="male">Male</mat-radio-button>
-    <mat-radio-button value="female">Female</mat-radio-button>
-    <mat-radio-button value="other">Other</mat-radio-button>
-  </mat-radio-group>
-
-  <mat-form-field appearance="outline" class="w-full">
-    <mat-label>Bio</mat-label>
-    <textarea matInput formControlName="bio" placeholder="Your bio"></textarea>
-    <mat-error *ngFor="let error of getObjectKeys(editProfileForm.get('bio')?.errors)">
-      {{ bioValidationmsg[error] }}
-    </mat-error>
-  </mat-form-field>
-
-  <img [src]="imageUrl" class="max-w-28">
-  <div>
-    <label for="avatar">Avatar</label>
-    <input type="file" formControlName="avatar" (change)="onImageUpload($event)">
+<form [formGroup]="editProfileForm" class="flex gap-6 p-4 my-4" (submit)="onSubmit()">
+  <div class="form-image relative flex items-center justify-center">
+    <div class="relative">
+      <label for="input-avatar" class="bottom-6 hover:bg-gray-300 absolute right-0 px-4 py-2 bg-gray-200 border-2 border-gray-400 rounded-full cursor-pointer">
+        Change avatar
+      </label>
+      <img [src]="imageUrl" class="ring-slate-400 ring-4 rounded-full" draggable="false">
+    </div>
+    <input id="input-avatar" type="file" accept="image/*" formControlName="avatar" (change)="onImageUpload($event)"
+      class="absolute top-0 block w-full h-full opacity-0 cursor-pointer">
   </div>
 
-  <button type="submit" class="hover:bg-green-300 px-4 py-2 my-2 bg-green-400">Update my profile</button>
+  <div class="w-full">
+    <h4 class="text-unica-one my-3 text-3xl font-semibold text-center">My Profile</h4>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Fullname</mat-label>
+      <input matInput formControlName="fullname" placeholder="Your fullname">
+      <mat-error *ngFor="let error of getObjectKeys(editProfileForm.get('fullname')?.errors)">
+        {{ fullnameValidationMsg[error] }}
+      </mat-error>
+    </mat-form-field>
 
+    <mat-form-field appearance="outline" class="example-full-width">
+      <mat-label>Date of birth</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="dob">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker touchUi #picker></mat-datepicker>
+    </mat-form-field>
+
+    <div class="pl-1 mb-4">
+      <label class="block">Gender</label>
+      <mat-radio-group formControlName="gender" class="space-x-6">
+        <mat-radio-button value="male">Male</mat-radio-button>
+        <mat-radio-button value="female">Female</mat-radio-button>
+        <mat-radio-button value="other">Other</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Bio</mat-label>
+      <textarea matInput formControlName="bio" placeholder="Your bio" rows="5"></textarea>
+      <mat-error *ngFor="let error of getObjectKeys(editProfileForm.get('bio')?.errors)">
+        {{ bioValidationmsg[error] }}
+      </mat-error>
+    </mat-form-field>
+
+    <div class="text-end">
+      <button type="submit" class="hover:bg-sky-300 bg-sky-400 px-5 py-2.5 my-2 rounded-full">Update my profile</button>
+    </div>
+  </div>
 </form>
 
+{{ editProfileForm.value | json }}
