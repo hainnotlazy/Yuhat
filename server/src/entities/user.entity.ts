@@ -50,7 +50,12 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({ nullable: true })
+  @Exclude()
+  forgetPasswordCode: number;
+
   @Column({ default: null })
+  @Exclude()
   emailVerificationCode: number;
 
   @Column({ default: false })

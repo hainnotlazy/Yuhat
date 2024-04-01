@@ -14,6 +14,7 @@ export class VerifyEmailComponent implements OnInit {
   formError = "";
   timeCanResendCode?: Date;
   canResendCode = true;
+  sentMail = false;
 
   // FIXME: Resend email function
 
@@ -50,6 +51,7 @@ export class VerifyEmailComponent implements OnInit {
             } else {
               const remainingTime = Math.max(0, new Date(this.timeCanResendCode).getTime() - new Date().getTime());
               this.canResendCode = remainingTime === 0 ? true : false;
+              this.sentMail = false;
             }
           })
         );
@@ -66,6 +68,7 @@ export class VerifyEmailComponent implements OnInit {
   }
 
   sendVerificationCode() {
+    this.sentMail = true;
     this.usersService.resendVerificationCode().pipe(
       tap(data => {
         this.timeCanResendCode = data.availableTimeVerifyEmail

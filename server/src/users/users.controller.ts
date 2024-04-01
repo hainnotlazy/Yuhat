@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Put, UploadedFile, UseInterceptors, Post, Inject, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Put, UploadedFile, UseInterceptors, Post, Inject, BadRequestException, HttpCode } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from 'src/entities/user.entity';
@@ -9,6 +9,9 @@ import { extname, join } from 'path';
 import { existsSync, unlinkSync } from 'fs';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { VerifyService } from 'src/shared/services/verify/verify.service';
+import { VerifyEmailDto } from './dtos/verify-email.dto';
+import { PublicRoute } from 'src/common/decorators/public-route.decorator';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
 
 @Controller('users')
 export class UsersController {
@@ -80,16 +83,18 @@ export class UsersController {
     )
   }
 
+  @HttpCode(200)
   @Post("send-verification-email-mail")
-  sendVerificationMail(@CurrentUser() currentUser: User) {
+  async sendVerificationMail(@CurrentUser() currentUser: User) {
     return Object.assign(
       new User(),
-      this.usersService.sendVerificationEmailMail(currentUser.id)
+      await this.usersService.sendVerificationEmailMail(currentUser.id)
     );
   }
 
+  @HttpCode(200)
   @Post("verify-email")
-  async verifyEmail(@CurrentUser() currentUser: User, @Body() body: { verificationCode: string, recaptcha: string }) {
+  async verifyEmail(@CurrentUser() currentUser: User, @Body() body: VerifyEmailDto) {
     const { verificationCode, recaptcha } = body;
 
     if (!await this.verifyService.verifyRecaptcha(recaptcha)) {
@@ -97,5 +102,26 @@ export class UsersController {
     }
 
     return await this.usersService.verifyEmail(currentUser.id, verificationCode);
+  }
+
+  @PublicRoute()
+  @HttpCode(200)
+  @Post("send-forget-password-mail")
+  async sendForgetPasswordMail(@Body() body: {username: string}) {
+    if (!body?.username) throw new BadRequestException("Username is required!");
+    return Object.assign(
+      new User(),
+      await this.usersService.sendForgetPasswordMail(body.username)
+    );
+  } 
+
+  @HttpCode(200)
+  @PublicRoute()
+  @Post("reset-password")
+  async resetPassword(@Body() body: ResetPasswordDto) {
+    return Object.assign(
+      new User(),
+      await this.usersService.resetPassword(body.username, body.newPassword, body.validationCode)
+    );
   }
 }

@@ -157,4 +157,64 @@ export class UsersService {
       )
     )
   }
+
+  sendForgetPasswordMail(username: string) {
+    return this.httpClient.post<UserDto>("api/users/send-forget-password-mail", {
+      username
+    }).pipe(
+      tap(
+        () => this.router.navigate([`auth/reset-password`], {queryParams: { username: username }})
+      ),
+      catchError(
+        (err: IErrorResponse) => {
+          const errorMessages = err.error.message;
+          if (errorMessages && errorMessages.length > 0) {
+            this.snackbar.open(errorMessages, "x", {
+              duration: 2000,
+              horizontalPosition: "right",
+              verticalPosition: "top"
+            })
+            throw new Error(errorMessages);
+          } else {
+            this.snackbar.open("Unexpected error happened! Please try again", "x", {
+              duration: 2000,
+              horizontalPosition: "right",
+              verticalPosition: "top"
+            })
+            throw new Error("Unexpected error happened! Please try again");
+          }
+        }
+      )
+    )
+  }
+
+  resetPassword(username: string, newPassword: string, validationCode: string) {
+    return this.httpClient.post("api/users/reset-password", {
+      username, newPassword, validationCode
+    }).pipe(
+      tap(
+        () => this.router.navigate(["auth/login"])
+      ),
+      catchError(
+        (err: IErrorResponse) => {
+          const errorMessages = err.error.message;
+          if (errorMessages && errorMessages.length > 0) {
+            this.snackbar.open(errorMessages, "x", {
+              duration: 2000,
+              horizontalPosition: "right",
+              verticalPosition: "top"
+            })
+            throw new Error(errorMessages);
+          } else {
+            this.snackbar.open("Unexpected error happened! Please try again", "x", {
+              duration: 2000,
+              horizontalPosition: "right",
+              verticalPosition: "top"
+            })
+            throw new Error("Unexpected error happened! Please try again");
+          }
+        }
+      )
+    )
+  }
 }

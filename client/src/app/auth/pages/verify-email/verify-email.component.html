@@ -25,7 +25,7 @@
   <p class="text-start block w-full">
     Didn't receive verification code?
     <ng-container *ngIf="canResendCode; else countdownTime">
-      <button type="button" class="hover:text-blue-600 font-semibold" (click)="sendVerificationCode()">Resend it</button>
+      <button [disabled]="sentMail" type="button" class="hover:text-blue-600 font-semibold" (click)="sendVerificationCode()">Resend it</button>
     </ng-container>
     <ng-template #countdownTime>
       <ng-container *ngIf="timeCanResendCode">

@@ -127,7 +127,7 @@ export class UsersService {
     throw new InternalServerErrorException("Somethings went wrong when sending verification mail!");
   }
 
-  async verifyEmail(userId: string, verificationCode: string) {
+  async verifyEmail(userId: string, verificationCode: number) {
     const user = await this.findOneByProperty({property: "id", value: userId});
 
     if (!user) {
@@ -142,6 +142,47 @@ export class UsersService {
     user.emailVerified = true;
 
     return await this.userRepository.save(user);
+  }
+
+  async sendForgetPasswordMail(username: string) {
+    const user = await this.findOneByProperty({property: "username", value: username}) 
+      || await this.findOneByProperty({property: "email", value: username});
+    
+    if (!user) throw new NotFoundException("User not found!");
+    if (!user.email) throw new BadRequestException("User didn't link email!");
+
+    const forgetPasswordCode = Math.floor(100000 + Math.random() * 900000);
+    const sentMail = await this.mailerService.sendMail({
+      to: user.email,
+      subject: "[Yuhat] Forget password",
+      template: "forget-password",
+      context: {
+        username: user.username,
+        resetCode: forgetPasswordCode
+      }
+    })
+
+    if (sentMail?.accepted?.length > 0) {
+      user.forgetPasswordCode = forgetPasswordCode;
+      return await this.userRepository.save(user);
+    }
+    throw new InternalServerErrorException("Somethings went wrong when sending mail!");
+  }
+
+  async resetPassword(username: string, newPassword: string, validationCode: number) {
+    const user = await this.findOneByProperty({property: "username", value: username}) 
+      || await this.findOneByProperty({property: "email", value: username});
+
+    if (!user) throw new NotFoundException("User not found!");
+    if (!user.forgetPasswordCode) throw new BadRequestException("User didn't request reset password");
+    if (user.forgetPasswordCode != validationCode) throw new BadRequestException("Validation code is incorrect!");
+
+    const newHashedPassword = bcrypt.hashSync(newPassword, SaltRounds);
+    
+    user.password = newHashedPassword;
+    user.forgetPasswordCode = null;
+
+    return this.userRepository.save(user);
   }
 
   findOneByProperty(property: IEntityProperty) {
