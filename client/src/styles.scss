@@ -21,6 +21,6 @@
   border-right-style: hidden;
 }
 
-textarea:focus {
-  --tw-ring-shadow: none;
+textarea:focus, input:focus {
+  --tw-ring-shadow: none !important;
 }

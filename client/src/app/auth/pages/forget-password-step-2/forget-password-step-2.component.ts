@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { catchError, of } from 'rxjs';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { UsersService } from 'src/app/services/users.service';
 
@@ -66,7 +67,15 @@ export class ForgetPasswordStep2Component implements OnInit {
       this.usersService.resetPassword(
         this.username,
         this.resetPasswordForm.get("newPassword")?.value as string,
-        this.resetPasswordForm.get("validationCode")?.value as string).subscribe();
+        this.resetPasswordForm.get("validationCode")?.value as string)
+        .pipe(
+          catchError(
+            err => {
+              this.formError = err.message;
+              return of(null);
+            }
+          )
+        ).subscribe();
     }
   }
 }

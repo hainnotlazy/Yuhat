@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { tap } from 'rxjs';
+import { catchError, finalize, of } from 'rxjs';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { UsersService } from 'src/app/services/users.service';
 
@@ -42,7 +42,13 @@ export class ForgetPasswordStep1Component {
     if (this.form.valid) {
       this.formSubmitted = true;
       this.usersService.sendForgetPasswordMail(this.form.get("username")?.value as string).pipe(
-        tap(
+        catchError(
+          err => {
+            this.formError = err.message;
+            return of(null);
+          }
+        ),
+        finalize(
           () => this.formSubmitted = false
         )
       ).subscribe();

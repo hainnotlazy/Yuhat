@@ -16,8 +16,6 @@ export class VerifyEmailComponent implements OnInit {
   canResendCode = true;
   sentMail = false;
 
-  // FIXME: Resend email function
-
   verificationCodeValidationMsg: IValidationMessages = {
     required: "Validation Code is required",
     pattern: "Validation Code must be 6 digits"
