@@ -1,5 +1,38 @@
-<div class="shadow-md">
-  Header
-
-  <button class="hover:bg-slate-100 px-4 py-2 bg-gray-200" (click)="logout()">Logout</button>
-</div>
+<nav class="bg-white border-gray-200 shadow-md">
+  <div class="container flex flex-wrap items-center justify-between p-4 mx-auto">
+    <a routerLink="/" class="flex items-center space-x-3">
+      <img src="/assets/images/yuhat-horizontal.png" class="h-12" alt="Yuhat Logo"/>
+    </a>
+    <div class="md:order-2 md:space-x-0 flex items-center space-x-3">
+      <button type="button"
+        class="md:me-0 focus:ring-4 focus:ring-sky-300 flex text-sm bg-gray-800 rounded-full"
+        id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+        data-dropdown-placement="bottom">
+        <span class="sr-only">Open user menu</span>
+        <img class="w-10 h-10 rounded-full" [src]="avatar" alt="User avatar">
+      </button>
+      <!-- Dropdown menu -->
+      <div
+        class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow"
+        id="user-dropdown">
+        <div class="px-4 py-3">
+          <span class=" block text-sm text-gray-900">{{ fullname }}</span>
+          <span class=" block text-sm text-gray-500 truncate">{{ username }}</span>
+        </div>
+        <ul class="py-2" aria-labelledby="user-menu-button">
+          <li>
+            <a routerLink="/profile"
+              class="hover:bg-gray-100 block px-4 py-2 text-sm text-gray-700">Profile</a>
+          </li>
+          <li>
+            <a routerLink="/profile/change-password"
+              class="hover:bg-gray-100 block px-4 py-2 text-sm text-gray-700">Change password</a>
+          </li>
+          <li>
+            <button class="hover:bg-gray-100 text-start block w-full px-4 py-2 text-sm text-gray-700" (click)="logout()">Log out</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>

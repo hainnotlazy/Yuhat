@@ -20,3 +20,7 @@
 .mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field.mat-mdc-form-field .mdc-notched-outline__notch {
   border-right-style: hidden;
 }
+
+textarea:focus {
+  --tw-ring-shadow: none;
+}

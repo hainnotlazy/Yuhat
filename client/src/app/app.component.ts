@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-root',
@@ -7,12 +7,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'client';
-  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.route.data.subscribe(
-      value => console.log("app component", value)
-    )
+    initFlowbite();
   }
 }
