@@ -10,10 +10,10 @@ enum ParticipantRole {
 
 @Entity()
 export class RoomChatParticipant {
-  @PrimaryColumn()
+  @PrimaryColumn("uuid")
   userId: string;
 
-  @PrimaryColumn()
+  @PrimaryColumn("uuid")
   roomChatId: string;
 
   @ManyToOne(() => User, user => user.Participants)

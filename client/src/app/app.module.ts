@@ -9,7 +9,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthInterceptor } from './common/interceptors/auth.interceptor';
 import { JwtModule } from '@auth0/angular-jwt';
-import { TestComponent } from './test/test.component';
 import { SocketIoModule } from 'ngx-socket-io';
 import { JwtConfigOptions } from './config/jwt.config';
 import { SocketConfigOptions } from './config/socket-io.config';
@@ -17,7 +16,6 @@ import { SocketConfigOptions } from './config/socket-io.config';
 @NgModule({
   declarations: [
     AppComponent,
-    TestComponent,
   ],
   imports: [
     BrowserModule,

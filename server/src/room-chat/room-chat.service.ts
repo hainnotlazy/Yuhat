@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RoomChatParticipant } from 'src/entities/room-chat-participant.entity';
 import { RoomChat } from 'src/entities/room-chat.entity';
 import { UsersService } from 'src/users/users.service';
-import { DataSource, Repository } from 'typeorm';
+import { Brackets, DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class RoomChatService {
@@ -15,6 +15,20 @@ export class RoomChatService {
     private dataSource: DataSource,
     private usersService: UsersService
   ) {}
+
+  async findAllRoomChat(userId: string) {
+    return this.roomChatRepository.createQueryBuilder("roomChat")
+      .leftJoinAndSelect("roomChat.participants", "participants")
+      .leftJoinAndSelect("participants.user", "user")
+      .where(qb => {
+        const subQuery = qb.subQuery()
+          .select('participant."roomChatId"')
+          .from(RoomChatParticipant, "participant")
+          .where('participant."userId" = :userId')
+          .getQuery();
+        return "roomChat.id in " + subQuery;
+      }).setParameter("userId", userId).getMany();
+  }
 
   /**
    * Note: Personal Chat is chat just including 2 peoples

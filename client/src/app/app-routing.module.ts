@@ -4,7 +4,6 @@ import { AppComponent } from './app.component';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { authGuard } from './common/guards/auth.guard';
 import { FullLayoutComponent } from './layout/full-layout/full-layout.component';
-import { TestComponent } from './test/test.component';
 
 const routes: Routes = [
   {
@@ -13,13 +12,21 @@ const routes: Routes = [
     loadChildren: () => import("./auth/auth.module").then(m => m.AuthModule),
     canActivate: [authGuard]
   },
+  // {
+  //   path: "profile",
+  //   component: FullLayoutComponent,
+  //   loadChildren: () => import("./profile/profile.module").then(m => m.ProfileModule),
+  //   canActivate: [authGuard]
+  // },
   {
-    path: "profile",
+    path: "",
     component: FullLayoutComponent,
-    loadChildren: () => import("./profile/profile.module").then(m => m.ProfileModule),
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+    children: [
+      { path: "profile", loadChildren: () => import("./profile/profile.module").then(m => m.ProfileModule) },
+      { path: "dashboard", loadChildren: () => import("./dashboard/dashboard.module").then(m => m.DashboardModule) }
+    ]
   },
-  { path: "test", component: TestComponent, canActivate: [authGuard] },
   { path: "", component: AppComponent, canActivate: [authGuard] },
   { path: "**", redirectTo: "" }
 ];
