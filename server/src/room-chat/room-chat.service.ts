@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IEntityProperty } from 'src/common/interfaces/entity-property.interface';
 import { RoomChatParticipant } from 'src/entities/room-chat-participant.entity';
 import { RoomChat } from 'src/entities/room-chat.entity';
 import { UsersService } from 'src/users/users.service';
-import { Brackets, DataSource, Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class RoomChatService {
@@ -17,6 +18,21 @@ export class RoomChatService {
   ) {}
 
   async findAllRoomChat(userId: string) {
+    return this.roomChatRepository.createQueryBuilder("roomChat")
+      .select(["roomChat.id as id", "users.fullname as fullname", "users.avatar as avatar"])
+      .leftJoin("roomChat.participants", "participants")
+      .leftJoin("participants.user", "users")
+      .where(qb => {
+        const subQuery = qb.subQuery()
+          .select('participant."roomChatId"')
+          .from(RoomChatParticipant, "participant")
+          .where('participant."userId" = :userId')
+          .getQuery();
+        return "roomChat.id in " + subQuery;
+      }).setParameter("userId", userId)
+      .andWhere('participants."userId" != :user', {user: userId})
+      .getRawMany();
+
     return this.roomChatRepository.createQueryBuilder("roomChat")
       .leftJoinAndSelect("roomChat.participants", "participants")
       .leftJoinAndSelect("participants.user", "user")
@@ -83,5 +99,11 @@ export class RoomChatService {
       .getOne();
 
     return !!existingChat;
+  }
+
+  findOneByProperty(property: IEntityProperty) {
+    return this.roomChatRepository.createQueryBuilder()
+      .where(`${property.property} = :value`, {value: property.value})
+      .getOne();
   }
 }

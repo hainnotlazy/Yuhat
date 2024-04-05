@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Socket } from 'ngx-socket-io';
 import { catchError, map, tap } from 'rxjs';
+import { RoomChatDto } from '../dashboard/dtos/room-chat.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +17,22 @@ export class ChatService {
   ) { }
 
   sendMessage(message: string) {
-    this.socket.emit("message", message);
+    this.socket.emit("sendMessage", message);
   }
 
   getMessage() {
     return this.socket.fromEvent("message").pipe(
+      map(
+        (data: any) => {
+          console.log(data);
+          return data;
+        }
+      )
+    )
+  }
+
+  getTestMessage() {
+    return this.socket.fromEvent("test-message").pipe(
       map(
         (data: any) => {
           console.log(data);
@@ -51,5 +63,9 @@ export class ChatService {
         throw new Error("");
       })
     )
+  }
+
+  getAllRoomChats() {
+    return this.httpClient.get<RoomChatDto[]>("api/room-chat");
   }
 }

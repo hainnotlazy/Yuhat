@@ -10,3 +10,44 @@
     <button type="submit" class="bg-yellow-300 px-4 py-2.5 rounded-md hover:bg-yellow-200">Create chat</button>
   </form>
 </div>
+
+<div class="grid grid-cols-3 my-4 space-x-4">
+  <div class="space-y-4">
+    <div class="flex gap-4 p-4 bg-gray-400 rounded-md cursor-pointer"
+      *ngFor="let chat of roomChats$ | async"
+      (click)="onSelectRoomChat(chat.id)">
+      <img [src]="'http://localhost:3000/' + chat.avatar" alt="" class="max-w-24 rounded-full">
+      <div class="flex flex-col justify-center">
+        <h6 class="text-xl font-semibold">{{ chat.fullname }}</h6>
+        <p>New message!!</p>
+        <p>RoomId: {{ chat.id }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-span-2 space-y-4">
+    <div class="min-h-52 bg-slate-200">
+      <ng-container *ngFor="let message of messages">
+        <p class="flex items-center gap-2">
+          <img [src]="'http://localhost:3000/' + message.sender_avatar" class="max-w-8">
+          <span>{{ message.content }} - {{ message.time | date:'h:mm d MMMM, y' }}</span>
+        </p>
+      </ng-container>
+    </div>
+
+    <div class="flex">
+      <input class="flex-grow" type="text" [formControl]="messageForSending">
+      <button
+        class="px-4 py-2.5 bg-blue-300 hover:bg-blue-400 disabled:bg-slate-200"
+        [disabled]="!messageForSending.valid"
+        (click)="sendMessage()">
+        Send
+      </button>
+    </div>
+  </div>
+</div>
+
+{{ messageForSending.value }}
+
+
+<br><hr>
+{{ testMessages | json }}

@@ -16,7 +16,7 @@ export class RoomChatParticipant {
   @PrimaryColumn("uuid")
   roomChatId: string;
 
-  @ManyToOne(() => User, user => user.Participants)
+  @ManyToOne(() => User, user => user.participants)
   user: User;
 
   @ManyToOne(() => RoomChat, roomChat => roomChat.participants)

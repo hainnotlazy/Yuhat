@@ -1,12 +1,17 @@
 import { Module } from '@nestjs/common';
 import { VerifyService } from './services/verify/verify.service';
 import { HttpModule } from '@nestjs/axios';
+import { RedisService } from './services/redis/redis.service';
 
 @Module({
-  imports: [
-    HttpModule
+  imports: [HttpModule],
+  providers: [
+    VerifyService, 
+    RedisService
   ],
-  providers: [VerifyService],
-  exports: [VerifyService]
+  exports: [
+    VerifyService, 
+    RedisService
+  ],
 })
 export class SharedModule {}

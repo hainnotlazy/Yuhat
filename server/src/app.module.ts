@@ -15,6 +15,7 @@ import { RoomChatModule } from './room-chat/room-chat.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailerConfigService } from './config/mailer.config';
 import { SharedModule } from './shared/shared.module';
+import { RedisModule } from '@nestjs-modules/ioredis';
 
 @Module({
   imports: [
@@ -23,6 +24,13 @@ import { SharedModule } from './shared/shared.module';
       useClass: TypeOrmConfigService
     }),
     ServeStaticModule.forRoot(ServeStaticOptions),
+    RedisModule.forRoot({
+      type: "single",
+      options: {
+        host: "localhost",
+        port: 6379
+      }
+    }),
     MailerModule.forRootAsync({
       useClass: MailerConfigService
     }),

@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { RoomChatParticipant } from "./room-chat-participant.entity";
+import { Message } from "./message.entity";
 
 enum RoomChatType {
   "PERSONAL" = "personal",
@@ -19,8 +20,11 @@ export class RoomChat {
   })
   type: string;
 
-  @OneToMany(() => RoomChatParticipant, participant => participant.roomChat)
+  @OneToMany(() => RoomChatParticipant, participants => participants.roomChat)
   participants: RoomChatParticipant[];
+
+  @OneToMany(() => Message, messages => messages.room)
+  messages: Message[];
 
   @CreateDateColumn()
   createdAt: Date;
