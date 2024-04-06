@@ -16,8 +16,11 @@ export class ChatService {
     private snackbar: MatSnackBar
   ) { }
 
-  sendMessage(message: string) {
-    this.socket.emit("sendMessage", message);
+  sendMessage(roomChatId: string, message: string) {
+    this.socket.emit("sendMessage", {
+      roomChatId,
+      content: message
+    });
   }
 
   getMessage() {
@@ -31,15 +34,8 @@ export class ChatService {
     )
   }
 
-  getTestMessage() {
-    return this.socket.fromEvent("test-message").pipe(
-      map(
-        (data: any) => {
-          console.log(data);
-          return data;
-        }
-      )
-    )
+  getNewMessages() {
+    return this.socket.fromEvent("newMessage");
   }
 
   createNewRoomChat(userId: string) {

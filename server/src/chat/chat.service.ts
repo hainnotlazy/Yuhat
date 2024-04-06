@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { NewMessageDto } from './dtos/new-message.dto';
 import { User } from 'src/entities/user.entity';
 import { RoomChatService } from 'src/room-chat/room-chat.service';
+import { RoomChatParticipant } from 'src/entities/room-chat-participant.entity';
 
 @Injectable()
 export class ChatService {
@@ -17,18 +18,22 @@ export class ChatService {
   async createNewMessage(sender: User, newMessageDto: NewMessageDto) {
     const { roomChatId, content } = newMessageDto;
 
-    const roomChat = await this.roomChatService.findOneByProperty({property: "id", value: roomChatId});
+    const roomChat = await this.roomChatService.findRoomAndParticipants(roomChatId);
 
     if (!roomChat) {
       throw new NotFoundException("Room chat not found!");
     }
 
+    const participants: RoomChatParticipant[] = roomChat.participants;
     const newMessage = this.messageRepository.create({
       sender, content,
       room: roomChat
     })
 
-    return this.messageRepository.save(newMessage);
+    return {
+      participants,
+      newMessage: await this.messageRepository.save(newMessage)
+    }
   }
 
   async getMessagesByRoom(userId: string, roomChatId: string) {

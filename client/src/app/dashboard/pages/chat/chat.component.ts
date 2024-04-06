@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { map } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
 import { MessageDto } from '../../dtos/message.dto';
 
@@ -15,17 +15,26 @@ export class ChatComponent implements OnInit {
   messages: MessageDto[] = [];
   currentRoom: string | null = null;
 
-  testMessages: string[] = [];
-
   constructor(
     private chatService: ChatService,
     private httpClient: HttpClient
   ) {}
 
   ngOnInit(): void {
-    this.chatService.getTestMessage().subscribe(
-      data => this.testMessages.push(data)
-    )
+    this.chatService.getNewMessages().pipe(
+      map(
+        (data: any) => {
+          if (data.roomChatId === this.currentRoom) {
+            this.messages.push({
+              sender_avatar: data.sender_avatar,
+              content: data.content,
+              time: data.sentAt
+            });
+            this.messageForSending.reset();
+          }
+        }
+      )
+    ).subscribe();
   }
 
   onSelectRoomChat(roomId: string = "") {
@@ -37,12 +46,19 @@ export class ChatComponent implements OnInit {
     }
   }
 
+  autoGrowInput(element: any) {
+    element.style.height = "5px";
+    element.style.height = (element.scrollHeight) + "px";
+  }
+
+  // Create new Room Chat
   formCreateNewChat = new FormGroup({
     userId: new FormControl("", [
       Validators.required
     ])
   })
 
+  // Send message
   messageForSending = new FormControl("", [Validators.required]);
 
   onCreateNewChat() {
@@ -52,7 +68,6 @@ export class ChatComponent implements OnInit {
   }
 
   sendMessage() {
-    this.chatService.sendMessage(this.messageForSending.value as string);
+    this.chatService.sendMessage(this.currentRoom as string, this.messageForSending.value as string);
   }
-
 }

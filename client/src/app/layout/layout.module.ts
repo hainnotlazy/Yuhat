@@ -5,13 +5,15 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { RouterModule } from '@angular/router';
 import { FullLayoutComponent } from './full-layout/full-layout.component';
+import { ChatLayoutComponent } from './chat-layout/chat-layout.component';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     FooterComponent,
     AuthLayoutComponent,
-    FullLayoutComponent
+    FullLayoutComponent,
+    ChatLayoutComponent
   ],
   imports: [
     RouterModule,

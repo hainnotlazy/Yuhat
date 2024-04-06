@@ -106,4 +106,11 @@ export class RoomChatService {
       .where(`${property.property} = :value`, {value: property.value})
       .getOne();
   }
+
+  findRoomAndParticipants(roomChatId: string) {
+    return this.roomChatRepository.createQueryBuilder("roomChat")
+      .leftJoinAndSelect("roomChat.participants", "participants")
+      .where("roomChat.id = :roomChatId", {roomChatId})
+      .getOne();
+  }
 }

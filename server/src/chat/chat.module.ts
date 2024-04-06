@@ -6,12 +6,14 @@ import { ChatController } from './chat.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Message } from 'src/entities/message.entity';
 import { RoomChatModule } from 'src/room-chat/room-chat.module';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Message]),
     AuthModule, 
-    RoomChatModule
+    RoomChatModule,
+    SharedModule
   ],
   providers: [ChatGateway, ChatService],
   controllers: [ChatController],
