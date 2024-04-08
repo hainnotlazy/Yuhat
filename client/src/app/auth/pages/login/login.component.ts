@@ -12,7 +12,6 @@ import { environment } from 'src/environments/environment.development';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  recaptchaClientKey = environment.recaptchaClinetKey;
   formError = "";
   hidePassword = true;
 

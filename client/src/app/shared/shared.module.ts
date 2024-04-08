@@ -55,7 +55,7 @@ import { TimeGapPipe } from './pipes/time-gap.pipe';
     },
     {
       provide: RECAPTCHA_SETTINGS,
-      useValue: { siteKey: environment.recaptchaClinetKey } as RecaptchaSettings
+      useValue: { siteKey: environment.recaptchaClientKey } as RecaptchaSettings
     }
   ]
 })

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from 'src/entities/user.entity';
 import { RoomChatService } from './room-chat.service';

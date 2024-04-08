@@ -3,6 +3,7 @@ export interface RoomChatDto {
   type: string;
   latestMessage: string;
   latestMessageSentAt: Date;
+  participantId?: string;
   participantName: string;
   participantAvatar: string;
 }
