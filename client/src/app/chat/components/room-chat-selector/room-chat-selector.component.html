@@ -1,0 +1,20 @@
+<ng-container *ngIf="roomChats">
+  <div *ngFor="let roomChat of roomChats"
+    [class]="{ 'bg-second/60': false }"
+    (click)="selectChat(roomChat)"
+    class="flex items-center gap-3 px-4 py-2.5 cursor-pointer rounded-xl hover:bg-gray-200">
+
+    <img class="max-w-20 border-slate-700 border-2 rounded-full" [src]="roomChat.participantAvatar"
+      [alt]="'Avatar of room chat' + roomChat.id">
+
+    <div class="md:block flex-grow hidden">
+      <h6 class="text-lg font-semibold">{{ roomChat.participantName }}</h6>
+      <p>{{ roomChat.latestMessage }} · {{ roomChat.latestMessageSentAt | timeGap }}</p>
+    </div>
+
+    <!-- <button class="hover:bg-fourth bg-third p-3 text-gray-600 rounded-full shadow-md">
+      <i class="icon-more-vert flex items-center justify-center"></i>
+    </button> -->
+
+  </div>
+</ng-container>
