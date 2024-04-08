@@ -7,7 +7,6 @@ import { RoomChatSelectorComponent } from './components/room-chat-selector/room-
 import { SharedModule } from '../shared/shared.module';
 import { MessageComponent } from './components/message/message.component';
 
-
 @NgModule({
   declarations: [
     DashboardComponent,

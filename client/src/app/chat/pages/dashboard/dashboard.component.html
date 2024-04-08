@@ -14,6 +14,10 @@
         (selectRoomChat)="onSelectedRoomChat($event)">
       </app-room-chat-selector>
     </div>
+
+    "{{ messageInput.value }}"
+    <br>
+    is valid: {{ messageInput.valid }}
   </div>
 
   <ng-container *ngIf="selectedRoomChat; else noSelectedRoomChat">
@@ -52,15 +56,21 @@
         </button>
         <textarea
           class="no-scrollbar flex-grow rounded-lg"
+          [formControl]="messageInput"
           (input)="autoGrowInput($event.target)"
+          (keydown.enter)="onSendMessage()"
           cols="30"
           rows="1"
           placeholder="Aa"></textarea>
-        <button>
-          <i class="icon-send text-first hover:text-primary text-2xl"></i>
+        <button [disabled]="!messageInput.valid" (click)="onSendMessage()">
+          <i
+            [ngClass]="messageInput.valid ? 'text-first hover:text-primary' : 'text-gray-400'"
+            class="icon-send text-2xl">
+          </i>
         </button>
       </div>
     </div>
+
   </ng-container>
 
   <ng-template #noSelectedRoomChat>

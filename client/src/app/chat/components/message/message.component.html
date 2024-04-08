@@ -15,6 +15,7 @@
       class="p-2 rounded-lg">
       {{ message.content }}
     </p>
-    <small class="text-end block py-1">{{ message.sentAt | date:"h:m EEEE" }}</small>
+    <small [class]="{'text-end': message.sentByCurrentUser}"
+    class="block py-1">{{ message.sentAt | date:"h:m EEEE" }}</small>
   </div>
 </div>

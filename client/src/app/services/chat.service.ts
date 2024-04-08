@@ -25,6 +25,17 @@ export class ChatService {
     });
   }
 
+  getNewMessages(): Observable<MessageDto> {
+    return this.socket.fromEvent<MessageDto>("newMessage").pipe(
+      map(
+        message => ({
+          ...message,
+          senderAvatar: `${environment.server}/${message.senderAvatar}`
+        })
+      )
+    );
+  }
+
   getMessage() {
     return this.socket.fromEvent("message").pipe(
       map(
@@ -34,10 +45,6 @@ export class ChatService {
         }
       )
     )
-  }
-
-  getNewMessages() {
-    return this.socket.fromEvent("newMessage");
   }
 
   createNewRoomChat(userId: string) {
@@ -81,7 +88,7 @@ export class ChatService {
     );
   }
 
-  getMessagesByRoomId(roomChatId: string) {
+  getMessagesByRoomId(roomChatId: string): Observable<MessageDto[]> {
     return this.httpClient.get<MessageDto[]>(`api/chat/${roomChatId}`).pipe(
       map(
         response => {

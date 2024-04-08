@@ -55,10 +55,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (participantSocketId) {
         this.server.to(participantSocketId).emit("newMessage", {
           roomChatId,
-          sender: newMessage.sender.fullname,
-          sender_avatar: newMessage.sender.avatar,
-          sentAt: newMessage.updatedAt,
-          content: newMessage.content
+          sender: newMessage.sender.username,
+          senderAvatar: newMessage.sender.avatar,
+          sentAt: newMessage.createdAt,
+          content: newMessage.content,
+          sentByCurrentUser: participantId === user.id
         })
       } 
     }

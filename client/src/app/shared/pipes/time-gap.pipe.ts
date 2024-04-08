@@ -22,6 +22,8 @@ export class TimeGapPipe implements PipeTransform {
       return `${days}d ago`;
     } else if (hours > 0) {
       return `${hours}h ago`;
+    } else if (minutes === 0) {
+      return "Just now";
     } else {
       return `${minutes}m ago`;
     }
