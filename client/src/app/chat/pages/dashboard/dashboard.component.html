@@ -38,27 +38,9 @@
       </div>
 
       <div #chatView class="flex-grow p-2 mt-1 space-y-2 overflow-y-auto bg-gray-200">
-        <div
-          *ngFor="let message of messages$ | async"
-          [class]="{'justify-end': message.sentByCurrentUser}"
-          class="flex items-start gap-2">
-          <img
-            *ngIf="!message.sentByCurrentUser"
-            class="max-w-8 border-2 border-black rounded-full"
-            [src]="message.senderAvatar"
-            [alt]="">
-          <div style="max-width: 60%;">
-            <p
-              [ngClass]="{
-                'bg-second rounded-tl-none': !message.sentByCurrentUser,
-                'bg-fourth rounded-tr-none': message.sentByCurrentUser
-              }"
-              class="p-2 rounded-lg">
-              {{ message.content }}
-            </p>
-            <small class="text-end block py-1">{{ message.sentAt | date:"h:m EEEE" }}</small>
-          </div>
-        </div>
+        <ng-container *ngFor="let message of messages$ | async">
+          <app-message [message]="message"></app-message>
+        </ng-container>
       </div>
 
       <div class="flex items-end gap-2 px-2 pt-2">

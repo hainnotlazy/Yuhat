@@ -1,6 +1,7 @@
 import { Component, ElementRef,  ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
+import { MessageDto } from 'src/app/dtos/message.dto';
 import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
 import { ChatService } from 'src/app/services/chat.service';
 
@@ -12,7 +13,7 @@ import { ChatService } from 'src/app/services/chat.service';
 export class DashboardComponent {
   selectedRoomChat: RoomChatDto | null = null;
   roomChats$ = this.chatService.getAllRoomChats();
-  messages$: any;
+  messages$: Observable<MessageDto[]> | null = null;
 
   @ViewChild("chatView") chatView!: ElementRef;
 
