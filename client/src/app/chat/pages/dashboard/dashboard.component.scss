@@ -1,0 +1,18 @@
+.left-sidebar.hide {
+  opacity: 0;
+  z-index: -10;
+
+  .info-sidebar{
+    right: -20%;
+  }
+}
+
+.left-sidebar:not(.hide) {
+  z-index: 10;
+  opacity: 1;
+
+  .info-sidebar{
+    right: 0;
+    opacity: 1;
+  }
+}

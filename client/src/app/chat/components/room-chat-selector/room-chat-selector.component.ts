@@ -9,12 +9,13 @@ import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
 })
 export class RoomChatSelectorComponent {
   @Input() roomChats: RoomChatDto[] | null = null;
-  // @Input() selectedRoomChat;
+  selectedRoomChat: RoomChatDto | null = null;
   @Output() selectRoomChat = new EventEmitter<RoomChatDto>();
 
   constructor(private router: Router) {}
 
   selectChat(roomChat: RoomChatDto) {
+    this.selectedRoomChat = roomChat;
     // this.router.navigate([`/chat/r/${roomChat.id}`])
     this.selectRoomChat.emit(roomChat);
   }

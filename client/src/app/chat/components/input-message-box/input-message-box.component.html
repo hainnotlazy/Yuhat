@@ -1,0 +1,22 @@
+<div class="flex items-end gap-2 px-2 pt-2">
+  <button>
+    <i class="icon-add-circle text-secondary hover:text-primary text-2xl"></i>
+  </button>
+  <button>
+    <i class="icon-attach-file text-secondary hover:text-primary text-2xl"></i>
+  </button>
+  <textarea
+    class="no-scrollbar flex-grow rounded-lg"
+    [formControl]="messageInput"
+    (input)="autoGrowInput($event.target)"
+    (keydown.enter)="onSendMessage()"
+    cols="30"
+    rows="1"
+    placeholder="Aa"></textarea>
+  <button [disabled]="!messageInput.valid" (click)="onSendMessage()">
+    <i
+      [ngClass]="messageInput.valid ? 'text-first hover:text-primary' : 'text-gray-400'"
+      class="icon-send text-2xl">
+    </i>
+  </button>
+</div>

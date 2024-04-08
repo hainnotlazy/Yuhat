@@ -1,0 +1,18 @@
+<div class="bg-first text-white px-4 py-2.5 flex justify-between items-center shadow-lg">
+  <div class="flex items-center justify-center gap-2">
+    <img
+    class="max-w-16 border-slate-700 border-2 rounded-full"
+    [src]="selectedRoomChat.participantAvatar"
+    [alt]="'Avatar of room chat ' + selectedRoomChat.id">
+    <div>
+      <h6 class="text-lg font-semibold">{{ selectedRoomChat.participantName }}</h6>
+      <p>Online</p>
+    </div>
+  </div>
+
+  <div class="z-10">
+    <button type="button" (click)="onViewRoomChatInfo()">
+      <i class="icon-info hover:text-fourth text-third text-2xl"></i>
+    </button>
+  </div>
+</div>

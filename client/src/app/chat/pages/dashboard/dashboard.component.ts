@@ -17,10 +17,7 @@ export class DashboardComponent {
   messages$: Observable<MessageDto[]> | null = null;
 
   @ViewChild("chatView") chatView!: ElementRef;
-
-  messages: any;
-
-  messageInput = new FormControl("", [Validators.required]);
+  @ViewChild("roomChatInfoSidebar") roomChatInfoSidebarRef!: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,29 +28,17 @@ export class DashboardComponent {
     this.chatService.getNewMessages().subscribe();
   }
 
-  autoGrowInput(element: EventTarget | null) {
-    if (!element) return;
-
-    const maxHeight = 120;
-    if ((element as HTMLTextAreaElement).scrollHeight <= maxHeight) {
-      (element as HTMLTextAreaElement).style.height = ((element as HTMLTextAreaElement).scrollHeight) + 'px';
+  onViewRoomChatInfo() {
+    const classes = this.roomChatInfoSidebarRef.nativeElement.classList;
+    if (classes.contains("hide")) {
+      this.roomChatInfoSidebarRef.nativeElement.classList.remove("hide");
     } else {
-      (element as HTMLTextAreaElement).style.height = maxHeight + 'px';
-      (element as HTMLTextAreaElement).style.overflowY = 'auto';
+      this.roomChatInfoSidebarRef.nativeElement.classList.add("hide");
     }
-  }
-
-  some() {
-
   }
 
   onSelectedRoomChat(roomChatId: RoomChatDto) {
     this.selectedRoomChat = roomChatId;
-    // this.messages$ = this.chatService.getMessagesByRoomId(this.selectedRoomChat.id).pipe(
-    //   tap(
-    //     () => this.scrollToBottom()
-    //   )
-    // )
 
     this.messages$ = combineLatest([
       this.chatService.getMessagesByRoomId(this.selectedRoomChat.id).pipe(tap(() => this.scrollToBottom())),
@@ -67,17 +52,6 @@ export class DashboardComponent {
         return messages;
       })
     )
-  }
-
-  onSendMessage() {
-    // FIXME: Fix error when press enter twice
-    // FIXME: After send message, it become 1 line chat
-    if (this.messageInput.valid && this.messageInput.value?.trim() !== "") {
-      this.chatService.sendMessage(this.selectedRoomChat?.id as string, this.messageInput.value as string);
-      this.messageInput.reset();
-    } else {
-      this.messageInput.reset();
-    }
   }
 
   private scrollToBottom() {
