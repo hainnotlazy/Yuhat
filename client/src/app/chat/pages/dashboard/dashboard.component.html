@@ -1,0 +1,94 @@
+<div class="md:flex-row flex flex-col h-full max-h-full gap-2 pb-2">
+  <div class="md:w-1/3 lg:w-1/4 md:max-h-full md:overflow-y-auto w-full px-2 space-y-4">
+    <h4 class="mt-4 ml-4 text-xl font-semibold">Your chats</h4>
+    <div>
+      <input
+        class="w-full rounded-lg"
+        placeholder="Search chat"
+        type="text">
+    </div>
+    <div class="md:block md:py-0 flex py-2 overflow-x-auto">
+
+      <app-room-chat-selector
+        [roomChats]="roomChats$ | async"
+        (selectRoomChat)="onSelectedRoomChat($event)">
+      </app-room-chat-selector>
+    </div>
+  </div>
+
+  <ng-container *ngIf="selectedRoomChat; else noSelectedRoomChat">
+    <div class="md:w-2/3 lg:w-3/4 flex flex-col flex-grow w-full pb-2 border-l-2 border-gray-300">
+      <div class="bg-first text-white px-4 py-2.5 flex justify-between items-center shadow-lg">
+        <div class="flex items-center justify-center gap-2">
+          <img
+          class="max-w-16 border-slate-700 border-2 rounded-full"
+          [src]="selectedRoomChat.participantAvatar"
+          [alt]="'Avatar of room chat ' + selectedRoomChat.id">
+          <div>
+            <h6 class="text-lg font-semibold">{{ selectedRoomChat.participantName }}</h6>
+            <p>Online</p>
+          </div>
+        </div>
+
+        <div>
+          <button>
+            <i class="icon-info hover:text-fourth text-third text-2xl"></i>
+          </button>
+        </div>
+      </div>
+
+      <div #chatView class="flex-grow p-2 mt-1 space-y-2 overflow-y-auto bg-gray-200">
+        <div
+          *ngFor="let message of messages$ | async"
+          [class]="{'justify-end': message.sentByCurrentUser}"
+          class="flex items-start gap-2">
+          <img
+            *ngIf="!message.sentByCurrentUser"
+            class="max-w-8 border-2 border-black rounded-full"
+            [src]="message.senderAvatar"
+            [alt]="">
+          <div style="max-width: 60%;">
+            <p
+              [ngClass]="{
+                'bg-second rounded-tl-none': !message.sentByCurrentUser,
+                'bg-fourth rounded-tr-none': message.sentByCurrentUser
+              }"
+              class="p-2 rounded-lg">
+              {{ message.content }}
+            </p>
+            <small class="text-end block py-1">{{ message.sentAt | date:"h:m EEEE" }}</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-end gap-2 px-2 pt-2">
+        <button>
+          <i class="icon-add-circle text-secondary hover:text-primary text-2xl"></i>
+        </button>
+        <button>
+          <i class="icon-attach-file text-secondary hover:text-primary text-2xl"></i>
+        </button>
+        <textarea
+          class="no-scrollbar flex-grow rounded-lg"
+          (input)="autoGrowInput($event.target)"
+          cols="30"
+          rows="1"
+          placeholder="Aa"></textarea>
+        <button>
+          <i class="icon-send text-first hover:text-primary text-2xl"></i>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #noSelectedRoomChat>
+    <div class="md:w-2/3 lg:w-3/4 flex flex-col items-center justify-center flex-grow w-full pb-2 border-l-2 border-gray-300">
+      <img class="max-w-60" src="/assets/images/yuhat.png" alt="Yuhat Logo">
+      <h6 class="text-4xl font-semibold">
+        <span class="text-lobster text-blue-900">Yu</span><span class="text-lobster text-sky-400">hat</span>
+      </h6>
+      <p class="text-unica-one py-2 text-xl italic font-semibold">Keep your communication with everyone!</p>
+    </div>
+  </ng-template>
+
+</div>

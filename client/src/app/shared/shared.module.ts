@@ -12,10 +12,12 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RecaptchaModule, RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS, RecaptchaSettings, RecaptchaFormsModule } from 'ng-recaptcha';
 import { environment } from 'src/environments/environment.development';
 import { CountdownPipe } from './pipes/countdown.pipe';
+import { TimeGapPipe } from './pipes/time-gap.pipe';
 
 @NgModule({
   declarations: [
-    CountdownPipe
+    CountdownPipe,
+    TimeGapPipe
   ],
   imports: [
     CommonModule,
@@ -43,7 +45,8 @@ import { CountdownPipe } from './pipes/countdown.pipe';
     MatSnackBarModule,
     RecaptchaModule,
     RecaptchaFormsModule,
-    CountdownPipe
+    CountdownPipe,
+    TimeGapPipe
   ],
   providers: [
     {

@@ -26,10 +26,10 @@ const routes: Routes = [
     component: ChatLayoutComponent,
     canActivate: [authGuard],
     children: [
+      { path: "chat", loadChildren: () => import("./chat/chat.module").then(m => m.ChatModule) },
       { path: "dashboard", loadChildren: () => import("./dashboard/dashboard.module").then(m => m.DashboardModule) }
     ]
   },
-  { path: "", component: AppComponent, canActivate: [authGuard] },
   { path: "**", redirectTo: "" }
 ];
 
