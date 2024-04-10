@@ -1,31 +1,72 @@
-import { Component, ElementRef,  ViewChild } from '@angular/core';
+import { Component, ElementRef,  OnInit,  ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, combineLatest, map, startWith, tap } from 'rxjs';
 import { MessageDto } from 'src/app/dtos/message.dto';
 import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
+import { UserDto } from 'src/app/dtos/user.dto';
 import { ChatService } from 'src/app/services/chat.service';
+import { RoomChatService } from 'src/app/services/room-chat.service';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {
-  selectedRoomChat: RoomChatDto | null = null;
-  roomChats$ = this.chatService.getAllRoomChats();
-  messages$: Observable<MessageDto[]> | null = null;
+export class DashboardComponent implements OnInit {
+  currentRoomChat?: RoomChatDto;
+  messages$?: Observable<MessageDto[]>;
 
   @ViewChild("chatView") chatView!: ElementRef;
   @ViewChild("roomChatInfoSidebar") roomChatInfoSidebarRef!: ElementRef;
 
+  searchControl = new FormControl("", [Validators.required]);
+  searchedUsers: UserDto[] = [];
+
+  onSearch() {
+    if (this.searchControl.valid && this.searchControl.value?.trim() !== "") {
+      const searchQuery = this.searchControl.value?.trim();
+      this.usersService.findUsersByNameOrUsername(searchQuery as string).subscribe(
+        data => this.searchedUsers = data
+      )
+    }
+  }
+
   constructor(
     private route: ActivatedRoute,
-    private chatService: ChatService
+    private router: Router,
+    private chatService: ChatService,
+    private usersService: UsersService,
+    private roomChatService: RoomChatService
   ) {}
 
   ngOnInit() {
-    this.chatService.getNewMessages().subscribe();
+    this.route.params.subscribe(
+      params => {
+        const roomChatId = params["roomChatId"];
+
+        this.roomChatService.findRoomChatById(roomChatId).subscribe(
+          (roomChat: RoomChatDto) => {
+            this.currentRoomChat = roomChat;
+
+            this.messages$ = combineLatest([
+              this.chatService.getMessagesByRoomId(roomChat.id).pipe(tap(() => this.scrollToBottom())),
+              this.chatService.getNewMessages().pipe(startWith(null))
+            ]).pipe(
+              map(([messages, newMessage]) => {
+                if (newMessage && newMessage.roomChatId === this.currentRoomChat?.id) {
+                  messages.push(newMessage);
+                  this.scrollToBottom()
+                }
+                return messages;
+              })
+            )
+          },
+          () => this.router.navigate(["/chat"])
+        );
+      }
+    )
   }
 
   onViewRoomChatInfo() {
@@ -35,23 +76,6 @@ export class DashboardComponent {
     } else {
       this.roomChatInfoSidebarRef.nativeElement.classList.add("hide");
     }
-  }
-
-  onSelectedRoomChat(roomChatId: RoomChatDto) {
-    this.selectedRoomChat = roomChatId;
-
-    this.messages$ = combineLatest([
-      this.chatService.getMessagesByRoomId(this.selectedRoomChat.id).pipe(tap(() => this.scrollToBottom())),
-      this.chatService.getNewMessages().pipe(startWith(null))
-    ]).pipe(
-      map(([messages, newMessage]) => {
-        if (newMessage && newMessage.roomChatId === this.selectedRoomChat?.id) {
-          messages.push(newMessage);
-          this.scrollToBottom()
-        }
-        return messages;
-      })
-    )
   }
 
   private scrollToBottom() {

@@ -12,6 +12,11 @@ export class RoomChatController {
     return this.roomChatService.findAllRoomChat(currentUser.id);
   }
 
+  @Get("/:id")
+  findRoomChat(@CurrentUser() currentUser: User, @Param("id") id: string) {
+    return this.roomChatService.findOneById(currentUser.id, id);
+  }
+
   @Post("personal-chat") 
   createPersonalChat(@CurrentUser() currentUser: User, @Body() body: { userId: string }) {
     return this.roomChatService.createPersonalChat([currentUser.id, body.userId]);

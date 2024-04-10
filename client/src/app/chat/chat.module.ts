@@ -8,6 +8,7 @@ import { SharedModule } from '../shared/shared.module';
 import { MessageComponent } from './components/message/message.component';
 import { InputMessageBoxComponent } from './components/input-message-box/input-message-box.component';
 import { RoomChatInfoComponent } from './components/room-chat-info/room-chat-info.component';
+import { DefaultPageComponent } from './pages/default-page/default-page.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { RoomChatInfoComponent } from './components/room-chat-info/room-chat-inf
     MessageComponent,
     InputMessageBoxComponent,
     RoomChatInfoComponent,
+    DefaultPageComponent,
   ],
   imports: [
     CommonModule,

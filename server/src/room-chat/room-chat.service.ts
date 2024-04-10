@@ -46,34 +46,26 @@ export class RoomChatService {
       }).setParameter("participantId", userId)
       .andWhere('users.id != :userId', {userId})
       .orderBy('messages."createdAt"', "DESC")
-      .getRawMany()
+      .getRawMany();
+  }
 
-    // return this.roomChatRepository.createQueryBuilder("roomChat")
-    //   .distinctOn(["roomChat.id"])
-    //   .select(
-    //     ["roomChat.id as id", 
-    //     "roomChat.type as type", 
-    //     'users.id as "participantId"', 
-    //     'users.fullname as "participantName"', 
-    //     'users.avatar as "participantAvatar"', 
-    //     'messages.content as "latestMessage"',
-    //     'messages."createdAt" as "latestMessageSentAt"'
-    //   ])
-    //   .leftJoin("roomChat.participants", "participants")
-    //   .leftJoin("roomChat.messages", "messages")
-    //   .leftJoin("participants.user", "users")
-    //   .where(qb => {
-    //     const subQuery = qb.subQuery()
-    //       .select('participant."roomChatId"')
-    //       .from(RoomChatParticipant, "participant")
-    //       .where('participant."userId" = :userId')
-    //       .getQuery();
-    //     return "roomChat.id in " + subQuery;
-    //   }).setParameter("userId", userId)
-    //   .andWhere('participants."userId" != :user', {user: userId})
-    //   .andWhere("messages.content != ''")
-    //   .orderBy('roomChat.id, messages."createdAt"', "DESC")
-    //   .getRawMany();
+  async findOneById(userId: string, id: string) {
+    return this.roomChatRepository.createQueryBuilder("roomChat")
+    .select([
+      "roomChat.id as id", 
+      "roomChat.type as type", 
+      'users.id as "participantId"', 
+      'users.fullname as "participantName"', 
+      'users.avatar as "participantAvatar"', 
+      'messages.content as "latestMessage"',
+      'messages."createdAt" as "latestMessageSentAt"'
+    ])
+    .leftJoin('roomChat.messages', "messages")
+    .leftJoin("roomChat.participants", "participants")
+    .leftJoin("participants.user", "users")
+    .where("roomChat.id = :roomChatId", {roomChatId: id})
+    .andWhere("users.id != :userId", {userId})
+    .getRawOne();
   }
 
   /**

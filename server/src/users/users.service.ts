@@ -17,6 +17,14 @@ export class UsersService {
     private mailerService: MailerService
   ) {}
 
+  async findUsersByNameOrUsername(searchQuery: string) {
+    return this.userRepository.createQueryBuilder()
+      .where("username like :username", { username: `%${searchQuery}%` })
+      .orWhere("fullname like :fullname", { fullname: `%${searchQuery}%` })
+      .limit(5)
+      .getMany()
+  }
+
   async createUser(newUser: Partial<User>) {
     const hashedPassword = bcrypt.hashSync(newUser.password, SaltRounds);
     const user = this.userRepository.create({

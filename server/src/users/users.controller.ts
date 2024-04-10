@@ -46,6 +46,14 @@ export class UsersController {
     }
   }
 
+  /**
+   * Find likely users by name or username
+   */
+  @Get("/:searchQuery/find-users")
+  async findUsersByNameOrUsername(@Param("searchQuery") searchQuery: string) {
+    return this.usersService.findUsersByNameOrUsername(searchQuery);
+  }
+
   @Put()
   @UseInterceptors(FileInterceptor("avatar", {
     storage: diskStorage({ 

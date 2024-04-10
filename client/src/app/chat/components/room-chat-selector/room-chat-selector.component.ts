@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input } from '@angular/core';
 import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
+import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
   selector: 'app-room-chat-selector',
@@ -8,15 +8,17 @@ import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
   styleUrls: ['./room-chat-selector.component.scss']
 })
 export class RoomChatSelectorComponent {
-  @Input() roomChats: RoomChatDto[] | null = null;
-  selectedRoomChat: RoomChatDto | null = null;
-  @Output() selectRoomChat = new EventEmitter<RoomChatDto>();
+  roomChats$ = this.chatService.getAllRoomChats();
 
-  constructor(private router: Router) {}
+  @Input() selectedRoomChat?: RoomChatDto;
 
-  selectChat(roomChat: RoomChatDto) {
-    this.selectedRoomChat = roomChat;
-    // this.router.navigate([`/chat/r/${roomChat.id}`])
-    this.selectRoomChat.emit(roomChat);
-  }
+  constructor(
+    private chatService: ChatService
+  ) {}
+
+  // selectChat(roomChat: RoomChatDto) {
+  //   // this.selectedRoomChat = roomChat;
+
+  //   this.selectRoomChat.emit(roomChat);
+  // }
 }

@@ -1,17 +1,32 @@
 <div class="md:flex-row relative flex flex-col h-full max-h-full gap-2 pb-2">
   <div class="md:w-1/3 lg:w-1/4 md:max-h-full md:overflow-y-auto w-full px-2 space-y-4">
     <h4 class="mt-4 ml-4 text-xl font-semibold">Your chats</h4>
-    <div>
+    <div class="relative">
       <input
+        (keyup)="onSearch()"
+        [formControl]="searchControl"
         class="w-full rounded-lg"
-        placeholder="Search chat"
+        placeholder="Search"
         type="text">
+      <div
+        *ngIf="searchedUsers.length > 0"
+        class="bg-slate-200 absolute left-0 right-0 rounded-md">
+        <div
+          *ngFor="let user of searchedUsers; last as isLast"
+          [class]="{'border-b-slate-100': !isLast}"
+          class="flex gap-3 items-center p-4 py-2.5 border-b-2">
+          <img
+            class="max-w-12 border-slate-500 border-2 rounded-full"
+            [src]="user.avatar"
+            [alt]="'Avatar of ' + user.fullname">
+          <p>{{ user.fullname }} · {{ user.username }}</p>
+        </div>
+      </div>
     </div>
     <div class="md:block md:py-0 flex py-2 overflow-x-auto">
 
       <app-room-chat-selector
-        [roomChats]="roomChats$ | async"
-        (selectRoomChat)="onSelectedRoomChat($event)">
+        [selectedRoomChat]="">
       </app-room-chat-selector>
     </div>
 
@@ -20,22 +35,22 @@
   <div #roomChatInfoSidebar class="left-sidebar hide absolute z-10 w-full h-full overflow-hidden transition-all duration-700">
     <div (click)="onViewRoomChatInfo()" class="bg-slate-600 opacity-80 background w-full h-full"></div>
     <div class="info-sidebar bg-second/80 absolute top-0 right-0 z-10 flex flex-col items-center w-1/4 h-full gap-2 pt-8 transition-all duration-700 border-l-2 border-gray-600 shadow-lg opacity-0">
-      <img [src]="selectedRoomChat?.participantAvatar"
-        [alt]="'Avatar of room chat' + selectedRoomChat?.id"
+      <img [src]="currentRoomChat?.participantAvatar"
+        [alt]="'Avatar of room chat' + currentRoomChat?.id"
         class="max-w-52 border-2 border-gray-500 rounded-full">
-      <h6 class="text-xl font-semibold">{{ selectedRoomChat?.participantName }}</h6>
+      <h6 class="text-xl font-semibold">{{ currentRoomChat?.participantName }}</h6>
       <a
         class="px-4 py-2.5 bg-third hover:bg-fourth rounded-full"
-        [routerLink]="'/profile/' + selectedRoomChat?.participantId">
+        [routerLink]="'/profile/' + currentRoomChat?.participantId">
         View profile
       </a>
     </div>
   </div>
 
-  <ng-container *ngIf="selectedRoomChat; else noSelectedRoomChat">
+  <ng-container *ngIf="currentRoomChat">
     <div class="md:w-2/3 lg:w-3/4 flex flex-col flex-grow w-full pb-2 border-l-2 border-gray-300">
       <app-room-chat-info
-        [selectedRoomChat]="selectedRoomChat"
+        [selectedRoomChat]="currentRoomChat"
         [roomChatInfoSidebarRef]="roomChatInfoSidebarRef">
       </app-room-chat-info>
 
@@ -45,18 +60,8 @@
         </ng-container>
       </div>
 
-      <app-input-message-box [selectedRoomChat]="selectedRoomChat"></app-input-message-box>
+      <app-input-message-box [selectedRoomChat]="currentRoomChat"></app-input-message-box>
     </div>
   </ng-container>
-
-  <ng-template #noSelectedRoomChat>
-    <div class="md:w-2/3 lg:w-3/4 flex flex-col items-center justify-center flex-grow w-full pb-2 border-l-2 border-gray-300">
-      <img class="max-w-60" src="/assets/images/yuhat.png" alt="Yuhat Logo">
-      <h6 class="text-4xl font-semibold">
-        <span class="text-lobster text-blue-900">Yu</span><span class="text-lobster text-sky-400">hat</span>
-      </h6>
-      <p class="text-unica-one py-2 text-xl italic font-semibold">Keep your communication with everyone!</p>
-    </div>
-  </ng-template>
 
 </div>
