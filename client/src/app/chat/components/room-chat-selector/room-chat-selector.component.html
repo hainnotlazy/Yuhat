@@ -8,7 +8,7 @@
 
   <div class="md:block flex-grow hidden">
     <h6 class="text-lg font-semibold">{{ roomChat.participantName }}</h6>
-    <p>{{ roomChat.latestMessage }} · {{ roomChat.latestMessageSentAt | timeGap }}</p>
+    <p>{{ roomChat.latestMessage }} · {{ roomChat.latestMessageSentAt | timeGap | async }}</p>
   </div>
 
   <!-- <button class="hover:bg-fourth bg-third p-3 text-gray-600 rounded-full shadow-md">

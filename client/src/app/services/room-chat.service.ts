@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { RoomChatDto } from '../dtos/room-chat.dto';
+import { CreatedRoomChatDto, RoomChatDto } from '../dtos/room-chat.dto';
 import { map } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 
@@ -23,4 +23,9 @@ export class RoomChatService {
     )
   }
 
+  createNewRoomChat(receiverId: string) {
+    return this.httpClient.post<CreatedRoomChatDto>("api/room-chat/personal-chat", {
+      userId: receiverId
+    });
+  }
 }

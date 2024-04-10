@@ -15,16 +15,36 @@ export class RoomChatSelectorComponent {
   ]).pipe(
     map(([roomChats, newMessage]) => {
       if (newMessage) {
-        roomChats.forEach(roomChat => {
-          if (roomChat.id === newMessage.roomChatId) {
-            roomChat.latestMessage = newMessage.content;
-            roomChat.latestMessageSentAt = newMessage.sentAt;
-          }
-        })
+        // Handle if new msg is the first msg of roomChat
+        if (
+          !roomChats.find(roomChat => roomChat.id === newMessage.roomChatId)
+          && newMessage.roomChatId === this.selectedRoomChat?.id
+        ) {
+          roomChats.push({
+            id: this.selectedRoomChat?.id as string,
+            type: this.selectedRoomChat?.type as string,
+            latestMessage: newMessage.content,
+            latestMessageSentAt: newMessage.sentAt,
+            participantId: this.selectedRoomChat?.participantId,
+            participantName: this.selectedRoomChat?.participantName as string,
+            participantAvatar: this.selectedRoomChat?.participantAvatar as string
+          })
+        }
+        // Handle if new msg belong to room in roomChats
+        else {
+          roomChats.forEach(roomChat => {
+            if (roomChat.id === newMessage.roomChatId) {
+              roomChat.latestMessage = newMessage.content;
+              roomChat.latestMessageSentAt = newMessage.sentAt;
+            }
+          })
+        }
+
         roomChats.sort((a, b) => {
           return new Date(b.latestMessageSentAt).getTime() - new Date(a.latestMessageSentAt).getTime();
         });
       }
+
       return roomChats;
     })
   );

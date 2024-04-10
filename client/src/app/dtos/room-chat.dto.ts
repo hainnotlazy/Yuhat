@@ -7,3 +7,8 @@ export interface RoomChatDto {
   participantName: string;
   participantAvatar: string;
 }
+
+export interface CreatedRoomChatDto {
+  id: string;
+  type: string;
+}
