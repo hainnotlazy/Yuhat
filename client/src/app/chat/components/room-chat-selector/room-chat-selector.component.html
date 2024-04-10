@@ -1,5 +1,5 @@
 <a *ngFor="let roomChat of roomChats$ | async"
-  [class]="roomChat === selectedRoomChat ? 'bg-second/60' : 'hover:bg-gray-200'"
+  [class]="roomChat.id === selectedRoomChat?.id ? 'bg-second/60' : 'hover:bg-gray-200'"
   [routerLink]="'/chat/r/' + roomChat.id"
   class="flex items-center gap-3 px-4 py-2.5 cursor-pointer rounded-xl">
 

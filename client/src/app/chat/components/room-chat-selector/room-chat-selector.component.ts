@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { combineLatest, map, startWith } from 'rxjs';
 import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
 import { ChatService } from 'src/app/services/chat.service';
 
@@ -8,7 +9,25 @@ import { ChatService } from 'src/app/services/chat.service';
   styleUrls: ['./room-chat-selector.component.scss']
 })
 export class RoomChatSelectorComponent {
-  roomChats$ = this.chatService.getAllRoomChats();
+  roomChats$ = combineLatest([
+    this.chatService.getAllRoomChats(),
+    this.chatService.getNewMessages().pipe(startWith(null))
+  ]).pipe(
+    map(([roomChats, newMessage]) => {
+      if (newMessage) {
+        roomChats.forEach(roomChat => {
+          if (roomChat.id === newMessage.roomChatId) {
+            roomChat.latestMessage = newMessage.content;
+            roomChat.latestMessageSentAt = newMessage.sentAt;
+          }
+        })
+        roomChats.sort((a, b) => {
+          return new Date(b.latestMessageSentAt).getTime() - new Date(a.latestMessageSentAt).getTime();
+        });
+      }
+      return roomChats;
+    })
+  );
 
   @Input() selectedRoomChat?: RoomChatDto;
 
@@ -16,9 +35,4 @@ export class RoomChatSelectorComponent {
     private chatService: ChatService
   ) {}
 
-  // selectChat(roomChat: RoomChatDto) {
-  //   // this.selectedRoomChat = roomChat;
-
-  //   this.selectRoomChat.emit(roomChat);
-  // }
 }
