@@ -18,7 +18,7 @@ export class RoomChatController {
   }
 
   @Post("personal-chat") 
-  createPersonalChat(@CurrentUser() currentUser: User, @Body() body: { userId: string }) {
-    return this.roomChatService.createPersonalChat([currentUser.id, body.userId]);
+  retrieveOrCreatePersonalChat(@CurrentUser() currentUser: User, @Body() body: { userId: string }) {
+    return this.roomChatService.retrieveOrCreatePersonalChat([currentUser.id, body.userId]);
   }
 }

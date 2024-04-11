@@ -9,6 +9,7 @@ import { MessageComponent } from './components/message/message.component';
 import { InputMessageBoxComponent } from './components/input-message-box/input-message-box.component';
 import { RoomChatInfoComponent } from './components/room-chat-info/room-chat-info.component';
 import { DefaultPageComponent } from './pages/default-page/default-page.component';
+import { LiveSearchComponent } from './components/live-search/live-search.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { DefaultPageComponent } from './pages/default-page/default-page.componen
     InputMessageBoxComponent,
     RoomChatInfoComponent,
     DefaultPageComponent,
+    LiveSearchComponent,
   ],
   imports: [
     CommonModule,

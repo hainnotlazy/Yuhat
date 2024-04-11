@@ -71,10 +71,16 @@ export class RoomChatService {
   /**
    * Note: Personal Chat is chat just including 2 peoples
    */
-  async createPersonalChat(userIds: string[]) {
+  async retrieveOrCreatePersonalChat(userIds: string[]) {
     if (userIds.length != 2) throw new BadRequestException("Must include 2 userIds");
-    if (await this.isPersonalChatExisted(userIds)) throw new BadRequestException("2 this user have already had personal chat");
+    
+    // Check if chat is existed?
+    const existedChat = await this.findPersonalChat(userIds);
+    if (existedChat) {
+      return existedChat;
+    }
 
+    // Else create new chat
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -85,8 +91,8 @@ export class RoomChatService {
       });
       const savedRoomChat = await queryRunner.manager.save(RoomChat, roomChat);
 
-      for (let i = 0; i < userIds.length; i ++) {
-        const user = await this.usersService.findOneByProperty({property: "id", value: userIds[i]});
+      for (let userId of userIds) {
+        const user = await this.usersService.findOneByProperty({property: "id", value: userId});
 
         if (!user) throw new NotFoundException("User not found!");
 
@@ -107,11 +113,11 @@ export class RoomChatService {
     }
   }
 
-  private async isPersonalChatExisted(userIds: string[]) {
+  private async findPersonalChat(userIds: string[]) {
     const [userId1, userId2] = userIds;
 
     // Query to check if a personal chat exists between the two users
-    const existingChat = await this.roomChatRepository
+    return await this.roomChatRepository
       .createQueryBuilder('roomChat')
       .innerJoin('roomChat.participants', 'participant1')
       .innerJoin('roomChat.participants', 'participant2')
@@ -119,8 +125,6 @@ export class RoomChatService {
       .andWhere('participant2.userId = :userId2', { userId2 })
       .andWhere('roomChat.type = :type', { type: 'personal' })
       .getOne();
-
-    return !!existingChat;
   }
 
   findOneByProperty(property: IEntityProperty) {

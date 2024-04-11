@@ -1,0 +1,20 @@
+<input
+  [formControl]="searchControl"
+  class="live-search w-full rounded-lg"
+  placeholder="Search"
+  type="text">
+<div
+  #hint
+  class="bg-slate-200 absolute left-0 right-0 rounded-md">
+  <div
+    *ngFor="let user of searchedUsers$ | async; last as isLast"
+    [class]="{'border-b-slate-100': !isLast, 'border-b-2': !isLast}"
+    (click)="onCreateNewChat(user.id)"
+    class="flex gap-3 items-center p-4 py-2.5 cursor-pointer hover:bg-slate-400 rounded-md live-search">
+    <img
+      class="max-w-12 border-slate-500 border-2 rounded-full"
+      [src]="user.avatar"
+      [alt]="'Avatar of ' + user.fullname">
+    <p>{{ user.fullname }} · {{ user.username }}</p>
+  </div>
+</div>

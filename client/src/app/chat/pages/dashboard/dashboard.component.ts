@@ -20,48 +20,11 @@ export class DashboardComponent implements OnInit {
 
   @ViewChild("chatView") chatView!: ElementRef;
   @ViewChild("roomChatInfoSidebar") roomChatInfoSidebarRef!: ElementRef;
-  @ViewChild("liveSearch") liveSearch!: ElementRef;
-
-  searchControl = new FormControl("", [Validators.required]);
-  searchedUsers: UserDto[] = [];
-  searchInputValue$ = this.searchControl.valueChanges.pipe(
-    distinctUntilChanged(),
-    switchMap(searchQuery => {
-      if (!searchQuery) return of([]);
-      return this.usersService.findUsersByNameOrUsername(searchQuery.trim());
-    })
-  )
-
-  onCreateNewChat(userId: string = "") {
-    if (!userId) return;
-    this.roomChatService.createNewRoomChat(userId).pipe(
-      tap(
-        roomChat => {
-          this.searchControl.reset();
-          this.router.navigate([`/chat/r/${roomChat.id}`]);
-        }
-      )
-    ).subscribe()
-  }
-
-  onClick(event: any) {
-    let currentTarget = event.target;
-    if (["img", "p"].includes(currentTarget["tagName"].toLowerCase())) {
-      currentTarget = currentTarget.parentElement;
-    }
-
-    if (!currentTarget.classList.contains("live-search")) {
-      this.liveSearch.nativeElement.classList.add("hidden");
-    } else {
-      this.liveSearch.nativeElement.classList.remove("hidden");
-    }
-  }
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private chatService: ChatService,
-    private usersService: UsersService,
     private roomChatService: RoomChatService
   ) {}
 

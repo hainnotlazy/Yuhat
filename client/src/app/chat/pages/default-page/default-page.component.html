@@ -1,32 +1,8 @@
 <div class="md:flex-row relative flex flex-col h-full max-h-full gap-2 pb-2">
   <div class="md:w-1/3 lg:w-1/4 md:max-h-full md:overflow-y-auto w-full px-2 space-y-4">
     <h4 class="mt-4 ml-4 text-xl font-semibold">Your chats</h4>
-    <div class="relative">
-        <input
-        class="w-full rounded-lg"
-        placeholder="Search"
-        type="text">
-      <!-- <input
-        (keyup)="onSearch()"
-        [formControl]="searchControl"
-        class="w-full rounded-lg"
-        placeholder="Search"
-        type="text">
-      <div
-        *ngIf="searchedUsers.length > 0"
-        class="bg-slate-200 absolute left-0 right-0 rounded-md">
-        <div
-          *ngFor="let user of searchedUsers; last as isLast"
-          [class]="{'border-b-slate-100': !isLast}"
-          class="flex gap-3 items-center p-4 py-2.5 border-b-2">
-          <img
-            class="max-w-12 border-slate-500 border-2 rounded-full"
-            [src]="user.avatar"
-            [alt]="'Avatar of ' + user.fullname">
-          <p>{{ user.fullname }} · {{ user.username }}</p>
-        </div>
-      </div> -->
-    </div>
+    <app-live-search class="block"></app-live-search>
+
     <div class="md:block md:py-0 flex py-2 overflow-x-auto">
 
       <app-room-chat-selector
