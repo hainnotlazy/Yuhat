@@ -10,9 +10,24 @@
     </div>
   </div>
 
-  <div class="z-10">
+  <div class="z-20">
     <button type="button" (click)="onViewRoomChatInfo()">
       <i class="icon-info hover:text-fourth text-third text-2xl"></i>
     </button>
+  </div>
+</div>
+
+<div #roomChatInfoSidebar class="left-sidebar hide absolute top-0 left-0 z-10 w-full h-full overflow-hidden transition-all duration-700">
+  <div (click)="onViewRoomChatInfo()" class="bg-slate-600 opacity-80 background w-full h-full"></div>
+  <div class="info-sidebar bg-second/80 absolute top-0 right-0 z-10 flex flex-col items-center w-1/4 h-full gap-2 pt-8 transition-all duration-700 border-l-2 border-gray-600 shadow-lg opacity-0">
+    <img [src]="selectedRoomChat.participantAvatar"
+      [alt]="'Avatar of room chat' + selectedRoomChat.id"
+      class="max-w-52 border-2 border-gray-500 rounded-full">
+    <h6 class="text-xl font-semibold">{{ selectedRoomChat.participantName }}</h6>
+    <a
+      class="px-4 py-2.5 bg-third hover:bg-fourth rounded-full"
+      [routerLink]="'/profile/' + selectedRoomChat.participantId">
+      View profile
+    </a>
   </div>
 </div>

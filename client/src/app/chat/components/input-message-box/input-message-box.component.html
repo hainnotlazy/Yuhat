@@ -6,10 +6,9 @@
     <i class="icon-attach-file text-secondary hover:text-primary text-2xl"></i>
   </button>
   <textarea
+    #input
     class="no-scrollbar flex-grow rounded-lg"
     [formControl]="messageInput"
-    (input)="autoGrowInput($event.target)"
-    (keydown.enter)="onSendMessage()"
     cols="30"
     rows="1"
     placeholder="Aa"></textarea>

@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { fromEvent, tap } from 'rxjs';
 import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
 import { ChatService } from 'src/app/services/chat.service';
 
@@ -8,32 +9,54 @@ import { ChatService } from 'src/app/services/chat.service';
   templateUrl: './input-message-box.component.html',
   styleUrls: ['./input-message-box.component.scss']
 })
-export class InputMessageBoxComponent {
+export class InputMessageBoxComponent implements AfterViewInit {
   @Input() selectedRoomChat!: RoomChatDto;
-  messageInput = new FormControl("", [Validators.required]);
+
+  @ViewChild("input") inputRef!: ElementRef;
+  inputInitialHeight = 40;
+  inputMaxHeight = 120;
+
+  messageInput = new FormControl("", [
+    Validators.required,
+  ]);
 
   constructor(private chatService: ChatService) {}
 
+  ngAfterViewInit() {
+    this.inputInitialHeight = this.inputRef.nativeElement.offsetHeight;
+
+    fromEvent(this.inputRef.nativeElement, 'keydown').pipe(
+      tap((event: any) => {
+        if (event.shiftKey && event.key === 'Enter') {
+          this.growInputHeight();
+        }
+        else if (event.key === "Enter") {
+          this.onSendMessage();
+        }
+      })
+    ).subscribe();
+  }
+
   onSendMessage() {
-    // FIXME: Fix error when press enter twice
-    // FIXME: After send message, it become 1 line chat
-    if (this.messageInput.valid && this.messageInput.value?.trim() !== "") {
-      this.chatService.sendMessage(this.selectedRoomChat?.id as string, this.messageInput.value as string);
-      this.messageInput.reset();
-    } else {
-      this.messageInput.reset();
+    if (this.messageInput.valid && !!this.messageInput.value?.trim()) {
+      this.chatService.sendMessage(this.selectedRoomChat.id , this.messageInput.value);
+      this.resetInput();
+    } else if (!this.messageInput.value?.trim()) {
+      this.resetInput();
     }
   }
 
-  autoGrowInput(element: EventTarget | null) {
-    if (!element) return;
+  private resetInput() {
+    setTimeout(() => {
+      this.messageInput.reset();
+      this.messageInput.setValue(('').trim());
+      this.inputRef.nativeElement.style.height = this.inputInitialHeight + "px";
+    }, 0);
+  }
 
-    const maxHeight = 120;
-    if ((element as HTMLTextAreaElement).scrollHeight <= maxHeight) {
-      (element as HTMLTextAreaElement).style.height = ((element as HTMLTextAreaElement).scrollHeight) + 'px';
-    } else {
-      (element as HTMLTextAreaElement).style.height = maxHeight + 'px';
-      (element as HTMLTextAreaElement).style.overflowY = 'auto';
+  private growInputHeight() {
+    if (this.inputRef.nativeElement.scrollHeight <= this.inputMaxHeight) {
+      this.inputRef.nativeElement.style.height = this.inputRef.nativeElement.scrollHeight + 20 + "px";
     }
   }
 }

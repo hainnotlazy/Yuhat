@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
 
 @Component({
@@ -8,7 +8,8 @@ import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
 })
 export class RoomChatInfoComponent {
   @Input() selectedRoomChat!: RoomChatDto;
-  @Input() roomChatInfoSidebarRef!: ElementRef;
+
+  @ViewChild("roomChatInfoSidebar") roomChatInfoSidebarRef!: ElementRef;
 
   onViewRoomChatInfo() {
     const classes = this.roomChatInfoSidebarRef.nativeElement.classList;

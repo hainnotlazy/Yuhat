@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { InjectRepository } from '@nestjs/typeorm';
 import { IEntityProperty } from 'src/common/interfaces/entity-property.interface';
 import { User } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import * as bcrypt from "bcrypt";
 import { SaltRounds } from 'src/common/constants/bcrypt-salt.constant';
 import { randomBytes } from 'crypto';
@@ -17,12 +17,17 @@ export class UsersService {
     private mailerService: MailerService
   ) {}
 
-  async findUsersByNameOrUsername(searchQuery: string) {
+  async findUsersByNameOrUsername(currentUser: User, searchQuery: string) {
     return this.userRepository.createQueryBuilder()
-      .where("username like :username", { username: `%${searchQuery}%` })
-      .orWhere("fullname like :fullname", { fullname: `%${searchQuery}%` })
-      .limit(5)
-      .getMany()
+    .where("id != :id", {id: currentUser.id})
+    .andWhere(
+      new Brackets((qb) => {
+        qb.where('username ilike :username', { username: `%${searchQuery}%` })
+          .orWhere('fullname ilike :fullname', { fullname: `%${searchQuery}%` });
+      }),
+    )
+    .limit(5)
+    .getMany();
   }
 
   async createUser(newUser: Partial<User>) {

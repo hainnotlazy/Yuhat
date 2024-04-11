@@ -1,13 +1,10 @@
 import { Component, ElementRef,  OnInit,  ViewChild } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, combineLatest, debounceTime, distinctUntilChanged, map, of, startWith, switchMap, tap } from 'rxjs';
+import { Observable, combineLatest, map, startWith, tap } from 'rxjs';
 import { MessageDto } from 'src/app/dtos/message.dto';
 import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
-import { UserDto } from 'src/app/dtos/user.dto';
 import { ChatService } from 'src/app/services/chat.service';
 import { RoomChatService } from 'src/app/services/room-chat.service';
-import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,7 +16,6 @@ export class DashboardComponent implements OnInit {
   messages$?: Observable<MessageDto[]>;
 
   @ViewChild("chatView") chatView!: ElementRef;
-  @ViewChild("roomChatInfoSidebar") roomChatInfoSidebarRef!: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
@@ -54,15 +50,6 @@ export class DashboardComponent implements OnInit {
         );
       }
     )
-  }
-
-  onViewRoomChatInfo() {
-    const classes = this.roomChatInfoSidebarRef.nativeElement.classList;
-    if (classes.contains("hide")) {
-      this.roomChatInfoSidebarRef.nativeElement.classList.remove("hide");
-    } else {
-      this.roomChatInfoSidebarRef.nativeElement.classList.add("hide");
-    }
   }
 
   private scrollToBottom() {

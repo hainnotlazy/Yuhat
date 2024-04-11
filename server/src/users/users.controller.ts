@@ -50,8 +50,8 @@ export class UsersController {
    * Find likely users by name or username
    */
   @Get("/:searchQuery/find-users")
-  async findUsersByNameOrUsername(@Param("searchQuery") searchQuery: string) {
-    return this.usersService.findUsersByNameOrUsername(searchQuery);
+  async findUsersByNameOrUsername(@CurrentUser() currentUser: User, @Param("searchQuery") searchQuery: string) {
+    return this.usersService.findUsersByNameOrUsername(currentUser, searchQuery);
   }
 
   @Put()
