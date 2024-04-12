@@ -1,5 +1,5 @@
 import { OnDestroy, Pipe, PipeTransform } from '@angular/core';
-import { Observable, Subject, map, of, takeUntil, timer } from 'rxjs';
+import { Observable, Subject, map, takeUntil, timer } from 'rxjs';
 
 @Pipe({
   name: 'timeGap'

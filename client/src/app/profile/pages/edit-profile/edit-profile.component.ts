@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { IUser } from 'src/app/common/models/user.dto';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
-import { UpdateUserDto, UserDto } from 'src/app/dtos/user.dto';
 import { UsersService } from 'src/app/services/users.service';
 import { environment } from 'src/environments/environment.development';
 
@@ -11,7 +11,6 @@ import { environment } from 'src/environments/environment.development';
   styleUrls: ['./edit-profile.component.scss'],
 })
 export class EditProfileComponent implements OnInit {
-  userProfile?: UserDto;
   imageUrl?: string;
 
   fullnameRequirements = {
@@ -83,7 +82,7 @@ export class EditProfileComponent implements OnInit {
 
   onSubmit() {
     if (this.editProfileForm.valid) {
-      this.usersService.updateUser(this.editProfileForm.value as UpdateUserDto).subscribe()
+      this.usersService.updateUser(this.editProfileForm.value as Partial<IUser>).subscribe()
     }
   }
 }

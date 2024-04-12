@@ -1,9 +1,8 @@
-import { IAuthResponse, IErrorResponse } from './../dtos/auth.dto';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginUserDto, RegisterUserDto } from '../dtos/auth.dto';
+import { ILoginUser, IRegisterUser } from '../common/models/auth.dto';
+import { IAuthResponse, IErrorResponse } from './../common/interfaces/response.interface';
 import { catchError, tap } from 'rxjs';
-import { Router } from '@angular/router';
 import { setAccessToken } from "../common/utils/local-storage.utl"
 
 @Injectable({
@@ -12,10 +11,9 @@ import { setAccessToken } from "../common/utils/local-storage.utl"
 export class AuthService {
   constructor(
     private httpClient: HttpClient,
-    private router: Router
   ) { }
 
-  login(loginUserDto: LoginUserDto) {
+  login(loginUserDto: ILoginUser) {
     const { username, password, recaptcha } = loginUserDto;
 
     return this.httpClient.post<IAuthResponse>("api/auth/login", {
@@ -29,13 +27,13 @@ export class AuthService {
       ),
       catchError(
         (err: IErrorResponse) => {
-          throw new Error(err.error.message);
+          throw new Error(err.error.message ?? "Unexpected error happened!");
         }
       )
     )
   }
 
-  register(registerUserDto: RegisterUserDto) {
+  register(registerUserDto: IRegisterUser) {
     const { username, email, password } = registerUserDto;
 
     return this.httpClient.post<IAuthResponse>("api/auth/register", {
@@ -55,9 +53,5 @@ export class AuthService {
         }
       )
     )
-  }
-
-  authByGoogle() {
-    return this.router.navigate(["http://localhost:3000/api/auth/google"]);
   }
 }

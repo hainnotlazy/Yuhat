@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IChangePassword } from 'src/app/common/models/user.dto';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { RegisterFormValidator } from 'src/app/common/validators/register-form.validator';
-import { ChangePasswordDto } from 'src/app/dtos/user.dto';
 import { UsersService } from 'src/app/services/users.service';
 
 @Component({
@@ -73,7 +73,7 @@ export class ChangePasswordComponent {
     }
 
     if (this.changePasswordForm.valid) {
-      this.usersService.changePassword(this.changePasswordForm.value as ChangePasswordDto).subscribe();
+      this.usersService.changePassword(this.changePasswordForm.value as IChangePassword).subscribe();
     }
   }
 }

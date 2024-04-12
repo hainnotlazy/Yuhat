@@ -2,9 +2,8 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
-import { LoginUserDto } from 'src/app/dtos/auth.dto';
+import { ILoginUser } from 'src/app/common/models/auth.dto';
 import { AuthService } from 'src/app/services/auth.service';
-import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-login',
@@ -71,7 +70,7 @@ export class LoginComponent {
     }
 
     if (this.loginForm.valid) {
-      this.authService.login(this.loginForm.value as LoginUserDto).subscribe(
+      this.authService.login(this.loginForm.value as ILoginUser).subscribe(
         () => {
           this.router.navigate([""]);
         }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ChangePasswordDto, UpdateUserDto, UserDto } from '../dtos/user.dto';
+import { IChangePassword, IUser } from '../common/models/user.dto';
 import { catchError, map, of, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IErrorResponse } from '../dtos/auth.dto';
@@ -18,11 +18,11 @@ export class UsersService {
   ) { }
 
   findUser() {
-    return this.httpClient.get<UserDto>("api/users");
+    return this.httpClient.get<Partial<IUser>>("api/users");
   }
 
   findUsersByNameOrUsername(searchQuery: string) {
-    return this.httpClient.get<UserDto[]>(`api/users/${searchQuery}/find-users`).pipe(
+    return this.httpClient.get<Partial<IUser>[]>(`api/users/${searchQuery}/find-users`).pipe(
       map(
         response => {
           return response.map(
@@ -39,15 +39,13 @@ export class UsersService {
     )
   }
 
-  updateUser(updateUserDto: UpdateUserDto) {
-    let { dob } = updateUserDto;
+  updateUser(updateUser: Partial<IUser>) {
+    let { dob } = updateUser;
     const formData = new FormData();
 
     for (const field of ["fullname", "bio", "gender", "avatar"]) {
-      if (updateUserDto[field]) {
-        console.log(field);
-
-        formData.append(field, updateUserDto[field]);
+      if (updateUser[field]) {
+        formData.append(field, updateUser[field]);
       }
     }
     if (dob) {
@@ -69,29 +67,20 @@ export class UsersService {
       ),
       catchError(
         (err: IErrorResponse) => {
-          const errorMessages = err.error.message;
-          if (errorMessages && errorMessages.length > 0) {
-            this.snackbar.open(errorMessages, "x", {
-              duration: 2000,
-              horizontalPosition: "right",
-              verticalPosition: "top"
-            })
-            throw new Error(errorMessages);
-          } else {
-            this.snackbar.open("Unexpected error happened! Please try again", "x", {
-              duration: 2000,
-              horizontalPosition: "right",
-              verticalPosition: "top"
-            })
-            throw new Error("Unexpected error happened! Please try again");
-          }
+          const errorMessages = err.error.message ?? "Unexpected error happened! Please try again";
+          this.snackbar.open(errorMessages, "x", {
+            duration: 2000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+          })
+          throw new Error(errorMessages);
         }
       )
     );
   }
 
-  changePassword(changePasswordDto: ChangePasswordDto) {
-    const { password, newPassword } = changePasswordDto;
+  changePassword(changePasswordData: IChangePassword) {
+    const { password, newPassword } = changePasswordData;
 
     return this.httpClient.put("api/users/change-password", {
       password, newPassword
@@ -103,27 +92,43 @@ export class UsersService {
             horizontalPosition: "right",
             verticalPosition: "top"
           })
-          window.location.reload;
+          window.location.reload();
         }
       ),
       catchError(
         (err) => {
-          const errorMessages = err.error.message;
-          if (errorMessages && errorMessages.length > 0) {
-            this.snackbar.open(errorMessages, "x", {
-              duration: 2000,
-              horizontalPosition: "right",
-              verticalPosition: "top"
-            })
-            throw new Error(errorMessages);
-          } else {
-            this.snackbar.open("Unexpected error happened! Please try again", "x", {
-              duration: 2000,
-              horizontalPosition: "right",
-              verticalPosition: "top"
-            })
-            throw new Error("Unexpected error happened! Please try again");
-          }
+          const errorMessages = err.error.message ?? "Unexpected error happened! Please try again";
+          this.snackbar.open(errorMessages, "x", {
+            duration: 2000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+          })
+          throw new Error(errorMessages);
+        }
+      )
+    )
+  }
+
+  resendVerificationCode() {
+    return this.httpClient.post<Partial<IUser>>("api/users/send-verification-email-mail", {}).pipe(
+      tap(
+        () => {
+          this.snackbar.open("Sent verification code", "x", {
+            duration: 2000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+          })
+        }
+      ),
+      catchError(
+        (err: IErrorResponse) => {
+          const errorMessages = err.error.message ?? "Unexpected error happened! Please try again";
+          this.snackbar.open(errorMessages, "x", {
+            duration: 2000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+          })
+          throw new Error(errorMessages);
         }
       )
     )
@@ -138,49 +143,15 @@ export class UsersService {
         () => this.router.navigate([""])
       ),
       catchError(
-        (error) => {
-          throw new Error(error.error.message);
+        (error: IErrorResponse) => {
+          throw new Error(error.error.message ?? "Unexpected error happened! Please try again");
         }
       )
     );
   }
 
-  resendVerificationCode() {
-    return this.httpClient.post<UserDto>("api/users/send-verification-email-mail", {}).pipe(
-      tap(
-        () => {
-          this.snackbar.open("Sent verification code", "x", {
-            duration: 2000,
-            horizontalPosition: "right",
-            verticalPosition: "top"
-          })
-        }
-      ),
-      catchError(
-        (err: IErrorResponse) => {
-          const errorMessages = err.error.message;
-          if (errorMessages && errorMessages.length > 0) {
-            this.snackbar.open(errorMessages, "x", {
-              duration: 2000,
-              horizontalPosition: "right",
-              verticalPosition: "top"
-            })
-            throw new Error(errorMessages);
-          } else {
-            this.snackbar.open("Unexpected error happened! Please try again", "x", {
-              duration: 2000,
-              horizontalPosition: "right",
-              verticalPosition: "top"
-            })
-            throw new Error("Unexpected error happened! Please try again");
-          }
-        }
-      )
-    )
-  }
-
   sendForgetPasswordMail(username: string) {
-    return this.httpClient.post<UserDto>("api/users/send-forget-password-mail", {
+    return this.httpClient.post<Partial<IUser>>("api/users/send-forget-password-mail", {
       username
     }).pipe(
       tap(
@@ -188,22 +159,13 @@ export class UsersService {
       ),
       catchError(
         (err: IErrorResponse) => {
-          const errorMessages = err.error.message;
-          if (errorMessages && errorMessages.length > 0) {
-            this.snackbar.open(errorMessages, "x", {
-              duration: 2000,
-              horizontalPosition: "right",
-              verticalPosition: "top"
-            })
-            throw new Error(errorMessages);
-          } else {
-            this.snackbar.open("Unexpected error happened! Please try again", "x", {
-              duration: 2000,
-              horizontalPosition: "right",
-              verticalPosition: "top"
-            })
-            throw new Error("Unexpected error happened! Please try again");
-          }
+          const errorMessages = err.error.message ?? "Unexpected error happened! Please try again";
+          this.snackbar.open(errorMessages, "x", {
+            duration: 2000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+          })
+          throw new Error(errorMessages);
         }
       )
     )
@@ -218,22 +180,13 @@ export class UsersService {
       ),
       catchError(
         (err: IErrorResponse) => {
-          const errorMessages = err.error.message;
-          if (errorMessages && errorMessages.length > 0) {
-            this.snackbar.open(errorMessages, "x", {
-              duration: 2000,
-              horizontalPosition: "right",
-              verticalPosition: "top"
-            })
-            throw new Error(errorMessages);
-          } else {
-            this.snackbar.open("Unexpected error happened! Please try again", "x", {
-              duration: 2000,
-              horizontalPosition: "right",
-              verticalPosition: "top"
-            })
-            throw new Error("Unexpected error happened! Please try again");
-          }
+          const errorMessages = err.error.message ?? "Unexpected error happened! Please try again";
+          this.snackbar.open(errorMessages, "x", {
+            duration: 2000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+          })
+          throw new Error(errorMessages);
         }
       )
     )

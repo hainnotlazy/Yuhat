@@ -48,7 +48,7 @@ export class VerifyEmailComponent implements OnInit {
               this.canResendCode = true;
             } else {
               const remainingTime = Math.max(0, new Date(this.timeCanResendCode).getTime() - new Date().getTime());
-              this.canResendCode = remainingTime === 0 ? true : false;
+              this.canResendCode = remainingTime === 0;
               this.sentMail = false;
             }
           })

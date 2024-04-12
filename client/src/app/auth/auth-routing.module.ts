@@ -10,7 +10,7 @@ import { ForgetPasswordStep2Component } from './pages/forget-password-step-2/for
 const routes: Routes = [
   { path: "login", component: LoginComponent },
   { path: "register", component: RegisterComponent },
-  { path: "success", component: SuccessComponent },
+  { path: "success", component: SuccessComponent },   // Authenticated successfully by 3rd party
   { path: "verify-email", component: VerifyEmailComponent },
   { path: "forget-password", component: ForgetPasswordStep1Component },
   { path: "reset-password", component: ForgetPasswordStep2Component },

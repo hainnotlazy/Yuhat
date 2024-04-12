@@ -18,16 +18,22 @@ export class UsersService {
   ) {}
 
   async findUsersByNameOrUsername(currentUser: User, searchQuery: string) {
-    return this.userRepository.createQueryBuilder()
-    .where("id != :id", {id: currentUser.id})
-    .andWhere(
-      new Brackets((qb) => {
-        qb.where('username ilike :username', { username: `%${searchQuery}%` })
-          .orWhere('fullname ilike :fullname', { fullname: `%${searchQuery}%` });
-      }),
-    )
-    .limit(5)
-    .getMany();
+    return this.userRepository.createQueryBuilder("user")
+      .select([
+        "user.id",
+        "user.username",
+        "user.fullname",
+        "user.avatar"
+      ])
+      .where("id != :id", {id: currentUser.id})
+      .andWhere(
+        new Brackets((qb) => {
+          qb.where('user.username ilike :username', { username: `%${searchQuery}%` })
+            .orWhere('user.fullname ilike :fullname', { fullname: `%${searchQuery}%` });
+        }),
+      )
+      .limit(5)
+      .getMany();
   }
 
   async createUser(newUser: Partial<User>) {
@@ -200,9 +206,8 @@ export class UsersService {
 
   findOneByProperty(property: IEntityProperty) {
     return this.userRepository.createQueryBuilder()
-      .select("*")
       .where(`${property.property} = :value`, {value: property.value})
-      .getRawOne();
+      .getOne();
   }
 
   findOneByProperties() {
@@ -213,5 +218,4 @@ export class UsersService {
     const randomPassword = randomBytes(length / 2).toString("hex").slice(0, length);
     return bcrypt.hashSync(randomPassword, SaltRounds);
   }
-
 }

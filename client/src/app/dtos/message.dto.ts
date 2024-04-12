@@ -1,8 +1,12 @@
-export interface MessageDto {
-  roomChatId?: string;
+export interface IMessage {
   content: string;
-  sentAt: Date;
-  sender: string;
-  senderAvatar: string;
+  createdAt: Date;
+  updatedAt: Date;
+  sender: any;
+  attachments: IAttachment[];
   sentByCurrentUser: boolean;
+}
+
+export interface IAttachment {
+  filePath: string;
 }

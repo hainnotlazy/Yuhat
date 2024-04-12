@@ -1,4 +1,4 @@
-<a *ngFor="let roomChat of roomChats$ | async"
+<!-- <a *ngFor="let roomChat of roomChats$ | async"
   [class]="roomChat.id === selectedRoomChat?.id ? 'bg-second/60' : 'hover:bg-gray-200'"
   [routerLink]="'/chat/r/' + roomChat.id"
   class="flex items-center gap-3 px-4 py-2.5 cursor-pointer rounded-xl">
@@ -11,7 +11,10 @@
     <p>{{ roomChat.latestMessage }} · {{ roomChat.latestMessageSentAt | timeGap | async }}</p>
   </div>
 
+
+</a> -->
+
+
   <!-- <button class="hover:bg-fourth bg-third p-3 text-gray-600 rounded-full shadow-md">
     <i class="icon-more-vert flex items-center justify-center"></i>
   </button> -->
-</a>

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
-import { MessageDto } from '../../dtos/message.dto';
+import { IMessage } from '../../dtos/message.dto';
 
 @Component({
   selector: 'app-chat',
@@ -12,7 +12,7 @@ import { MessageDto } from '../../dtos/message.dto';
 })
 export class ChatComponent implements OnInit {
   roomChats$ = this.chatService.getAllRoomChats();
-  messages: MessageDto[] = [];
+  messages: IMessage[] = [];
   currentRoom: string | null = null;
 
   constructor(
@@ -40,7 +40,7 @@ export class ChatComponent implements OnInit {
   onSelectRoomChat(roomId: string = "") {
     if (roomId) {
       this.currentRoom = roomId;
-      this.httpClient.get<MessageDto[]>(`api/chat/${this.currentRoom}`).subscribe(
+      this.httpClient.get<IMessage[]>(`api/chat/${this.currentRoom}`).subscribe(
         data => this.messages = data
       );
     }

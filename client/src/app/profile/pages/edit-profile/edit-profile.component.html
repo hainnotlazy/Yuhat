@@ -12,7 +12,7 @@
 
   <div class="w-full">
     <h4 class="text-unica-one my-3 text-3xl font-semibold text-center">My Profile</h4>
-    <mat-form-field appearance="outline" class="w-full">
+    <mat-form-field appearance="outline" class="w-full mb-2">
       <mat-label>Fullname</mat-label>
       <input matInput formControlName="fullname" placeholder="Your fullname">
       <mat-error *ngFor="let error of getObjectKeys(editProfileForm.get('fullname')?.errors)">

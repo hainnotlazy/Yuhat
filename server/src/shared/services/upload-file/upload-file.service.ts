@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as path from "path";
 import * as fs from "fs";
-import { count } from 'console';
 
 @Injectable()
 export class UploadFileService {

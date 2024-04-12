@@ -25,7 +25,6 @@ export class ChatService {
     const { roomChatId, content } = newMessageDto;
 
     const roomChat = await this.roomChatService.findRoomAndParticipants(roomChatId);
-
     if (!roomChat) {
       throw new NotFoundException("Room chat not found!");
     }
@@ -44,10 +43,9 @@ export class ChatService {
         content,
         room: roomChat
       });
-
       const savedMessage = await queryRunner.manager.save(Message, newMessage);
-      
       const savedAttachments: MessageAttachment[] = [];
+
       for (let attachment of uploadedAttachments) {
         const savedAttachment = await queryRunner.manager.save(MessageAttachment, this.messageAttachmentRepository.create({
           message: savedMessage,
@@ -56,10 +54,11 @@ export class ChatService {
 
         savedAttachments.push(savedAttachment);
       }
-      savedMessage.attachments = savedAttachments;
       await queryRunner.commitTransaction();
-
+      
+      savedMessage.attachments = savedAttachments;
       const participants: RoomChatParticipant[] = roomChat.participants;
+
       return {
         participants,
         newMessage: savedMessage
@@ -78,18 +77,27 @@ export class ChatService {
     if (!roomChat) {
       throw new NotFoundException("Room chat not found!");
     }
-    // FIXME: Check if user is in roomChat => if no > throw error
 
-    return this.messageRepository.createQueryBuilder("message")
+    // FIXME: Check if user is in roomChat => if no > throw error
+    const messages = await this.messageRepository.createQueryBuilder("message")
       .select([
-        "message.content as content", 
-        'message.updatedAt as "sentAt"', 
-        'sender.avatar as "senderAvatar"',
-        "sender.username as sender",
-        `case when message."senderId" = '${userId}' then true else false end as "sentByCurrentUser"`
+        "message.content", 
+        'message.createdAt', 
+        'message.updatedAt', 
+        'sender.id',
+        'sender.avatar',
+        "sender.username",
+        "attachments.filePath"
       ])
       .leftJoin("message.sender", "sender")
+      .leftJoin("message.attachments", "attachments")
       .where("message.room = :roomId", {roomId: roomChatId})
-      .getRawMany()
+      .getMany();
+    
+    messages.map((message: any) => {
+      message.sentByCurrentUser = message.sender.id === userId;
+    })
+    
+    return messages;
   }
 }

@@ -1,3 +1,7 @@
+export interface IAuthResponse {
+  access_token: string;
+}
+
 export interface IErrorResponse {
   error: {
     error: string;
@@ -5,5 +9,3 @@ export interface IErrorResponse {
     statusCode: number;
   }
 }
-
-

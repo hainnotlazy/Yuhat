@@ -5,7 +5,7 @@ import { Socket } from 'ngx-socket-io';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { RoomChatDto } from '../dtos/room-chat.dto';
 import { environment } from 'src/environments/environment.development';
-import { MessageDto } from '../dtos/message.dto';
+import { IMessage } from '../dtos/message.dto';
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +25,14 @@ export class ChatService {
     });
   }
 
-  getNewMessages(): Observable<MessageDto> {
-    return this.socket.fromEvent<MessageDto>("newMessage").pipe(
+  getNewMessages(): Observable<IMessage> {
+    return this.socket.fromEvent<IMessage>("newMessage").pipe(
       map(
         message => ({
           ...message,
-          senderAvatar: `${environment.server}/${message.senderAvatar}`
+          sender: {
+            avatar: `${environment.server}/${message.sender.avatar}`
+          }
         })
       )
     );
@@ -88,14 +90,16 @@ export class ChatService {
     );
   }
 
-  getMessagesByRoomId(roomChatId: string): Observable<MessageDto[]> {
-    return this.httpClient.get<MessageDto[]>(`api/chat/${roomChatId}`).pipe(
+  getMessagesByRoomId(roomChatId: string): Observable<IMessage[]> {
+    return this.httpClient.get<IMessage[]>(`api/chat/${roomChatId}`).pipe(
       map(
         response => {
           return response.map(
             message => ({
               ...message,
-              senderAvatar: `${environment.server}/${message.senderAvatar}`
+              sender: {
+                avatar: `${environment.server}/${message.sender.avatar}`
+              }
             })
           )
         }

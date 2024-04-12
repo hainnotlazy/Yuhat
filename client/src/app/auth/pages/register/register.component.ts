@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { RegisterFormValidator } from 'src/app/common/validators/register-form.validator';
-import { RegisterUserDto } from 'src/app/dtos/auth.dto';
+import { IRegisterUser } from 'src/app/common/models/auth.dto';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -84,7 +84,7 @@ export class RegisterComponent {
     }
 
     if (this.registerForm.valid) {
-      this.authService.register(this.registerForm.value as RegisterUserDto).subscribe(
+      this.authService.register(this.registerForm.value as IRegisterUser).subscribe(
         () => {
           // If user register with email, redirect to verify page.
           if (this.registerForm.get("email")?.value) {
