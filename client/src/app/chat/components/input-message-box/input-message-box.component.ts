@@ -39,7 +39,8 @@ export class InputMessageBoxComponent implements AfterViewInit {
 
   onSendMessage() {
     if (this.messageInput.valid && !!this.messageInput.value?.trim()) {
-      this.chatService.sendMessage(this.selectedRoomChat.id , this.messageInput.value);
+      const msg = this.messageInput.value.split("\n").join("<br>");
+      this.chatService.sendMessage(this.selectedRoomChat.id, msg);
       this.resetInput();
     } else if (!this.messageInput.value?.trim()) {
       this.resetInput();

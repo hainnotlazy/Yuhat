@@ -12,8 +12,8 @@
         'bg-second rounded-tl-none': !message.sentByCurrentUser,
         'bg-fourth rounded-tr-none': message.sentByCurrentUser
       }"
+      [innerHTML]="message.content"
       class="p-2 rounded-lg">
-      {{ message.content }}
     </p>
     <small [class]="{'text-end': message.sentByCurrentUser}"
     class="block py-1">{{ message.sentAt | date:"h:m EEEE" }}</small>

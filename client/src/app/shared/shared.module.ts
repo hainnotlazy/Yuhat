@@ -17,7 +17,7 @@ import { TimeGapPipe } from './pipes/time-gap.pipe';
 @NgModule({
   declarations: [
     CountdownPipe,
-    TimeGapPipe
+    TimeGapPipe,
   ],
   imports: [
     CommonModule,
@@ -46,7 +46,7 @@ import { TimeGapPipe } from './pipes/time-gap.pipe';
     RecaptchaModule,
     RecaptchaFormsModule,
     CountdownPipe,
-    TimeGapPipe
+    TimeGapPipe,
   ],
   providers: [
     {

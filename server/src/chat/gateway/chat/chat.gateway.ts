@@ -44,25 +44,25 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('sendMessage')
   async sendMessage(socket: Socket, payload: {roomChatId: string, content: string}) {
-    const { roomChatId, content } = payload;
-    const user = socket.data.user;
-    const { participants, newMessage } = await this.chatService.createNewMessage(user, {roomChatId, content});
+    // const { roomChatId, content } = payload;
+    // const user = socket.data.user;
+    // const { participants, newMessage } = await this.chatService.createNewMessage(user, {roomChatId, content});
 
-    for (let participant of participants) {
-      const participantId = participant.userId;
-      const participantSocketId = await this.redisService.getValue(participantId);
+    // for (let participant of participants) {
+    //   const participantId = participant.userId;
+    //   const participantSocketId = await this.redisService.getValue(participantId);
 
-      if (participantSocketId) {
-        this.server.to(participantSocketId).emit("newMessage", {
-          roomChatId,
-          sender: newMessage.sender.username,
-          senderAvatar: newMessage.sender.avatar,
-          sentAt: newMessage.createdAt,
-          content: newMessage.content,
-          sentByCurrentUser: participantId === user.id
-        })
-      } 
-    }
+    //   if (participantSocketId) {
+    //     this.server.to(participantSocketId).emit("newMessage", {
+    //       roomChatId,
+    //       sender: newMessage.sender.username,
+    //       senderAvatar: newMessage.sender.avatar,
+    //       sentAt: newMessage.createdAt,
+    //       content: newMessage.content,
+    //       sentByCurrentUser: participantId === user.id
+    //     })
+    //   } 
+    // }
   }
 
   private disconnectSocket(socket: Socket) {
