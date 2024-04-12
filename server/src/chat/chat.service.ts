@@ -21,7 +21,7 @@ export class ChatService {
     private dataSource: DataSource
   ) {}
 
-  async createNewMessage(sender: User, newMessageDto: NewMessageDto, attachments: Array<Express.Multer.File>) {
+  async createNewMessage(sender: User, newMessageDto: NewMessageDto, attachments: Array<Express.Multer.File> = []) {
     const { roomChatId, content } = newMessageDto;
 
     const roomChat = await this.roomChatService.findRoomAndParticipants(roomChatId);
@@ -92,6 +92,7 @@ export class ChatService {
       .leftJoin("message.sender", "sender")
       .leftJoin("message.attachments", "attachments")
       .where("message.room = :roomId", {roomId: roomChatId})
+      .orderBy("message.createdAt", "ASC")
       .getMany();
     
     messages.map((message: any) => {

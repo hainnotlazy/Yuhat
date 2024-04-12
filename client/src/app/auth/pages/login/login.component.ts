@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
-import { ILoginUser } from 'src/app/common/models/auth.dto';
+import { ILoginUser } from 'src/app/common/models/auth.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({

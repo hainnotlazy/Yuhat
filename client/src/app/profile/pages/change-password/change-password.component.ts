@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IChangePassword } from 'src/app/common/models/user.dto';
+import { IChangePassword } from 'src/app/common/models/user.model';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { RegisterFormValidator } from 'src/app/common/validators/register-form.validator';
 import { UsersService } from 'src/app/services/users.service';

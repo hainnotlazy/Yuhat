@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ILoginUser, IRegisterUser } from '../common/models/auth.dto';
+import { ILoginUser, IRegisterUser } from '../common/models/auth.model';
 import { IAuthResponse, IErrorResponse } from './../common/interfaces/response.interface';
 import { catchError, tap } from 'rxjs';
 import { setAccessToken } from "../common/utils/local-storage.utl"

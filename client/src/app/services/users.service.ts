@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IChangePassword, IUser } from '../common/models/user.dto';
+import { IChangePassword, IUser } from '../common/models/user.model';
 import { catchError, map, of, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { IErrorResponse } from '../dtos/auth.dto';
+import { IErrorResponse } from '../common/interfaces/response.interface';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment.development';
 

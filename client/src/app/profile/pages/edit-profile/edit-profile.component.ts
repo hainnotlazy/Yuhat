@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IUser } from 'src/app/common/models/user.dto';
+import { IUser } from 'src/app/common/models/user.model';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { UsersService } from 'src/app/services/users.service';
 import { environment } from 'src/environments/environment.development';

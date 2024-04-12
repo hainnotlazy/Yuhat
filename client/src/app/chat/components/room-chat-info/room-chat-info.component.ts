@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
+import { IRoomChat } from 'src/app/common/models/room-chat.model';
 
 @Component({
   selector: 'app-room-chat-info',
@@ -7,7 +7,7 @@ import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
   styleUrls: ['./room-chat-info.component.scss']
 })
 export class RoomChatInfoComponent {
-  @Input() selectedRoomChat!: RoomChatDto;
+  @Input() selectedRoomChat!: IRoomChat;
 
   @ViewChild("roomChatInfoSidebar") roomChatInfoSidebarRef!: ElementRef;
 

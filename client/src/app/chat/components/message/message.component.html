@@ -1,11 +1,11 @@
-<!-- <div
+<div
   [class]="{'justify-end': message.sentByCurrentUser}"
   class="flex items-start gap-2">
   <img
     *ngIf="!message.sentByCurrentUser"
     class="max-w-8 border-2 border-black rounded-full"
-    [src]="message.senderAvatar"
-    [alt]="message.sender">
+    [src]="message.sender.avatar"
+    [alt]="message.sender.fullname">
   <div style="max-width: 60%;">
     <p
       [ngClass]="{
@@ -16,6 +16,6 @@
       class="p-2 rounded-lg">
     </p>
     <small [class]="{'text-end': message.sentByCurrentUser}"
-    class="block py-1">{{ message.sentAt | date:"h:m EEEE" }}</small>
+    class="block py-1">{{ message.createdAt | date:"H:m EEEE" }}</small>
   </div>
-</div> -->
+</div>

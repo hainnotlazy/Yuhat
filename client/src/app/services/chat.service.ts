@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Socket } from 'ngx-socket-io';
 import { Observable, catchError, map, of, tap } from 'rxjs';
-import { RoomChatDto } from '../dtos/room-chat.dto';
 import { environment } from 'src/environments/environment.development';
-import { IMessage } from '../dtos/message.dto';
+import { IRoomChat } from '../common/models/room-chat.model';
+import { IMessage } from '../common/models/message.model';
 
 @Injectable({
   providedIn: 'root'
@@ -38,17 +38,6 @@ export class ChatService {
     );
   }
 
-  getMessage() {
-    return this.socket.fromEvent("message").pipe(
-      map(
-        (data: any) => {
-          console.log(data);
-          return data;
-        }
-      )
-    )
-  }
-
   createNewRoomChat(userId: string) {
     return this.httpClient.post("api/room-chat/personal-chat", {
       userId
@@ -72,14 +61,20 @@ export class ChatService {
     )
   }
 
-  getAllRoomChats(): Observable<RoomChatDto[]> {
-    return this.httpClient.get<RoomChatDto[]>("api/room-chat").pipe(
+  getAllRoomChats(): Observable<IRoomChat[]> {
+    return this.httpClient.get<IRoomChat[]>("api/room-chat").pipe(
       map(
         response => {
           return response.map(
             roomChat => ({
               ...roomChat,
-              participantAvatar: `${environment.server}/${roomChat.participantAvatar}`
+              participants: roomChat.participants.map(participant => ({
+                ...participant,
+                user: {
+                  ...participant.user,
+                  avatar: `${environment.server}/${participant.user.avatar}`
+                }
+              }))
             })
           )
         }

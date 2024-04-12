@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { fromEvent, tap } from 'rxjs';
-import { RoomChatDto } from 'src/app/dtos/room-chat.dto';
+import { IRoomChat } from 'src/app/common/models/room-chat.model';
 import { ChatService } from 'src/app/services/chat.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { ChatService } from 'src/app/services/chat.service';
   styleUrls: ['./input-message-box.component.scss']
 })
 export class InputMessageBoxComponent implements AfterViewInit {
-  @Input() selectedRoomChat!: RoomChatDto;
+  @Input() selectedRoomChat!: IRoomChat;
 
   @ViewChild("input") inputRef!: ElementRef;
   inputInitialHeight = 40;

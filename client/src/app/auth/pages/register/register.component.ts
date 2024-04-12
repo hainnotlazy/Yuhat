@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { RegisterFormValidator } from 'src/app/common/validators/register-form.validator';
-import { IRegisterUser } from 'src/app/common/models/auth.dto';
+import { IRegisterUser } from 'src/app/common/models/auth.model';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({

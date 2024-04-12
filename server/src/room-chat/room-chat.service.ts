@@ -19,18 +19,10 @@ export class RoomChatService {
 
   async findAllRoomChat(userId: string) {
     return this.roomChatRepository.createQueryBuilder("roomChat")
-      .select([
-        "roomChat.id as id", 
-        "roomChat.type as type", 
-        'users.id as "participantId"', 
-        'users.fullname as "participantName"', 
-        'users.avatar as "participantAvatar"', 
-        'messages.content as "latestMessage"',
-        'messages."createdAt" as "latestMessageSentAt"'
-      ])
       .leftJoin('roomChat.messages', "messages")
       .leftJoin("roomChat.participants", "participants")
       .leftJoin("participants.user", "users")
+      .leftJoin("messages.attachments", "attachments")
       .where(`messages.id in 
         (select subquery.id 
         from (select id, row_number() over (partition by "roomId" order by "createdAt" desc) as rn 
@@ -46,26 +38,42 @@ export class RoomChatService {
       }).setParameter("participantId", userId)
       .andWhere('users.id != :userId', {userId})
       .orderBy('messages."createdAt"', "DESC")
-      .getRawMany();
+      .select([
+        'roomChat.id', 
+        'roomChat.type', 
+        'users.id', 
+        'users.username', 
+        'users.fullname', 
+        'users.avatar', 
+        'participants.role',
+        'messages.content',
+        'messages.createdAt',
+        'attachments.filePath',
+      ])
+      .getMany();
   }
 
   async findOneById(userId: string, id: string) {
     return this.roomChatRepository.createQueryBuilder("roomChat")
-    .select([
-      "roomChat.id as id", 
-      "roomChat.type as type", 
-      'users.id as "participantId"', 
-      'users.fullname as "participantName"', 
-      'users.avatar as "participantAvatar"', 
-      'messages.content as "latestMessage"',
-      'messages."createdAt" as "latestMessageSentAt"'
-    ])
-    .leftJoin('roomChat.messages', "messages")
-    .leftJoin("roomChat.participants", "participants")
-    .leftJoin("participants.user", "users")
-    .where("roomChat.id = :roomChatId", {roomChatId: id})
-    .andWhere("users.id != :userId", {userId})
-    .getRawOne();
+      // .leftJoin('roomChat.messages', "messages")
+      .leftJoin("roomChat.participants", "participants")
+      .leftJoin("participants.user", "users")
+      // .leftJoin("messages.attachments", "attachments")
+      .where("roomChat.id = :roomChatId", {roomChatId: id})
+      .andWhere("users.id != :userId", {userId})
+      .select([
+        'roomChat.id', 
+        'roomChat.type', 
+        'users.id', 
+        'users.username', 
+        'users.fullname', 
+        'users.avatar', 
+        'participants.role',
+        // 'messages.content',
+        // 'messages.createdAt',
+        // 'attachments.filePath',
+      ])
+      .getOne();
   }
 
   /**
