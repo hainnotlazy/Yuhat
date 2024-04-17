@@ -7,14 +7,29 @@
     [src]="message.sender.avatar"
     [alt]="message.sender.fullname">
   <div style="max-width: 60%;">
-    <p
+    <div
+      class="p-2 space-y-1 rounded-lg"
       [ngClass]="{
         'bg-second rounded-tl-none': !message.sentByCurrentUser,
         'bg-fourth rounded-tr-none': message.sentByCurrentUser
-      }"
-      [innerHTML]="message.content"
-      class="p-2 rounded-lg">
-    </p>
+      }">
+      <p [innerHTML]="message.content"></p>
+      <div *ngIf="message.attachments.length > 0"
+        [ngClass]="{
+          'grid-cols-1': message.attachments.length === 1,
+          'grid-cols-2': message.attachments.length === 2,
+          'grid-cols-3': message.attachments.length > 2
+        }"
+        class="grid gap-1">
+        <img
+          *ngFor="let attachment of message.attachments"
+          class="max-w-16 min-w-16 rounded-sm"
+          [src]="attachment.filePath"
+          alt="Attachment of message">
+      </div>
+    </div>
+
+
     <small [class]="{'text-end': message.sentByCurrentUser}"
     class="block py-1">{{ message.createdAt | date:"H:m EEEE" }}</small>
   </div>

@@ -20,6 +20,36 @@ export class InputMessageBoxComponent implements AfterViewInit {
     Validators.required,
   ]);
 
+  // Files upload
+  selectedFiles: File[] = [];
+  imageUrls: string[] = [];
+  filesInput = new FormControl(null);
+
+  onFileSelect(event: any) {
+    const files: File[] = event.target.files;
+    // this.selectedFiles = files;
+
+    // Read selected image files as data URLs
+    for (let file of files) {
+      this.selectedFiles.push(file);
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          // Push the data URL into the imageUrls array
+          this.imageUrls.push(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    this.filesInput.patchValue(this.selectedFiles as any)
+  }
+
+  popSelectedFile(index: number) {
+    this.imageUrls.splice(index, 1);
+    this.selectedFiles?.splice(index, 1);
+    this.filesInput.patchValue(this.selectedFiles as any);
+  }
+
   constructor(private chatService: ChatService) {}
 
   ngAfterViewInit() {
@@ -40,7 +70,9 @@ export class InputMessageBoxComponent implements AfterViewInit {
   onSendMessage() {
     if (this.messageInput.valid && !!this.messageInput.value?.trim()) {
       const msg = this.messageInput.value.split("\n").join("<br>");
-      this.chatService.sendMessage(this.selectedRoomChat.id, msg);
+
+      this.chatService.sendMessage(this.selectedRoomChat.id, msg, this.selectedFiles);
+
       this.resetInput();
     } else if (!this.messageInput.value?.trim()) {
       this.resetInput();

@@ -21,3 +21,9 @@ Flows
 
 - Bot Chat (1 vs Bot)
 
+
+- Functions need to do
+  - Send attachments
+  - View profile
+  - Group chat
+  - Bot chat

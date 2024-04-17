@@ -5,6 +5,7 @@ import { IMessage } from 'src/app/common/models/message.model';
 import { IRoomChat } from 'src/app/common/models/room-chat.model';
 import { ChatService } from 'src/app/services/chat.service';
 import { RoomChatService } from 'src/app/services/room-chat.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-dashboard',
@@ -43,7 +44,20 @@ export class DashboardComponent implements OnInit {
                   this.scrollToBottom()
                 }
                 return messages;
-              })
+              }),
+              map(
+                messages => messages.map(
+                  message => ({
+                    ...message,
+                    attachments: message.attachments.map(
+                      attachment => ({
+                        ...attachment,
+                        filePath: `${environment.server}/${attachment.filePath}`
+                      })
+                    )
+                  })
+                )
+              )
             )
           },
           () => this.router.navigate(["/chat"])

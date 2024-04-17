@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit {
         if (data.avatar) {
           this.avatar = data.avatar?.includes("https") ? data.avatar : `${environment.server}/${data.avatar}`;
         } else {
-          this.avatar = `${environment.server}/public/default-avatar.jpg`
+          this.avatar = `${environment.server}/public/avatars/default-avatar.jpg`
         }
       }
     )

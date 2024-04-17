@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Socket } from 'ngx-socket-io';
-import { Observable, catchError, map, of, tap } from 'rxjs';
+import { Observable, buffer, catchError, map, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { IRoomChat } from '../common/models/room-chat.model';
 import { IMessage } from '../common/models/message.model';
@@ -18,11 +18,27 @@ export class ChatService {
     private snackbar: MatSnackBar
   ) { }
 
-  sendMessage(roomChatId: string, message: string) {
-    this.socket.emit("sendMessage", {
-      roomChatId,
-      content: message
-    });
+  sendMessage(roomChatId: string, message: string, attachments?: File[]) {
+    if (attachments && attachments.length > 0) {
+      const attachmentsFile = [];
+      for (let attachment of attachments) {
+        attachmentsFile.push({
+          name: attachment.name,
+          buffer: attachment
+        })
+      }
+
+      this.socket.emit("sendMessage", {
+        roomChatId,
+        content: message,
+        attachments: attachmentsFile
+      });
+    } else {
+      this.socket.emit("sendMessage", {
+        roomChatId,
+        content: message,
+      });
+    }
   }
 
   getNewMessages(): Observable<IMessage> {

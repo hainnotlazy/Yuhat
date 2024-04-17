@@ -3,6 +3,7 @@ import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGa
 import { Server, Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
 import { ChatService } from 'src/chat/chat.service';
+import { Attachment } from 'src/chat/dtos/attachment.dto';
 import { RedisService } from 'src/shared/services/redis/redis.service';
 
 @WebSocketGateway({ cors: { origin: ["http://localhost:4200"] } })
@@ -37,16 +38,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     socket.disconnect();
   }
 
-  @SubscribeMessage('message')
-  handleMessage(client: any, payload: any) {
-    this.server.emit('message', "hello angular")
-  }
-
   @SubscribeMessage('sendMessage')
-  async sendMessage(socket: Socket, payload: {roomChatId: string, content: string}) {
-    const { roomChatId, content } = payload;
+  async sendMessage2(socket: Socket, payload: {roomChatId: string, content: string, attachments?: Attachment[]}) {
+    const { roomChatId, content, attachments } = payload;
     const user = socket.data.user;
-    const { participants, newMessage } = await this.chatService.createNewMessage(user, {roomChatId, content});
+    const { participants, newMessage } = await this.chatService.createNewMessage(user, {roomChatId, content}, attachments);
 
     for (let participant of participants) {
       const participantId = participant.userId;

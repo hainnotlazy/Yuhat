@@ -8,6 +8,7 @@ import { RoomChatService } from 'src/room-chat/room-chat.service';
 import { RoomChatParticipant } from 'src/entities/room-chat-participant.entity';
 import { MessageAttachment } from 'src/entities/message-attachment.entity';
 import { UploadFileService } from 'src/shared/services/upload-file/upload-file.service';
+import { Attachment } from './dtos/attachment.dto';
 
 @Injectable()
 export class ChatService {
@@ -21,7 +22,7 @@ export class ChatService {
     private dataSource: DataSource
   ) {}
 
-  async createNewMessage(sender: User, newMessageDto: NewMessageDto, attachments: Array<Express.Multer.File> = []) {
+  async createNewMessage(sender: User, newMessageDto: NewMessageDto, attachments: Attachment[] = []) {
     const { roomChatId, content } = newMessageDto;
 
     const roomChat = await this.roomChatService.findRoomAndParticipants(roomChatId);
