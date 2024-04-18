@@ -9,6 +9,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { TooltipPosition, MatTooltipModule } from '@angular/material/tooltip';
 import { RecaptchaModule, RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS, RecaptchaSettings, RecaptchaFormsModule } from 'ng-recaptcha';
 import { environment } from 'src/environments/environment.development';
 import { CountdownPipe } from './pipes/countdown.pipe';
@@ -30,6 +31,7 @@ import { TimeGapPipe } from './pipes/time-gap.pipe';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSnackBarModule,
+    MatTooltipModule,
     RecaptchaModule,
     RecaptchaFormsModule
   ],
@@ -43,6 +45,7 @@ import { TimeGapPipe } from './pipes/time-gap.pipe';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSnackBarModule,
+    MatTooltipModule,
     RecaptchaModule,
     RecaptchaFormsModule,
     CountdownPipe,

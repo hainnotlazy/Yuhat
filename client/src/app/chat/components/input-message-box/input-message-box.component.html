@@ -2,16 +2,34 @@
   <button>
     <i class="icon-add-circle text-secondary hover:text-primary text-2xl"></i>
   </button>
-  <button>
-    <i class="icon-attach-file text-secondary hover:text-primary text-2xl"></i>
+  <button type="button">
+    <label for="input-files" class="cursor-pointer">
+      <i class="icon-attach-file text-secondary hover:text-primary text-2xl"></i>
+    </label>
   </button>
   <div class="flex flex-col flex-grow gap-2">
-    <div class="flex flex-wrap gap-4">
-      <ng-container *ngFor="let imageUrl of imageUrls; let i = index">
+    <div
+      [ngClass]="{ 'hidden': selectedFiles.length === 0 }"
+      class="max-h-60 flex flex-wrap gap-4 pt-2 overflow-y-auto">
+      <ng-container *ngFor="let file of filesForPreview; let i = index">
+        <div
+          [matTooltip]="file"
+          matTooltipPosition="above"
+          class="max-w-14 min-w-14 flex items-center justify-center border-2 border-gray-400 border-dashed rounded-md">
+          <i [ngClass]="{
+            'icon-word text-blue-700': file.endsWith('.doc'),
+            'icon-pdf text-red-600': file.endsWith('.pdf'),
+            'icon-zip text-yellow-400': file.endsWith('.rar') || file.endsWith('.zip')
+          }"
+          class="text-3xl"></i>
+        </div>
+      </ng-container>
+
+      <ng-container *ngFor="let image of imagesForPreview; let i = index">
         <div class="relative">
           <img
           class="max-w-14 border-2 border-gray-400 border-dashed rounded-md"
-          [src]="imageUrl"
+          [src]="image"
           alt="">
           <button
             type="button"
@@ -21,10 +39,13 @@
           </button>
         </div>
       </ng-container>
+
       <button class="min-w-14 min-h-14 relative border-2 border-gray-400 border-dashed rounded-md">
         <input class="absolute top-0 bottom-0 left-0 right-0 w-full h-full opacity-0 cursor-pointer"
+          id="input-files"
           type="file"
           accept="image/*, .pdf, .doc, .docx, .rar, .zip"
+          [formControl]="filesInput"
           (change)="onFileSelect($event)"
           multiple>
         <i class="icon-add-circle text-xl text-gray-500"></i>
@@ -39,9 +60,9 @@
       placeholder="Aa"></textarea>
   </div>
 
-  <button [disabled]="!messageInput.valid" (click)="onSendMessage()">
+  <button [disabled]="!messageInput.valid && selectedFiles.length === 0" (click)="onSendMessage()">
     <i
-      [ngClass]="messageInput.valid ? 'text-first hover:text-primary' : 'text-gray-400'"
+      [ngClass]="messageInput.valid || selectedFiles.length > 0 ? 'text-first hover:text-primary' : 'text-gray-400'"
       class="icon-send text-2xl">
     </i>
   </button>

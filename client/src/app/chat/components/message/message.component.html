@@ -14,21 +14,29 @@
         'bg-fourth rounded-tr-none': message.sentByCurrentUser
       }">
       <p [innerHTML]="message.content"></p>
-      <div *ngIf="message.attachments.length > 0"
-        [ngClass]="{
-          'grid-cols-1': message.attachments.length === 1,
-          'grid-cols-2': message.attachments.length === 2,
-          'grid-cols-3': message.attachments.length > 2
-        }"
-        class="grid gap-1">
-        <img
-          *ngFor="let attachment of message.attachments"
-          class="max-w-16 min-w-16 rounded-sm"
-          [src]="attachment.filePath"
-          alt="Attachment of message">
+      <div class="grid grid-cols-3 gap-2">
+        <ng-container *ngFor="let attachment of message.attachments">
+          <ng-container *ngIf="isFile(attachment.filePath); else imageAttachment">
+            <div class="bg-slate-50 flex items-center justify-between gap-2 px-4 py-2.5 rounded-md col-span-3">
+              <i [ngClass]="{
+                'icon-word text-blue-700': attachment.filePath.endsWith('.doc'),
+                'icon-pdf text-red-600': attachment.filePath.endsWith('.pdf'),
+                'icon-zip text-yellow-400': attachment.filePath.endsWith('.zip') || attachment.filePath.endsWith('.rar')
+              }"
+              class="text-xl"></i>
+              <p>{{ getFileName(attachment.filePath) }}</p>
+              <i class="icon-download"></i>
+            </div>
+          </ng-container>
+          <ng-template #imageAttachment>
+            <img
+            class="max-w-16 min-w-16 rounded-sm"
+            [src]="attachment.filePath"
+            alt="Attachment of message">
+          </ng-template>
+        </ng-container>
       </div>
     </div>
-
 
     <small [class]="{'text-end': message.sentByCurrentUser}"
     class="block py-1">{{ message.createdAt | date:"H:m EEEE" }}</small>

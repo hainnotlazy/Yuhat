@@ -6,7 +6,10 @@ import { ChatService } from 'src/chat/chat.service';
 import { Attachment } from 'src/chat/dtos/attachment.dto';
 import { RedisService } from 'src/shared/services/redis/redis.service';
 
-@WebSocketGateway({ cors: { origin: ["http://localhost:4200"] } })
+@WebSocketGateway({ 
+  cors: { origin: ["http://localhost:4200"] },
+  maxHttpBufferSize: 1e9 // ~100MB
+})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   
@@ -39,7 +42,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('sendMessage')
-  async sendMessage2(socket: Socket, payload: {roomChatId: string, content: string, attachments?: Attachment[]}) {
+  async sendMessage(socket: Socket, payload: {roomChatId: string, content: string, attachments?: Attachment[]}) {
     const { roomChatId, content, attachments } = payload;
     const user = socket.data.user;
     const { participants, newMessage } = await this.chatService.createNewMessage(user, {roomChatId, content}, attachments);

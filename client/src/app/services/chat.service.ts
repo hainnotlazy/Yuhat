@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Socket } from 'ngx-socket-io';
-import { Observable, buffer, catchError, map, of, tap } from 'rxjs';
+import { Observable, catchError, map, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { IRoomChat } from '../common/models/room-chat.model';
 import { IMessage } from '../common/models/message.model';
