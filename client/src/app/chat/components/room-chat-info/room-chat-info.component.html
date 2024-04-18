@@ -1,13 +1,23 @@
 <div class="bg-first text-white px-4 py-2.5 flex justify-between items-center shadow-lg">
   <div class="flex items-center justify-center gap-2">
-    <img
-    class="max-w-16 border-slate-700 border-2 rounded-full"
-    [src]="selectedRoomChat.participants[0].user.avatar"
-    [alt]="'Avatar of room chat ' + selectedRoomChat.id">
-    <div>
-      <h6 class="text-lg font-semibold">{{ selectedRoomChat.participants[0].user.fullname }}</h6>
-      <p>Online</p>
-    </div>
+    <ng-container *ngIf="selectedRoomChat.type === 'personal'">
+      <img
+      class="max-w-16 border-slate-700 border-2 rounded-full"
+      [src]="selectedRoomChat.participants[0].user.avatar"
+      [alt]="'Avatar of room chat ' + selectedRoomChat.id">
+      <div>
+        <h6 class="text-lg font-semibold">{{ selectedRoomChat.participants[0].user.fullname }}</h6>
+        <p>Online</p>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="selectedRoomChat.type === 'group'">
+      <img
+      class="max-w-16 border-slate-700 border-2 rounded-full"
+      [src]="selectedRoomChat.avatar"
+      [alt]="'Avatar of room chat ' + selectedRoomChat.id">
+      <h6 class="text-lg font-semibold">{{ selectedRoomChat.name }}</h6>
+    </ng-container>
   </div>
 
   <div class="z-20">

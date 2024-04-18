@@ -7,7 +7,7 @@ import { Attachment } from 'src/chat/dtos/attachment.dto';
 import { RedisService } from 'src/shared/services/redis/redis.service';
 
 @WebSocketGateway({ 
-  cors: { origin: ["http://localhost:4200"] },
+  cors: { origin: "*" },
   maxHttpBufferSize: 1e9 // ~100MB
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -22,7 +22,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleConnection(socket: Socket) {
     try {
       const user = await this.authService.getUserFromJwtToken(socket.handshake.headers.authorization);
-      
       if (!user) {
         this.disconnectSocket(socket);
       }

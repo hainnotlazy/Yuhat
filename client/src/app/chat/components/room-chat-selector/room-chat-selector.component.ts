@@ -22,6 +22,8 @@ export class RoomChatSelectorComponent {
         ) {
           roomChats.push({
             id: this.selectedRoomChat?.id as string,
+            name: this.selectedRoomChat?.name as string,
+            avatar: this.selectedRoomChat?.avatar as string,
             type: this.selectedRoomChat?.type as string,
             participants: this.selectedRoomChat?.participants as IRoomChatParticipant[],
             messages: [newMessage]

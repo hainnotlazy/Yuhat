@@ -23,7 +23,7 @@ Flows
 
 
 - Functions need to do
-  - Send attachments
+  - Send attachments (x)
   - View profile
   - Group chat
   - Bot chat

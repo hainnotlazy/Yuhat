@@ -38,6 +38,7 @@ export class UsersService {
 
   async createUser(newUser: Partial<User>) {
     const hashedPassword = bcrypt.hashSync(newUser.password, SaltRounds);
+    // FIXME: Correct default avatar path to public/avatar/default-avatar.jpg
     const user = this.userRepository.create({
       ...newUser,
       password: hashedPassword,

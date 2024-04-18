@@ -20,6 +20,12 @@ export class RoomChat {
   })
   type: string;
 
+  @Column({ nullable: true })
+  name: string;
+
+  @Column({ nullable: true })
+  avatar: string;
+
   @OneToMany(() => RoomChatParticipant, participants => participants.roomChat)
   participants: RoomChatParticipant[];
 

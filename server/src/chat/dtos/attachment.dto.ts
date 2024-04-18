@@ -1,4 +1,4 @@
 export class Attachment {
   name: string;
-  buffer: any;
+  buffer: Buffer;
 }

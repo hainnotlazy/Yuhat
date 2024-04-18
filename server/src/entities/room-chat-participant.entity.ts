@@ -4,7 +4,7 @@ import { User } from "./user.entity";
 
 enum ParticipantRole {
   "OWNER" = "owner",
-  "MODERATOR" = "moderator",
+  // "MODERATOR" = "moderator",
   "MEMBER" = "member"
 }
 

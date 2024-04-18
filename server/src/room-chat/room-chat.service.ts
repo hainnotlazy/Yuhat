@@ -40,6 +40,8 @@ export class RoomChatService {
       .orderBy('messages."createdAt"', "DESC")
       .select([
         'roomChat.id', 
+        'roomChat.name', 
+        'roomChat.avatar', 
         'roomChat.type', 
         'users.id', 
         'users.username', 
@@ -63,6 +65,8 @@ export class RoomChatService {
       .andWhere("users.id != :userId", {userId})
       .select([
         'roomChat.id', 
+        'roomChat.name', 
+        'roomChat.avatar', 
         'roomChat.type', 
         'users.id', 
         'users.username', 
@@ -116,6 +120,43 @@ export class RoomChatService {
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException("Failed when creating personal room chat!");
+    } finally {
+      await queryRunner.release();
+    }
+  }
+
+  async retrieveOrCreateGroupChat(roomChatName: string, userIds: string[]) {
+    if (userIds.length < 2) throw new BadRequestException("Must include at least 1 user");
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      const roomChat = this.roomChatRepository.create({
+        name: roomChatName,
+        avatar: "public/avatars/default-group-chat.jpg",
+        type: "group",
+      });
+      const savedRoomChat = await queryRunner.manager.save(RoomChat, roomChat);
+
+      for (let userId of userIds) {
+        const user = await this.usersService.findOneByProperty({property: "id", value: userId});
+
+        if (!user) throw new NotFoundException("User not found!");
+
+        const participant = this.roomChatParticipantRepository.create({
+          user: user,
+          roomChat: savedRoomChat,
+          role: "owner"
+        })
+        await queryRunner.manager.save(RoomChatParticipant, participant);
+      }
+      await queryRunner.commitTransaction();
+      return savedRoomChat;
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException("Failed when creating group chat!");
     } finally {
       await queryRunner.release();
     }

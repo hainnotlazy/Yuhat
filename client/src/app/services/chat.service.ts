@@ -84,6 +84,7 @@ export class ChatService {
           return response.map(
             roomChat => ({
               ...roomChat,
+              avatar: `${environment.server}/${roomChat.avatar}`,
               participants: roomChat.participants.map(participant => ({
                 ...participant,
                 user: {

@@ -17,13 +17,11 @@ export class ChatController {
     return this.chatService.getMessagesByRoom(currentUser.id, roomId);
   }
 
-  // @Post()
-  // @UseInterceptors(FilesInterceptor("attachments"))
-  // createNewMessage(
-  //   @CurrentUser() currentUser: User, 
-  //   @Body() body: NewMessageDto, 
-  //   @UploadedFiles() attachments: Array<Express.Multer.File> = []) {
+  @Post()
+  createNewMessage(
+    @CurrentUser() currentUser: User, 
+    @Body() body: NewMessageDto) {
       
-  //   return this.chatService.createNewMessage(currentUser, body, attachments);
-  // }
+    return this.chatService.createNewMessage(currentUser, body);
+  }
 }

@@ -3,6 +3,8 @@ import { IUser } from "./user.model";
 
 export interface IRoomChat {
   id: string;
+  name: string;
+  avatar: string;
   type: string;
   createdAt?: Date;
   updatedAt?: Date;

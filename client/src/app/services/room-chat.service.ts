@@ -17,6 +17,7 @@ export class RoomChatService {
       map(
         data => ({
           ...data,
+          avatar: `${environment.server}/${data.avatar}`,
           participants: data.participants.map(participant => ({
             ...participant,
             user: {
