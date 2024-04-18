@@ -23,6 +23,7 @@ export class InputMessageBoxComponent implements AfterViewInit {
 
   // Files upload
   selectedFiles: File[] = [];
+  filesForPreview: string[] = [];
 
   // Used for preview after uploaded
   fileTypesAllowed: string[] = [
@@ -31,8 +32,6 @@ export class InputMessageBoxComponent implements AfterViewInit {
     "application/x-zip-compressed",
     "application/x-compressed"
   ];
-  filesForPreview: string[] = [];
-  imagesForPreview: string[] = [];
 
   constructor(private chatService: ChatService) {}
 
@@ -60,21 +59,20 @@ export class InputMessageBoxComponent implements AfterViewInit {
         const reader = new FileReader();
         reader.onload = () => {
           // Push the data URL into the imageUrls array
-          this.imagesForPreview.push(reader.result as string);
+          this.filesForPreview.push(reader.result as string);
+          this.selectedFiles.push(file);
         };
         reader.readAsDataURL(file);
       } else if (this.fileTypesAllowed.includes(file.type)) {
         const fileName = file.name;
         this.filesForPreview.push(fileName);
-      } else {
-        return;
+        this.selectedFiles.push(file);
       }
-      this.selectedFiles.push(file);
     }
   }
 
   popSelectedFile(index: number) {
-    this.imagesForPreview.splice(index, 1);
+    this.filesForPreview.splice(index, 1);
     this.selectedFiles?.splice(index, 1);
   }
 
@@ -97,7 +95,6 @@ export class InputMessageBoxComponent implements AfterViewInit {
   private resetInput() {
     setTimeout(() => {
       this.selectedFiles = [];
-      this.imagesForPreview = [];
       this.filesForPreview = [];
       this.filesInput.reset();
       this.messageInput.reset();

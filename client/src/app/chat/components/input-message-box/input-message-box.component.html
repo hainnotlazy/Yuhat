@@ -11,33 +11,41 @@
     <div
       [ngClass]="{ 'hidden': selectedFiles.length === 0 }"
       class="max-h-60 flex flex-wrap gap-4 pt-2 overflow-y-auto">
+
       <ng-container *ngFor="let file of filesForPreview; let i = index">
-        <div
+        <ng-container *ngIf="file.startsWith('data:image/'); else filePreview">
+          <div class="relative">
+            <img
+            class="max-w-14 border-2 border-gray-400 border-dashed rounded-md"
+            [src]="file"
+            alt="">
+            <button
+              type="button"
+              class="-top-2 -right-2 absolute px-1 bg-gray-300 rounded-full"
+              (click)="popSelectedFile(i)">
+              <i class="icon-close"></i>
+            </button>
+          </div>
+        </ng-container>
+        <ng-template #filePreview>
+          <div
           [matTooltip]="file"
           matTooltipPosition="above"
-          class="max-w-14 min-w-14 flex items-center justify-center border-2 border-gray-400 border-dashed rounded-md">
-          <i [ngClass]="{
-            'icon-word text-blue-700': file.endsWith('.doc'),
-            'icon-pdf text-red-600': file.endsWith('.pdf'),
-            'icon-zip text-yellow-400': file.endsWith('.rar') || file.endsWith('.zip')
-          }"
-          class="text-3xl"></i>
-        </div>
-      </ng-container>
-
-      <ng-container *ngFor="let image of imagesForPreview; let i = index">
-        <div class="relative">
-          <img
-          class="max-w-14 border-2 border-gray-400 border-dashed rounded-md"
-          [src]="image"
-          alt="">
-          <button
-            type="button"
-            class="-top-2 -right-2 absolute px-1 bg-gray-300 rounded-full"
-            (click)="popSelectedFile(i)">
-            <i class="icon-close"></i>
-          </button>
-        </div>
+          class="max-w-14 min-w-14 relative flex items-center justify-center border-2 border-gray-400 border-dashed rounded-md">
+            <i [ngClass]="{
+              'icon-word text-blue-700': file.endsWith('.doc'),
+              'icon-pdf text-red-600': file.endsWith('.pdf'),
+              'icon-zip text-yellow-400': file.endsWith('.rar') || file.endsWith('.zip')
+            }"
+            class="text-3xl"></i>
+            <button
+              type="button"
+              class="-top-2 -right-2 absolute px-1 bg-gray-300 rounded-full"
+              (click)="popSelectedFile(i)">
+              <i class="icon-close"></i>
+            </button>
+          </div>
+        </ng-template>
       </ng-container>
 
       <button class="min-w-14 min-h-14 relative border-2 border-gray-400 border-dashed rounded-md">
