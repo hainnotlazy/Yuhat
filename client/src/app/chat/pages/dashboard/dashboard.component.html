@@ -1,7 +1,17 @@
 <div class="md:flex-row relative flex flex-col h-full max-h-full gap-2">
   <div class="md:w-1/3 lg:w-1/4 md:max-h-full md:overflow-y-auto w-full px-2 space-y-4">
     <h4 class="mt-4 ml-4 text-xl font-semibold">Your chats</h4>
-    <app-live-search class="block"></app-live-search>
+    <div class="flex gap-2">
+      <app-live-search class="flex-grow block"></app-live-search>
+
+      <button
+        [matTooltip]="'Create group chat'"
+        [matTooltipPosition]="'above'"
+        (click)="openDialog()"
+        class="hover:border-blue-600 hover:text-blue-600 px-2 text-gray-600 border-2 border-gray-400 rounded-full">
+        <i class="icon-add-group text-2xl"></i>
+      </button>
+    </div>
 
     <div class="md:block md:py-0 flex py-2 overflow-x-auto">
       <app-room-chat-selector

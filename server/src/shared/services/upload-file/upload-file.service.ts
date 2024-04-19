@@ -6,14 +6,22 @@ import { Attachment } from 'src/chat/dtos/attachment.dto';
 @Injectable()
 export class UploadFileService {
   private readonly RESOURCES_PATH = "./resources";
+  private readonly AVATAR_PATH = "./resources/avatars"
   private readonly SERVE_PATH = "public"
 
   constructor(
 
   ) {}
 
-  async saveUserAvatar(avatar: Express.Multer.File) {
+  async saveAvatar(avatar: Express.Multer.File) {
+    if (!fs.existsSync(this.AVATAR_PATH)) {
+      fs.mkdirSync(this.AVATAR_PATH, { recursive: true });
+    }
+    const randomName = `${Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')}${path.extname(avatar.originalname)}`;
+    const filePath = `${this.AVATAR_PATH}/${randomName}`;
 
+    fs.writeFileSync(filePath, avatar.buffer);
+    return filePath.replace(this.AVATAR_PATH, `${this.SERVE_PATH}/avatars`);
   }
 
   saveChatAttachments(roomChatId: string, files: Attachment[]) {

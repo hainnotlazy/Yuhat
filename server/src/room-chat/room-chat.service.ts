@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IEntityProperty } from 'src/common/interfaces/entity-property.interface';
 import { RoomChatParticipant } from 'src/entities/room-chat-participant.entity';
 import { RoomChat } from 'src/entities/room-chat.entity';
+import { UploadFileService } from 'src/shared/services/upload-file/upload-file.service';
 import { UsersService } from 'src/users/users.service';
 import { DataSource, Repository } from 'typeorm';
 
@@ -14,7 +15,8 @@ export class RoomChatService {
     @InjectRepository(RoomChatParticipant)
     private roomChatParticipantRepository: Repository<RoomChatParticipant>,
     private dataSource: DataSource,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private uploadFileService: UploadFileService
   ) {}
 
   async findAllRoomChat(userId: string) {
@@ -125,7 +127,7 @@ export class RoomChatService {
     }
   }
 
-  async retrieveOrCreateGroupChat(roomChatName: string, userIds: string[]) {
+  async retrieveOrCreateGroupChat(roomChatName: string, userIds: string[], avatar: Express.Multer.File | undefined) {
     if (userIds.length < 2) throw new BadRequestException("Must include at least 1 user");
 
     const queryRunner = this.dataSource.createQueryRunner();
@@ -135,7 +137,7 @@ export class RoomChatService {
     try {
       const roomChat = this.roomChatRepository.create({
         name: roomChatName,
-        avatar: "public/avatars/default-group-chat.jpg",
+        avatar: avatar ? await this.uploadFileService.saveAvatar(avatar) : "public/avatars/default-group-chat.jpg",
         type: "group",
       });
       const savedRoomChat = await queryRunner.manager.save(RoomChat, roomChat);

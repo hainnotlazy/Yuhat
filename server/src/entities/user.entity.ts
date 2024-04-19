@@ -15,6 +15,7 @@ export class User {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
+  // FIXME: typeorm doesn't have min-maxlength
   @Column({ unique: true })
   @MinLength(5)
   @MaxLength(50)

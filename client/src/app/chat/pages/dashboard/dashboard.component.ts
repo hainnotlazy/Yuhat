@@ -6,6 +6,8 @@ import { IRoomChat } from 'src/app/common/models/room-chat.model';
 import { ChatService } from 'src/app/services/chat.service';
 import { RoomChatService } from 'src/app/services/room-chat.service';
 import { environment } from 'src/environments/environment.development';
+import { DialogCreateGroupChatComponent } from '../../components/dialog-create-group-chat/dialog-create-group-chat.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,8 +24,13 @@ export class DashboardComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private chatService: ChatService,
-    private roomChatService: RoomChatService
+    private roomChatService: RoomChatService,
+    private dialog: MatDialog
   ) {}
+
+  openDialog() {
+    this.dialog.open(DialogCreateGroupChatComponent, {});
+  }
 
   ngOnInit() {
     this.route.params.subscribe(

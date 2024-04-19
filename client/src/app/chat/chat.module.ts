@@ -10,6 +10,7 @@ import { InputMessageBoxComponent } from './components/input-message-box/input-m
 import { RoomChatInfoComponent } from './components/room-chat-info/room-chat-info.component';
 import { DefaultPageComponent } from './pages/default-page/default-page.component';
 import { LiveSearchComponent } from './components/live-search/live-search.component';
+import { DialogCreateGroupChatComponent } from './components/dialog-create-group-chat/dialog-create-group-chat.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { LiveSearchComponent } from './components/live-search/live-search.compon
     RoomChatInfoComponent,
     DefaultPageComponent,
     LiveSearchComponent,
+    DialogCreateGroupChatComponent,
   ],
   imports: [
     CommonModule,

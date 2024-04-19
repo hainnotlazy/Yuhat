@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from 'src/entities/user.entity';
 import { RoomChatService } from './room-chat.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('room-chat')
 export class RoomChatController {
@@ -24,8 +25,14 @@ export class RoomChatController {
   }
 
   @Post("group-chat")
-  retrieveOrCreateGroupChat(@CurrentUser() currentUser: User, @Body() body: { userId: string[], roomChatName: string }) {
+  @UseInterceptors(FileInterceptor("avatar"))
+  retrieveOrCreateGroupChat(
+    @CurrentUser() currentUser: User, 
+    @Body() body: { userId: string[], roomChatName: string }, 
+    @UploadedFile() avatar: Express.Multer.File
+  ) {
+    const usersId = typeof body.userId == "string" ? [body.userId] : body.userId;
     // FIXME: Create body by using class-validators
-    return this.roomChatService.retrieveOrCreateGroupChat(body.roomChatName, [currentUser.id, ...body.userId]);
+    return this.roomChatService.retrieveOrCreateGroupChat(body.roomChatName, [currentUser.id, ...usersId], avatar);
   }
 }

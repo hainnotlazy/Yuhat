@@ -25,5 +25,5 @@ Flows
 - Functions need to do
   - Send attachments (x)
   - View profile
-  - Group chat
+  - Group chat (x)
   - Bot chat

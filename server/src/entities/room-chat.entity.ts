@@ -20,7 +20,7 @@ export class RoomChat {
   })
   type: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 255 })
   name: string;
 
   @Column({ nullable: true })
