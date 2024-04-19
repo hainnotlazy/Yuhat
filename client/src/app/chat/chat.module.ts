@@ -11,6 +11,7 @@ import { RoomChatInfoComponent } from './components/room-chat-info/room-chat-inf
 import { DefaultPageComponent } from './pages/default-page/default-page.component';
 import { LiveSearchComponent } from './components/live-search/live-search.component';
 import { DialogCreateGroupChatComponent } from './components/dialog-create-group-chat/dialog-create-group-chat.component';
+import { DialogViewImageComponent } from './components/dialog-view-image/dialog-view-image.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { DialogCreateGroupChatComponent } from './components/dialog-create-group
     DefaultPageComponent,
     LiveSearchComponent,
     DialogCreateGroupChatComponent,
+    DialogViewImageComponent,
   ],
   imports: [
     CommonModule,

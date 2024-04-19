@@ -37,6 +37,7 @@ Flows
   - Redis for save access token
   - View image in large size
   - Check Online status of user
+  - Show new room chat when receive first msg
   - Download attachment (x)
   - Show name of sender in group chat (x)
   - Truncate chat (x)

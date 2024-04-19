@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { IMessage } from 'src/app/common/models/message.model';
+import { DialogViewImageComponent } from '../dialog-view-image/dialog-view-image.component';
 
 @Component({
   selector: 'app-message',
@@ -8,6 +10,9 @@ import { IMessage } from 'src/app/common/models/message.model';
 })
 export class MessageComponent {
   @Input() message!: IMessage;
+  @Input() roomChatType: string = "personal";
+
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit() {
     this.message.attachments.sort((a, b) => {
@@ -20,6 +25,15 @@ export class MessageComponent {
         return 1;
       }
       return 0;
+    })
+  }
+
+  viewImage(filePath: string) {
+    this.dialog.open(DialogViewImageComponent, {
+      data: {
+        filePath
+      },
+      height: "80%"
     })
   }
 

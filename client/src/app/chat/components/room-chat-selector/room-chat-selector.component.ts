@@ -15,11 +15,13 @@ export class RoomChatSelectorComponent {
   ]).pipe(
     map(([roomChats, newMessage]) => {
       if (newMessage) {
+        console.log(newMessage)
         // Handle if new msg is the first msg of roomChat
         if (
           !roomChats.find(roomChat => roomChat.id === newMessage.roomChat.id)
           && newMessage.roomChat.id === this.selectedRoomChat?.id
         ) {
+          console.log(newMessage)
           roomChats.push({
             id: this.selectedRoomChat?.id as string,
             name: this.selectedRoomChat?.name as string,

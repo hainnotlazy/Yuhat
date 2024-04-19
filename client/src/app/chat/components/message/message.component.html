@@ -7,7 +7,7 @@
     [src]="message.sender.avatar"
     [alt]="message.sender.fullname">
   <div style="max-width: 60%;">
-    <small *ngIf="!message.sentByCurrentUser" class="block py-1">
+    <small *ngIf="!message.sentByCurrentUser && roomChatType === 'group'" class="block py-1">
       {{ message.sender.fullname }}
     </small>
 
@@ -36,7 +36,8 @@
           </ng-container>
           <ng-template #imageAttachment>
             <img
-            class="max-w-16 min-w-16 rounded-sm"
+            class="max-w-16 min-w-16 rounded-sm cursor-pointer"
+            (click)="viewImage(attachment.filePath)"
             [src]="attachment.filePath"
             alt="Attachment of message">
           </ng-template>
