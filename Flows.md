@@ -27,3 +27,16 @@ Flows
   - View profile
   - Group chat (x)
   - Bot chat
+
+
+- Enhance
+  - Show connected 3rd parties in profile.
+  - Responsive UI
+  - View info room-chat of personal & group chat (x)
+    - Add & Remove & Update role of member 
+  - Redis for save access token
+  - View image in large size
+  - Check Online status of user
+  - Download attachment (x)
+  - Show name of sender in group chat (x)
+  - Truncate chat (x)

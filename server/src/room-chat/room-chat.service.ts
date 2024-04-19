@@ -25,6 +25,7 @@ export class RoomChatService {
       .leftJoin("roomChat.participants", "participants")
       .leftJoin("participants.user", "users")
       .leftJoin("messages.attachments", "attachments")
+      .leftJoin("messages.sender", "sender")
       .where(`messages.id in 
         (select subquery.id 
         from (select id, row_number() over (partition by "roomId" order by "createdAt" desc) as rn 
@@ -51,6 +52,7 @@ export class RoomChatService {
         'users.avatar', 
         'participants.role',
         'messages.content',
+        'sender.fullname',
         'messages.createdAt',
         'attachments.filePath',
       ])

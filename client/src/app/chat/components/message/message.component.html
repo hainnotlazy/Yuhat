@@ -29,7 +29,9 @@
               }"
               class="text-xl"></i>
               <p>{{ getFileName(attachment.filePath) }}</p>
-              <i class="icon-download"></i>
+              <a [href]="attachment.filePath" target="_blank">
+                <i class="icon-download"></i>
+              </a>
             </div>
           </ng-container>
           <ng-template #imageAttachment>

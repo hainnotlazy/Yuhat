@@ -47,6 +47,7 @@ export class ChatService {
         message => ({
           ...message,
           sender: {
+            fullname: message.sender.fullname,
             avatar: `${environment.server}/${message.sender.avatar}`
           }
         })

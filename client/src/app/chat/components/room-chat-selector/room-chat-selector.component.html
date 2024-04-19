@@ -3,23 +3,18 @@
   [routerLink]="'/chat/r/' + roomChat.id"
   class="flex items-center gap-3 px-4 py-2.5 cursor-pointer rounded-xl">
 
-  <ng-container *ngIf="roomChat.type === 'personal'; else groupChat">
-    <img class="max-w-20 border-slate-700 border-2 rounded-full" [src]="roomChat.participants[0].user.avatar"
-    [alt]="'Avatar of room chat' + roomChat.id">
+  <img class="max-w-20 border-slate-700 border-2 rounded-full"
+  [src]="roomChat.type === 'personal' ? roomChat.participants[0].user.avatar : roomChat.avatar"
+  [alt]="'Avatar of room chat' + roomChat.id">
 
-    <div class="md:block flex-grow hidden">
-      <h6 class="text-lg font-semibold">{{ roomChat.participants[0].user.fullname }}</h6>
-      <p>{{ roomChat.messages[0].content | truncate:20 }} · {{ roomChat.messages[0].createdAt | timeGap | async }}</p>
-    </div>
-  </ng-container>
-
-  <ng-template #groupChat>
-    <img class="max-w-20 border-slate-700 border-2 rounded-full" [src]="roomChat.avatar"
-    [alt]="'Avatar of room chat' + roomChat.id">
-
-    <div class="md:block flex-grow hidden">
-      <h6 class="text-lg font-semibold">{{ roomChat.name }}</h6>
-      <p>{{ roomChat.messages[0].content | truncate:20 }} · {{ roomChat.messages[0].createdAt | timeGap | async }}</p>
-    </div>
-  </ng-template>
+  <div class="md:block flex-grow hidden">
+    <h6 class="text-lg font-semibold">{{ roomChat.type === 'personal' ? roomChat.participants[0].user.fullname : roomChat.name }}</h6>
+    <p>{{ roomChat.messages[0].sender.fullname }}
+    {{
+    roomChat.messages[0].content
+    ? ( ": " + roomChat.messages[0].content | truncate:20)
+    : ' sent files'
+    }}
+    · {{ roomChat.messages[0].createdAt | timeGap | async }}</p>
+  </div>
 </a>

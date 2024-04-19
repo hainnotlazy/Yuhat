@@ -87,6 +87,7 @@ export class ChatService {
         'message.updatedAt', 
         'sender.id',
         'sender.avatar',
+        'sender.fullname',
         "sender.username",
         "attachments.filePath"
       ])
