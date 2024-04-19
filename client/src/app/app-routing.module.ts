@@ -12,6 +12,7 @@ const routes: Routes = [
     loadChildren: () => import("./auth/auth.module").then(m => m.AuthModule),
     canActivate: [authGuard]
   },
+  { path: "", redirectTo: "/chat", pathMatch: "full" },
   {
     path: "",
     component: FullLayoutComponent,
@@ -28,7 +29,7 @@ const routes: Routes = [
       { path: "chat", loadChildren: () => import("./chat/chat.module").then(m => m.ChatModule) },
     ]
   },
-  { path: "**", redirectTo: "" }
+  { path: "**", redirectTo: "/chat" }
 ];
 
 @NgModule({

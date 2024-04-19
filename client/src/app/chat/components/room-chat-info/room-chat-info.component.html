@@ -30,14 +30,18 @@
 <div #roomChatInfoSidebar class="left-sidebar hide absolute top-0 left-0 z-10 w-full h-full overflow-hidden transition-all duration-700">
   <div (click)="onViewRoomChatInfo()" class="bg-slate-600 opacity-80 background w-full h-full"></div>
   <div class="info-sidebar bg-second/80 absolute top-0 right-0 z-10 flex flex-col items-center w-1/4 h-full gap-2 pt-8 transition-all duration-700 border-l-2 border-gray-600 shadow-lg opacity-0">
-    <img [src]="selectedRoomChat.participants[0].user.avatar"
+    <ng-container *ngIf="selectedRoomChat.type === 'personal'; else groupChat">
+      <img [src]="selectedRoomChat.participants[0].user.avatar"
       [alt]="'Avatar of room chat' + selectedRoomChat.id"
       class="max-w-52 border-2 border-gray-500 rounded-full">
-    <h6 class="text-xl font-semibold">{{ selectedRoomChat.participants[0].user.fullname }}</h6>
-    <a
-      class="px-4 py-2.5 bg-third hover:bg-fourth rounded-full"
-      [routerLink]="'/profile/' + selectedRoomChat.participants[0].user.id">
-      View profile
-    </a>
+      <h6 class="text-xl font-semibold">{{ selectedRoomChat.participants[0].user.fullname }}</h6>
+      <p>({{ selectedRoomChat.participants[0].user.username }})</p>
+    </ng-container>
+    <ng-template #groupChat>
+      <img [src]="selectedRoomChat.avatar"
+      [alt]="'Avatar of room chat' + selectedRoomChat.id"
+      class="max-w-52 border-2 border-gray-500 rounded-full">
+      <h6 class="text-xl font-semibold">{{ selectedRoomChat.name }}</h6>
+    </ng-template>
   </div>
 </div>

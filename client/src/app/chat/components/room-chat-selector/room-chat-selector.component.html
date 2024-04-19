@@ -1,46 +1,25 @@
-<!-- <a *ngFor="let roomChat of roomChats$ | async"
-  [class]="roomChat.id === selectedRoomChat?.id ? 'bg-second/60' : 'hover:bg-gray-200'"
-  [routerLink]="'/chat/r/' + roomChat.id"
-  class="flex items-center gap-3 px-4 py-2.5 cursor-pointer rounded-xl">
-
-  <img class="max-w-20 border-slate-700 border-2 rounded-full" [src]="roomChat.participantAvatar"
-    [alt]="'Avatar of room chat' + roomChat.id">
-
-  <div class="md:block flex-grow hidden">
-    <h6 class="text-lg font-semibold">{{ roomChat.participantName }}</h6>
-    <p>{{ roomChat.latestMessage }} · {{ roomChat.latestMessageSentAt | timeGap | async }}</p>
-  </div>
-
-
-</a> -->
-
-
-  <!-- <button class="hover:bg-fourth bg-third p-3 text-gray-600 rounded-full shadow-md">
-    <i class="icon-more-vert flex items-center justify-center"></i>
-  </button> -->
-
 <a *ngFor="let roomChat of roomChats$ | async"
   [class]="roomChat.id === selectedRoomChat?.id ? 'bg-second/60' : 'hover:bg-gray-200'"
   [routerLink]="'/chat/r/' + roomChat.id"
   class="flex items-center gap-3 px-4 py-2.5 cursor-pointer rounded-xl">
 
-  <ng-container *ngIf="roomChat.type === 'personal'">
+  <ng-container *ngIf="roomChat.type === 'personal'; else groupChat">
     <img class="max-w-20 border-slate-700 border-2 rounded-full" [src]="roomChat.participants[0].user.avatar"
     [alt]="'Avatar of room chat' + roomChat.id">
 
     <div class="md:block flex-grow hidden">
       <h6 class="text-lg font-semibold">{{ roomChat.participants[0].user.fullname }}</h6>
-      <p>{{ roomChat.messages[0].content }} · {{ roomChat.messages[0].createdAt | timeGap | async }}</p>
+      <p>{{ roomChat.messages[0].content | truncate:20 }} · {{ roomChat.messages[0].createdAt | timeGap | async }}</p>
     </div>
   </ng-container>
 
-  <ng-container *ngIf="roomChat.type === 'group'">
+  <ng-template #groupChat>
     <img class="max-w-20 border-slate-700 border-2 rounded-full" [src]="roomChat.avatar"
     [alt]="'Avatar of room chat' + roomChat.id">
 
     <div class="md:block flex-grow hidden">
       <h6 class="text-lg font-semibold">{{ roomChat.name }}</h6>
-      <p>{{ roomChat.messages[0].content }} · {{ roomChat.messages[0].createdAt | timeGap | async }}</p>
+      <p>{{ roomChat.messages[0].content | truncate:20 }} · {{ roomChat.messages[0].createdAt | timeGap | async }}</p>
     </div>
-  </ng-container>
+  </ng-template>
 </a>

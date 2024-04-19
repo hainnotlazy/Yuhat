@@ -17,6 +17,7 @@ import { RecaptchaModule, RECAPTCHA_LANGUAGE, RECAPTCHA_SETTINGS, RecaptchaSetti
 import { environment } from 'src/environments/environment.development';
 import { CountdownPipe } from './pipes/countdown.pipe';
 import { TimeGapPipe } from './pipes/time-gap.pipe';
+import { TruncatePipe } from './pipes/truncate.pipe';
 
 const MatModules = [
   MatFormFieldModule,
@@ -37,6 +38,7 @@ const MatModules = [
   declarations: [
     CountdownPipe,
     TimeGapPipe,
+    TruncatePipe,
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,7 @@ const MatModules = [
     RecaptchaFormsModule,
     CountdownPipe,
     TimeGapPipe,
+    TruncatePipe,
   ],
   providers: [
     {

@@ -110,6 +110,7 @@ export class ChatService {
             message => ({
               ...message,
               sender: {
+                ...message.sender,
                 avatar: `${environment.server}/${message.sender.avatar}`
               }
             })
