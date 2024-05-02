@@ -1,10 +1,7 @@
-import { Body, Controller, Get, Param, Post, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from 'src/entities/user.entity';
-import { NewMessageDto } from './dtos/new-message.dto';
-import { FilesInterceptor } from '@nestjs/platform-express';
-import { UploadFileService } from 'src/shared/services/upload-file/upload-file.service';
 
 @Controller('chat')
 export class ChatController {
@@ -16,12 +13,4 @@ export class ChatController {
   getMessages(@CurrentUser() currentUser: User, @Param("roomId") roomId: string) {
     return this.chatService.getMessagesByRoom(currentUser.id, roomId);
   }
-
-  // @Post()
-  // createNewMessage(
-  //   @CurrentUser() currentUser: User, 
-  //   @Body() body: NewMessageDto) {
-      
-  //   return this.chatService.createNewMessage(currentUser, body);
-  // }
 }

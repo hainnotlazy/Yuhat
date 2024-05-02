@@ -8,13 +8,17 @@ import { SaltRounds } from 'src/common/constants/bcrypt-salt.constant';
 import { randomBytes } from 'crypto';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { MailerService } from '@nestjs-modules/mailer';
+import { DownloadFileService } from 'src/shared/services/download-file/download-file.service';
+import { UploadFileService } from 'src/shared/services/upload-file/upload-file.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User> ,
-    private mailerService: MailerService
+    private mailerService: MailerService,
+    private downloadFileService: DownloadFileService,
+    private uploadFileService: UploadFileService
   ) {}
 
   async findUsersByNameOrUsername(currentUser: User, searchQuery: string) {
@@ -38,21 +42,27 @@ export class UsersService {
 
   async createUser(newUser: Partial<User>) {
     const hashedPassword = bcrypt.hashSync(newUser.password, SaltRounds);
-    // FIXME: Correct default avatar path to public/avatar/default-avatar.jpg
     const user = this.userRepository.create({
       ...newUser,
       password: hashedPassword,
-      avatar: "public/default-avatar.jpg"
+      avatar: "public/avatars/default-avatar.jpg"
     });
 
     return await this.userRepository.save(user);
   }
 
-  async updateUser(userId: string, updateUser: Partial<User>) {
+  async updateUser(userId: string, updateUser: Partial<User>, avatar: Express.Multer.File) {
     const user = await this.findOneByProperty({property: "id", value: userId});
 
     if (!user) {
       throw new NotFoundException("User not found!");
+    }
+
+    // Save new avatar & remove old one
+    if (avatar) {
+      const savedAvatar = await this.uploadFileService.saveAvatar(avatar);
+      this.uploadFileService.removeOldAvatar(user.avatar);
+      updateUser.avatar = savedAvatar;
     }
 
     if (updateUser.password) {
@@ -79,15 +89,17 @@ export class UsersService {
   async createUserByGoogle(newUser: Partial<User>) {
     const { fullname, avatar, email } = newUser;
 
+    // Save avatar
+    const savedAvatar = await this.downloadFileService.downloadAvatar(avatar);
+
     // Generate hashed random password
     const hashedPassword = this.generateRandomHashedPassword(20);
-
 
     const user = this.userRepository.create({
       username: email,
       password: hashedPassword,
       fullname,
-      avatar,
+      avatar: savedAvatar,
       email,
       emailVerified: true
     });
@@ -98,6 +110,9 @@ export class UsersService {
   async createUserByGithub(newUser: Partial<User>) {
     const { username, fullname, avatar, email, github } = newUser;
 
+    // Save avatar
+    const savedAvatar = await this.downloadFileService.downloadAvatar(avatar);
+
     // Generate hashed random password
     const hashedPassword = this.generateRandomHashedPassword(20);
 
@@ -105,7 +120,7 @@ export class UsersService {
       username: username,
       password: hashedPassword,
       fullname,
-      avatar,
+      avatar: savedAvatar,
       email,
       github,
     });
@@ -209,10 +224,6 @@ export class UsersService {
     return this.userRepository.createQueryBuilder()
       .where(`${property.property} = :value`, {value: property.value})
       .getOne();
-  }
-
-  findOneByProperties() {
-
   }
 
   private generateRandomHashedPassword(length) {

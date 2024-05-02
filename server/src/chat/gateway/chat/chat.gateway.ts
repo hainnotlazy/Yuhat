@@ -35,9 +35,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleDisconnect(socket: Socket) {
-    const userId = socket.data.user.id;
-    await this.redisService.removeKey(userId);
-    socket.disconnect();
+    try {
+      const userId = socket.data.user.id;
+      await this.redisService.removeKey(userId);
+      socket.disconnect();
+    } catch (err) {
+    }
   }
 
   @SubscribeMessage('sendMessage')

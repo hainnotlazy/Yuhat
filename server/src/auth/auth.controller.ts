@@ -1,9 +1,8 @@
-import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Request, Post, UseGuards, UseInterceptors, Req, Res, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Request, Post, UseGuards, Req, Res, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from 'src/users/dtos/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { PublicRoute } from 'src/common/decorators/public-route.decorator';
-import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { IGoogleProfile } from 'src/common/interfaces/google-profile.interface';
 import { GithubAuthGuard } from './guards/github-auth.guard';
@@ -28,7 +27,7 @@ export class AuthController {
     }
 
     const user = req.user;
-    return await this.authService.login(user);
+    return this.authService.login(user);
   }
 
   @PublicRoute()
@@ -40,7 +39,7 @@ export class AuthController {
   @PublicRoute()
   @UseGuards(GoogleAuthGuard)
   @Get("google")
-  googleLogin() { }
+  googleLogin() {}
 
   @PublicRoute()
   @UseGuards(GoogleAuthGuard)
@@ -48,7 +47,6 @@ export class AuthController {
   async googleLoginCallback(@Req() req: any, @Res() res: any) {
     const googleProfile: IGoogleProfile = req.user;
 
-    // FIXME: Redirect to client app with access token
     const accessToken = await this.authService.googleLogin(googleProfile);
     res.cookie("access_token", accessToken, {
       secure: true,
@@ -69,7 +67,6 @@ export class AuthController {
   async githubLoginCallback(@Req() req: any, @Res() res: any) {
     const githubProfile: IGithubProfile = req.user;
     
-    // FIXME: Redirect to client app with access token
     const accessToken = await this.authService.githubLogin(githubProfile);
     res.cookie("access_token", accessToken, {
       secure: true,
@@ -77,11 +74,5 @@ export class AuthController {
       maxAge: 60 * 1000
     })
     return res.redirect("http://localhost:4200/auth/success")
-  }
-
-  @Get("whoami")
-  whoami(@CurrentUser() currentUser) {
-    const { password, ...user } = currentUser;
-    return user;
   }
 }

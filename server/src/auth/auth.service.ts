@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from 'src/entities/user.entity';
 import { RegisterUserDto } from 'src/users/dtos/register-user.dto';
 import { UsersService } from 'src/users/users.service';
@@ -29,13 +29,14 @@ export class AuthService {
 
     // Use try-catch in case error when sending mail won't break register flow.
     try {
-      if (email) this.usersService.sendVerificationEmailMail(newUser.id);
+      if (email) await this.usersService.sendVerificationEmailMail(newUser.id);
     } catch {}
 
     return { access_token: this.generateAccessToken(newUser) };
   }
 
   login(user: User) {
+    // Validate username & password handled in local strategy
     return { access_token: this.generateAccessToken(user) };
   }
 
@@ -64,7 +65,7 @@ export class AuthService {
     userExisted = await this.usersService.findOneByProperty({property: "email", value: email});
     if (userExisted) {
       userExisted.github = githubProfile.github;
-      userExisted = await this.usersService.updateUser(userExisted.id, userExisted);
+      userExisted = await this.usersService.updateUser(userExisted.id, userExisted, null);
       return this.generateAccessToken(userExisted);
     }
 

@@ -24,6 +24,14 @@ export class UploadFileService {
     return filePath.replace(this.AVATAR_PATH, `${this.SERVE_PATH}/avatars`);
   }
 
+  removeOldAvatar(avatarPath: string) {
+    if (avatarPath.includes("default-avatar.jpg")) return;
+    const actualAvatarPath = avatarPath.replace(this.SERVE_PATH, this.RESOURCES_PATH);
+    if (fs.existsSync(actualAvatarPath)) {
+      fs.unlinkSync(actualAvatarPath);
+    }
+  }
+
   saveChatAttachments(roomChatId: string, files: Attachment[]) {
     const folderPath = `${this.RESOURCES_PATH}/${roomChatId}`;
 

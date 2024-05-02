@@ -20,4 +20,8 @@ export class RedisService {
   async removeKey(key: string) {
     return await this.redis.del(key);
   }
+
+  async flushAll() {
+    return await this.redis.flushall();
+  }
 }

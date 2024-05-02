@@ -1,12 +1,9 @@
-import { Body, Controller, Get, NotFoundException, Param, Put, UploadedFile, UseInterceptors, Post, Inject, BadRequestException, HttpCode } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Put, UploadedFile, UseInterceptors, Post, BadRequestException, HttpCode } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from 'src/entities/user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname, join } from 'path';
-import { existsSync, unlinkSync } from 'fs';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { VerifyService } from 'src/shared/services/verify/verify.service';
 import { VerifyEmailDto } from './dtos/verify-email.dto';
@@ -55,27 +52,9 @@ export class UsersController {
   }
 
   @Put()
-  @UseInterceptors(FileInterceptor("avatar", {
-    storage: diskStorage({ 
-      destination: './resources/images',
-      filename: (req, file, callback) => {
-        const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-        return callback(null, `${randomName}${extname(file.originalname)}`);
-      }
-    })
-  }))
-  async updateUser(@CurrentUser() currentUser: User, @Body() body: UpdateUserDto, @UploadedFile() avatar) {
-    if (avatar) {
-      avatar = (avatar.path as string).replace("resources\\images\\", "public/");
-      body.avatar = avatar;
-    }
-    const updatedUser = await this.usersService.updateUser(currentUser.id, body);
-
-    // Remove old image
-    const oldAvatarPath = join(__dirname, "..", "..", "resources", "images", currentUser.avatar.replace("public/", ""));
-    if (existsSync(oldAvatarPath) && avatar) {
-      unlinkSync(oldAvatarPath);
-    }
+  @UseInterceptors(FileInterceptor("avatar"))
+  async updateUser(@CurrentUser() currentUser: User, @Body() body: UpdateUserDto, @UploadedFile() avatar: Express.Multer.File) {
+    const updatedUser = await this.usersService.updateUser(currentUser.id, body, avatar);
 
     return Object.assign(
       new User(),

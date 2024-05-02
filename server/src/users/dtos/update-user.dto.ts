@@ -1,4 +1,4 @@
-import { IsDate, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
+import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 
 export class UpdateUserDto {
@@ -19,8 +19,4 @@ export class UpdateUserDto {
   @IsOptional()
   @IsString()
   gender: string;
-
-  @IsOptional()
-  @IsString()
-  avatar: string;
 }
