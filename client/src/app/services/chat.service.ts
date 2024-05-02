@@ -2,8 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Socket } from 'ngx-socket-io';
-import { Observable, catchError, map, of, tap } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { Observable, catchError, of, tap } from 'rxjs';
 import { IRoomChat } from '../common/models/room-chat.model';
 import { IMessage } from '../common/models/message.model';
 
@@ -42,17 +41,7 @@ export class ChatService {
   }
 
   getNewMessages(): Observable<IMessage> {
-    return this.socket.fromEvent<IMessage>("newMessage").pipe(
-      map(
-        message => ({
-          ...message,
-          sender: {
-            fullname: message.sender.fullname,
-            avatar: `${environment.server}/${message.sender.avatar}`
-          }
-        })
-      )
-    );
+    return this.socket.fromEvent<IMessage>("newMessage");
   }
 
   createNewRoomChat(userId: string) {
@@ -80,23 +69,6 @@ export class ChatService {
 
   getAllRoomChats(): Observable<IRoomChat[]> {
     return this.httpClient.get<IRoomChat[]>("api/room-chat").pipe(
-      map(
-        response => {
-          return response.map(
-            roomChat => ({
-              ...roomChat,
-              avatar: `${environment.server}/${roomChat.avatar}`,
-              participants: roomChat.participants.map(participant => ({
-                ...participant,
-                user: {
-                  ...participant.user,
-                  avatar: `${environment.server}/${participant.user.avatar}`
-                }
-              }))
-            })
-          )
-        }
-      ),
       catchError(
         error => of([])
       )
@@ -105,19 +77,6 @@ export class ChatService {
 
   getMessagesByRoomId(roomChatId: string): Observable<IMessage[]> {
     return this.httpClient.get<IMessage[]>(`api/chat/${roomChatId}`).pipe(
-      map(
-        response => {
-          return response.map(
-            message => ({
-              ...message,
-              sender: {
-                ...message.sender,
-                avatar: `${environment.server}/${message.sender.avatar}`
-              }
-            })
-          )
-        }
-      ),
       catchError(
         error => of([])
       )

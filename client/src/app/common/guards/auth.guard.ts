@@ -3,29 +3,32 @@ import { CanActivateFn, Router } from '@angular/router';
 import { removeAccessToken } from '../utils/local-storage.utl';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
+const publicRoutes = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/success",
+  "/auth/forget-password",
+  "/auth/reset-password",
+]
+
 export const authGuard: CanActivateFn = (route, state) => {
   const jwtService = inject(JwtHelperService);
   const router = inject(Router);
   const currentUrl = state.url;
 
-  // FIXME: Protect route verify email
-  if (currentUrl === "/auth/verify-email" && !jwtService.isTokenExpired()) {
-    return true;
-  }
-
-  if (currentUrl.split("/")[1] === "auth") {
-    if (!jwtService.isTokenExpired()) {
-      router.navigate(["/dashboard"]);
-      return false;
+  // Public routes
+  if (publicRoutes.includes(currentUrl)) {
+    if (jwtService.isTokenExpired()) {
+      removeAccessToken();
+    } else {
+      return router.navigate(["/chat"]);
     }
-    removeAccessToken();
     return true;
   }
 
   if (jwtService.isTokenExpired()) {
     removeAccessToken();
-    router.navigate(["/auth"]);
-    return false;
+    return router.navigate(["/auth"]);
   }
   return true;
 };

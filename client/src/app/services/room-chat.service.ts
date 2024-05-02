@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { catchError } from 'rxjs';
 import { IRoomChat } from '../common/models/room-chat.model';
 import { IUser } from '../common/models/user.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,21 +15,7 @@ export class RoomChatService {
   ) { }
 
   findRoomChatById(id: string) {
-    return this.httpClient.get<IRoomChat>(`api/room-chat/${id}`).pipe(
-      map(
-        data => ({
-          ...data,
-          avatar: `${environment.server}/${data.avatar}`,
-          participants: data.participants.map(participant => ({
-            ...participant,
-            user: {
-              ...participant.user,
-              avatar: `${environment.server}/${participant.user.avatar}`
-            }
-          }))
-        })
-      )
-    )
+    return this.httpClient.get<IRoomChat>(`api/room-chat/${id}`)
   }
 
   createNewRoomChat(receiverId: string) {

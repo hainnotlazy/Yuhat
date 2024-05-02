@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs';
 import { removeAccessToken } from 'src/app/common/utils/local-storage.utl';
 import { UsersService } from 'src/app/services/users.service';
-import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-header',
@@ -20,17 +20,15 @@ export class HeaderComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.usersService.findUser().subscribe(
-      data => {
-        this.fullname = data.fullname || "";
-        this.username = data.username || "";
-        if (data.avatar) {
-          this.avatar = data.avatar?.includes("https") ? data.avatar : `${environment.server}/${data.avatar}`;
-        } else {
-          this.avatar = `${environment.server}/public/avatars/default-avatar.jpg`
+    this.usersService.findUser().pipe(
+      tap(
+        data => {
+          this.fullname = data.fullname as string;
+          this.username = data.username as string;
+          this.avatar = data.avatar as string;
         }
-      }
-    )
+      )
+    ).subscribe();
   }
 
   logout() {

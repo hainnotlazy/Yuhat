@@ -3,7 +3,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IUser } from 'src/app/common/models/user.model';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { UsersService } from 'src/app/services/users.service';
-import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-edit-profile',
@@ -54,7 +53,7 @@ export class EditProfileComponent implements OnInit {
         gender: data.gender,
         dob: data.dob,
       });
-      this.imageUrl = data.avatar?.includes("https") ? data.avatar : `${environment.server}/${data.avatar}`;
+      this.imageUrl = data.avatar;
     });
   }
 

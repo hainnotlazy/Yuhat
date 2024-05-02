@@ -35,9 +35,9 @@ Flows
   - View info room-chat of personal & group chat (x)
     - Add & Remove & Update role of member 
   - Redis for save access token
-  - View image in large size
   - Check Online status of user
-  - Show new room chat when receive first msg
+  - Show new room chat when receive first msg 
+  - View image in large size (x)
   - Download attachment (x)
   - Show name of sender in group chat (x)
   - Truncate chat (x)

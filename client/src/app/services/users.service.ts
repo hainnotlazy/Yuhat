@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IChangePassword, IUser } from '../common/models/user.model';
-import { catchError, map, of, tap } from 'rxjs';
+import { catchError, of, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IErrorResponse } from '../common/interfaces/response.interface';
 import { Router } from '@angular/router';
-import { environment } from 'src/environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -23,16 +22,6 @@ export class UsersService {
 
   findUsersByNameOrUsername(searchQuery: string) {
     return this.httpClient.get<Partial<IUser>[]>(`api/users/${searchQuery}/find-users`).pipe(
-      map(
-        response => {
-          return response.map(
-            user => ({
-              ...user,
-              avatar: `${environment.server}/${user.avatar}`
-            })
-          )
-        }
-      ),
       catchError(
         error => of([])
       )
