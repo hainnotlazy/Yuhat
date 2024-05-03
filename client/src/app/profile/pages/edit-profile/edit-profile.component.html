@@ -12,6 +12,7 @@
 
   <div class="w-full">
     <h4 class="text-unica-one my-3 text-3xl font-semibold text-center">My Profile</h4>
+
     <mat-form-field appearance="outline" class="w-full mb-2">
       <mat-label>Fullname</mat-label>
       <input matInput formControlName="fullname" placeholder="Your fullname">
@@ -20,7 +21,7 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="example-full-width">
+    <mat-form-field appearance="outline"s>
       <mat-label>Date of birth</mat-label>
       <input matInput [matDatepicker]="picker" formControlName="dob">
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -40,12 +41,39 @@
       <mat-label>Bio</mat-label>
       <textarea matInput formControlName="bio" placeholder="Your bio" rows="5"></textarea>
       <mat-error *ngFor="let error of getObjectKeys(editProfileForm.get('bio')?.errors)">
-        {{ bioValidationmsg[error] }}
+        {{ bioValidationMsg[error] }}
       </mat-error>
     </mat-form-field>
 
     <div class="text-end">
       <button type="submit" class="hover:bg-sky-300 bg-sky-400 px-5 py-2.5 my-2 rounded-full">Update my profile</button>
+    </div>
+
+    <div class="border-t-gray-300 pt-2 mt-6 space-y-3 border-t-2">
+      <h6 class="font-semibold">Linked Accounts</h6>
+      <button
+        type="button"
+        class="disabled:bg-gray-200 flex items-center gap-2 px-3 py-2 bg-green-200 rounded-md"
+        (click)="navigateToAuthPage('google')"
+        [disabled]="email !== null">
+        <img
+        class="max-w-8"
+        src="/assets/images/google.svg"
+        alt="Google logo">
+        <span>{{ email !== null ? email : "Link your Google account" }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="disabled:bg-gray-200 flex items-center gap-2 px-3 py-2 bg-green-200 rounded-md"
+        (click)="navigateToAuthPage('github')"
+        [disabled]="github !== null">
+        <img
+        class="max-w-8"
+        src="/assets/images/github.svg"
+        alt="Github logo">
+        <span>{{ github !== null ? github.split("/")[github.split("/").length - 1] : "Link your Github account" }}</span>
+      </button>
     </div>
   </div>
 </form>

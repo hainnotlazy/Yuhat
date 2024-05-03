@@ -1,7 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { combineLatest, map, startWith } from 'rxjs';
+import { combineLatest, map, startWith, tap } from 'rxjs';
 import { IRoomChat, IRoomChatParticipant } from 'src/app/common/models/room-chat.model';
 import { ChatService } from 'src/app/services/chat.service';
+import { RoomChatService } from 'src/app/services/room-chat.service';
 
 @Component({
   selector: 'app-room-chat-selector',
@@ -15,13 +16,11 @@ export class RoomChatSelectorComponent {
   ]).pipe(
     map(([roomChats, newMessage]) => {
       if (newMessage) {
-        console.log(newMessage)
-        // Handle if new msg is the first msg of roomChat
+        // Handle if new msg is from selectedRoomChat
         if (
           !roomChats.find(roomChat => roomChat.id === newMessage.roomChat.id)
           && newMessage.roomChat.id === this.selectedRoomChat?.id
         ) {
-          console.log(newMessage)
           roomChats.push({
             id: this.selectedRoomChat?.id as string,
             name: this.selectedRoomChat?.name as string,
@@ -30,6 +29,32 @@ export class RoomChatSelectorComponent {
             participants: this.selectedRoomChat?.participants as IRoomChatParticipant[],
             messages: [newMessage]
           })
+        }
+        // Handle if new msg not in roomChats & selectedRoomChat
+        else if (!roomChats.find(roomChat => roomChat.id === newMessage.roomChat.id)) {
+          const roomChatId = newMessage.roomChat.id;
+
+          this.roomChatService.findRoomChatById(roomChatId as string).pipe(
+            tap(
+              data => {
+                roomChats.push({
+                  id: roomChatId as string,
+                  name: data.name,
+                  avatar: data.avatar,
+                  type: data.type,
+                  participants: data.participants,
+                  messages: [newMessage]
+                })
+              }
+            ),
+            tap(
+              () => {
+                roomChats.sort((a, b) => {
+                  return new Date(b.messages[0].createdAt).getTime() - new Date(a.messages[0].createdAt).getTime();
+                });
+              }
+            )
+          ).subscribe();
         }
         // Handle if new msg belong to room in roomChats
         else {
@@ -52,7 +77,8 @@ export class RoomChatSelectorComponent {
   @Input() selectedRoomChat?: IRoomChat;
 
   constructor(
-    private chatService: ChatService
+    private chatService: ChatService,
+    private roomChatService: RoomChatService
   ) {}
 
 }

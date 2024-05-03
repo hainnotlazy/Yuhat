@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IUser } from 'src/app/common/models/user.model';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { UsersService } from 'src/app/services/users.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-edit-profile',
@@ -11,6 +12,9 @@ import { UsersService } from 'src/app/services/users.service';
 })
 export class EditProfileComponent implements OnInit {
   imageUrl?: string;
+  email: string | null = null;
+  github: string | null = null;
+  userId: string = "";
 
   fullnameRequirements = {
     minlength: 3,
@@ -25,7 +29,7 @@ export class EditProfileComponent implements OnInit {
     minlength: `Fullname must have more than ${this.fullnameRequirements.minlength} characters`,
     maxlength: `Fullname must have less than ${this.fullnameRequirements.maxlength} characters`
   }
-  bioValidationmsg: IValidationMessages = {
+  bioValidationMsg: IValidationMessages = {
     maxlength: `Bio must have less than ${this.bioRequirements.maxlength} characters`
   }
 
@@ -53,8 +57,15 @@ export class EditProfileComponent implements OnInit {
         gender: data.gender,
         dob: data.dob,
       });
+      this.email = data.email || null;
+      this.github = data.github || null;
       this.imageUrl = data.avatar;
+      this.userId = data.id as string;
     });
+  }
+
+  navigateToAuthPage(provider: string) {
+    window.location.href = `${environment.server}/api/auth/${provider}?userId=${this.userId}`;
   }
 
   getObjectKeys(arg: any): string[] {

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { ILoginUser } from 'src/app/common/models/auth.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-login',
@@ -61,7 +62,7 @@ export class LoginComponent {
   }
 
   navigateToAuthPage(provider: string) {
-    window.location.href = `http://localhost:3000/api/auth/${provider}`;
+    window.location.href = `${environment.server}/api/auth/${provider}`;
   }
 
   onSubmit() {

@@ -30,13 +30,15 @@ Flows
 
 
 - Enhance
-  - Show connected 3rd parties in profile.
   - Responsive UI
   - View info room-chat of personal & group chat (x)
     - Add & Remove & Update role of member 
-  - Redis for save access token
-  - Check Online status of user
-  - Show new room chat when receive first msg 
+  - Redis for save access token (optional)
+  - Check Online status of user (optional)
+  
+- Done:
+  - Show connected 3rd parties in profile. (x)
+  - Show new room chat when receive first msg (x)
   - View image in large size (x)
   - Download attachment (x)
   - Show name of sender in group chat (x)

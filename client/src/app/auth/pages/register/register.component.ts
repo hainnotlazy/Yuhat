@@ -5,6 +5,7 @@ import { IValidationMessages } from 'src/app/common/interfaces/form.interface';
 import { RegisterFormValidator } from 'src/app/common/validators/register-form.validator';
 import { IRegisterUser } from 'src/app/common/models/auth.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-register',
@@ -73,7 +74,7 @@ export class RegisterComponent {
   }
 
   navigateToAuthPage(provider: string) {
-    window.location.href = `http://localhost:3000/api/auth/${provider}`;
+    window.location.href = `${environment.server}/api/auth/${provider}`;
   }
 
   onSubmit() {

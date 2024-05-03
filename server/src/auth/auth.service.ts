@@ -41,8 +41,19 @@ export class AuthService {
   }
 
   async googleLogin(googleProfile: IGoogleProfile) {
-    const { email } = googleProfile;
+    const { id, email } = googleProfile;
 
+    // Handle to link user account with Google
+    if (id) {
+      const userExisted = await this.usersService.findOneByProperty({property: "id", value: id});
+      if (!userExisted.email) {
+        userExisted.email = email;
+        await this.usersService.updateUser(userExisted.id, userExisted, null);
+        return null;
+      }
+    }
+
+    // Handle login & register with Google
     const userExisted = await this.usersService.findOneByProperty({property: "email", value: email});
     if (userExisted) {
       return this.generateAccessToken(userExisted);
@@ -53,8 +64,18 @@ export class AuthService {
   }
 
   async githubLogin(githubProfile: IGithubProfile) {
-    const { email, github } = githubProfile;
+    const { id, email, github } = githubProfile;
 
+    // Handle to link user account with Github
+    if (id) {
+      const userExisted = await this.usersService.findOneByProperty({property: "id", value: id});
+      if (!userExisted.github) {
+        userExisted.github = github;
+        await this.usersService.updateUser(userExisted.id, userExisted, null);
+        return null;
+      }
+    }
+    // Handle login & register with Github
     // Find user existed with Github
     let userExisted = await this.usersService.findOneByProperty({property: "github", value: github});
     if (userExisted) {

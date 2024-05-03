@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Request, Post, UseGuards, Req, Res, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Request, Post, UseGuards, Req, Res, BadRequestException, Query } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterUserDto } from 'src/users/dtos/register-user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -8,6 +8,7 @@ import { IGoogleProfile } from 'src/common/interfaces/google-profile.interface';
 import { GithubAuthGuard } from './guards/github-auth.guard';
 import { IGithubProfile } from 'src/common/interfaces/github-profile.interface';
 import { VerifyService } from 'src/shared/services/verify/verify.service';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -46,8 +47,11 @@ export class AuthController {
   @Get("google/callback")
   async googleLoginCallback(@Req() req: any, @Res() res: any) {
     const googleProfile: IGoogleProfile = req.user;
-
     const accessToken = await this.authService.googleLogin(googleProfile);
+
+    if (accessToken === null) {
+      return res.redirect("http://localhost:4200/profile");
+    }
     res.cookie("access_token", accessToken, {
       secure: true,
       sameSite: 'strict',
@@ -56,7 +60,7 @@ export class AuthController {
     return res.redirect("http://localhost:4200/auth/success")
   }
 
-  @PublicRoute()
+  @PublicRoute()  
   @UseGuards(GithubAuthGuard)
   @Get("github")
   githubLogin() {}
@@ -66,13 +70,16 @@ export class AuthController {
   @Get("github/callback")
   async githubLoginCallback(@Req() req: any, @Res() res: any) {
     const githubProfile: IGithubProfile = req.user;
-    
     const accessToken = await this.authService.githubLogin(githubProfile);
+
+    if (accessToken === null) { 
+      return res.redirect("http://localhost:4200/profile");
+    }
     res.cookie("access_token", accessToken, {
       secure: true,
       sameSite: 'strict',
       maxAge: 60 * 1000
     })
-    return res.redirect("http://localhost:4200/auth/success")
+    return res.redirect("http://localhost:4200/auth/success");
   }
 }
