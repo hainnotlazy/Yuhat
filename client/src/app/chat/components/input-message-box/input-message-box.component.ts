@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { fromEvent, tap } from 'rxjs';
 import { IRoomChat } from 'src/app/common/models/room-chat.model';
 import { ChatService } from 'src/app/services/chat.service';
+import { DialogManageMemberComponent } from '../dialog-manage-member/dialog-manage-member.component';
 
 @Component({
   selector: 'app-input-message-box',
@@ -33,7 +35,16 @@ export class InputMessageBoxComponent implements AfterViewInit {
     "application/x-compressed"
   ];
 
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private matDialog: MatDialog
+  ) {}
+
+  openDialog() {
+    this.matDialog.open(DialogManageMemberComponent, {
+      data: this.selectedRoomChat
+    })
+  }
 
   ngAfterViewInit() {
     this.inputInitialHeight = this.inputRef.nativeElement.offsetHeight;

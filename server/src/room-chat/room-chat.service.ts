@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { IEntityProperty } from 'src/common/interfaces/entity-property.interface';
 import { RoomChatParticipant } from 'src/entities/room-chat-participant.entity';
 import { RoomChat } from 'src/entities/room-chat.entity';
+import { User } from 'src/entities/user.entity';
 import { UploadFileService } from 'src/shared/services/upload-file/upload-file.service';
 import { UsersService } from 'src/users/users.service';
 import { DataSource, Repository } from 'typeorm';
@@ -164,6 +165,69 @@ export class RoomChatService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  async removeUserFromGroupChat(currentUser: User, roomChatId: string, userId: string) {
+    const roomChat = await this.roomChatRepository.findOne({
+      where: {
+        id: roomChatId
+      }, 
+      relations: ['participants']
+    })
+
+    if (!roomChat) {
+      throw new BadRequestException("Room chat not found!");
+    }
+
+    // Validate if currentUser is in room & have permission to remove other user
+    const currentUserRole = roomChat.participants.find(participant => participant.userId == currentUser.id)?.role;
+
+    if (!currentUserRole && currentUserRole != "owner") {
+      throw new BadRequestException("You don't have permission to remove user from group chat");
+    }
+
+    const removeUser = roomChat.participants.find(participant => participant.userId == userId);
+    if (!removeUser) {
+      throw new BadRequestException("User not in room chat");
+    } else if (removeUser.role == "owner") {
+      throw new BadRequestException("Can not remove owner from room chat");
+    }
+    return await this.roomChatParticipantRepository.remove(removeUser);
+  }
+
+  async addUserToGroupChat(currentUser: User, roomChatId: string, userId: string) {
+    const roomChat = await this.roomChatRepository.findOne({
+      where: {
+        id: roomChatId
+      }, 
+      relations: ['participants']
+    });
+
+    if (!roomChat) {
+      throw new BadRequestException("Room chat not found!");
+    }
+
+    // Validate if currentUser is in room & have permission to add other user
+    const currentUserRole = roomChat.participants.find(participant => participant.userId == currentUser.id)?.role;
+
+    if (!currentUserRole && currentUserRole != "owner") {
+      throw new BadRequestException("You don't have permission to remove user from group chat");
+    }
+
+    // Check if user is already in room
+    const participatedUser = roomChat.participants.find(participant => participant.userId == userId);
+
+    if (participatedUser) {
+      throw new BadRequestException("User already in room chat");
+    }
+
+    const participant = this.roomChatParticipantRepository.create({
+      roomChat: roomChat,
+      user: await this.usersService.findOneByProperty({property: "id", value: userId}),
+      role: "member"
+    })
+
+    return await this.roomChatParticipantRepository.save(participant);
   }
 
   private async findPersonalChat(userIds: string[]) {

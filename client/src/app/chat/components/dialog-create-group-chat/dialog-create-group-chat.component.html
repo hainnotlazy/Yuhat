@@ -47,7 +47,7 @@
           formControlName="members"
           [matChipInputFor]="chipGrid"
           [matAutocomplete]="auto"/>
-          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
           <mat-option *ngFor="let member of member$ | async" [value]="member">
             <img
               draggable="false"

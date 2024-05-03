@@ -45,4 +45,38 @@ export class RoomChatService {
       })
     )
   }
+
+  removeUserFromGroupChat(roomChatId: string, userId: string) {
+    return this.httpClient.delete(`api/room-chat/group-chat/${roomChatId}/remove-user`, {
+      body: {
+        userId
+      }
+    }).pipe(
+      catchError(
+        err => {
+          this.snackbar.open("Unexpected error happened", "x", {
+            duration: 2000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+        })
+        throw new Error("");
+      })
+    );
+  }
+
+  addUserToGroupChat(roomChatId: string, userId: string) {
+    return this.httpClient.post(`api/room-chat/group-chat/${roomChatId}/add-user`, {
+      userId
+    }).pipe(
+      catchError(
+        err => {
+          this.snackbar.open("Unexpected error happened", "x", {
+            duration: 2000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+        })
+        throw new Error("");
+      })
+    );
+  }
 }

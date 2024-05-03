@@ -1,0 +1,50 @@
+<h6 mat-dialog-title>Manage group chat</h6>
+
+
+<div class="space-y-4" mat-dialog-content>
+  <div
+    class="flex items-center gap-4 px-4 py-2.5 bg-gray-200 rounded-md"
+    *ngFor="let participant of data.participants; let index = index">
+    <img
+      class="max-w-10 border border-gray-500 rounded-full"
+      [src]="participant.user.avatar"
+      [alt]="'Avatar of user ' + participant.user.id"
+    >
+    <span class="flex-grow font-semibold text-black">{{ participant.user.fullname }} - {{ participant.user.username }}</span>
+    <span class="bg-slate-400 p-2 text-white rounded-sm">{{ participant.role | titlecase }}</span>
+    <button
+      class="disabled:text-gray-400 hover:text-black text-gray-500"
+      [disabled]="participant.role === 'owner'"
+      (click)="removeUser(index, participant.user.id)">
+      <i class="icon-close"></i>
+    </button>
+  </div>
+
+  <div class="block pt-2 space-y-3 border-t border-gray-300">
+    <h6>Add member</h6>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Name</mat-label>
+      <input
+        matInput
+        [formControl]="nameControl"
+        placeholder="Enter fullname or username"
+        type="text"
+        [matAutocomplete]="auto"
+      >
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+        <mat-option *ngFor="let user of user$ | async" [value]="user">
+          <img
+            draggable="false"
+            class="max-w-8 me-2 inline-block border-2 border-gray-400 rounded-full"
+            [src]="user.avatar"
+            [alt]="'Avatar of user ' + user.id">
+          <span>{{ user.fullname }} - {{ user.username }}</span>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Close</button>
+</div>

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { User } from 'src/entities/user.entity';
 import { RoomChatService } from './room-chat.service';
@@ -34,5 +34,23 @@ export class RoomChatController {
     const usersId = typeof body.userId == "string" ? [body.userId] : body.userId;
     // FIXME: Create body by using class-validators
     return this.roomChatService.retrieveOrCreateGroupChat(body.roomChatName, [currentUser.id, ...usersId], avatar);
+  }
+
+  @Post("group-chat/:id/add-user")
+  addUserToGroupChat(
+    @CurrentUser() currentUser: User,
+    @Param("id") roomChatId: string,
+    @Body() body: { userId: string }
+  ) {
+    return this.roomChatService.addUserToGroupChat(currentUser, roomChatId, body.userId);
+  }
+
+  @Delete("group-chat/:id/remove-user")
+  removeUserFromGroupChat(
+    @CurrentUser() currentUser: User, 
+    @Param("id") roomChatId: string, 
+    @Body() body: { userId: string }
+  ) {
+    return this.roomChatService.removeUserFromGroupChat(currentUser, roomChatId, body.userId);
   }
 }

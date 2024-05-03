@@ -12,6 +12,7 @@ import { DefaultPageComponent } from './pages/default-page/default-page.componen
 import { LiveSearchComponent } from './components/live-search/live-search.component';
 import { DialogCreateGroupChatComponent } from './components/dialog-create-group-chat/dialog-create-group-chat.component';
 import { DialogViewImageComponent } from './components/dialog-view-image/dialog-view-image.component';
+import { DialogManageMemberComponent } from './components/dialog-manage-member/dialog-manage-member.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { DialogViewImageComponent } from './components/dialog-view-image/dialog-
     LiveSearchComponent,
     DialogCreateGroupChatComponent,
     DialogViewImageComponent,
+    DialogManageMemberComponent,
   ],
   imports: [
     CommonModule,
