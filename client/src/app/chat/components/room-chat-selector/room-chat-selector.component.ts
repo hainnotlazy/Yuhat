@@ -7,7 +7,10 @@ import { RoomChatService } from 'src/app/services/room-chat.service';
 @Component({
   selector: 'app-room-chat-selector',
   templateUrl: './room-chat-selector.component.html',
-  styleUrls: ['./room-chat-selector.component.scss']
+  styleUrls: ['./room-chat-selector.component.scss'],
+  host: {
+    class: "flex md:flex-col"
+  }
 })
 export class RoomChatSelectorComponent {
   roomChats$ = combineLatest([

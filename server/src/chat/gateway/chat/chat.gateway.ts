@@ -74,27 +74,4 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     socket.emit("Error", new UnauthorizedException());
     socket.disconnect()
   }
-
-  /**
-   *     console.log(socket.rooms)
-
-    socket.join("room-test");
-
-    if (socket.rooms.has("room-test")) {
-      this.server.to("room-test").emit("test-message", "message only for room test");
-    }
-
-    console.log(socket.id); // Log the socket's ID to verify
-
-    // Emitting a message to the socket using its ID
-    // socket.emit("test-message", "welcome");
-
-    // Alternatively, you can use the server object to emit to a specific socket
-    this.server.to(socket.id).emit("test-message", "welcome");
-
-    // console.log(client.conn.id);
-    // client.to(client.conn.id).emit("test-message", "welcome");
-    // this.server.to(client.conn.id).emit("test-message", "welcome");
-    this.server.emit('test-message', "hello angular");
-   */
 }

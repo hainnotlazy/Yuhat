@@ -15,28 +15,20 @@ export class User {
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  // FIXME: typeorm doesn't have min-maxlength
   @Column({ unique: true })
-  @MinLength(5)
-  @MaxLength(50)
   username: string;
 
   @Column()
-  @MinLength(8)
-  @MaxLength(100)
   @Exclude()
   password: string;
 
   @Column({ nullable: true })
-  @MinLength(3)
-  @MaxLength(255)
   fullname: string;
 
   @Column({ nullable: true, type: "date" })
   dob: Date;
 
   @Column({ nullable: true })
-  @MaxLength(255)
   bio: string;
 
   @Column({
