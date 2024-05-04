@@ -1,0 +1,76 @@
+version: "3"
+
+name: app-production
+
+services:
+  server:
+    container_name: server-prod
+    build:
+      context: ./server
+      dockerfile: Dockerfile.prod
+    ports:
+      - 3000:3000
+    volumes:
+      - server-data:/app/resources
+    networks:
+      - mainnet
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  client: 
+    container_name: client-prod
+    build:
+      context: ./client
+      dockerfile: Dockerfile.prod
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - mainnet
+    depends_on:
+      - server
+
+  database:
+    container_name: pg-database
+    image: postgres:16.2-alpine3.19
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+    env_file:
+      # Note: Change this example file path
+      - .database-env.example
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 60s  
+    networks:
+      - mainnet
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    volumes:
+      - redis-data:/data
+    ports:
+      - 6380:6379
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    networks:
+      - mainnet
+
+networks:
+  mainnet:
+
+volumes:
+  server-data:
+  db-data:
+  redis-data:

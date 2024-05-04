@@ -24,7 +24,6 @@ export class ChatService {
 
   async createNewMessage(sender: User, newMessageDto: NewMessageDto, attachments: Attachment[] = []) {
     const { roomChatId, content } = newMessageDto;
-
     const roomChat = await this.roomChatService.findRoomAndParticipants(roomChatId);
     if (!roomChat) {
       throw new NotFoundException("Room chat not found!");
@@ -69,6 +68,8 @@ export class ChatService {
       this.uploadFileService.removeFiles(uploadedAttachments);
       await queryRunner.rollbackTransaction();
       throw new InternalServerErrorException("Failed when save message!");
+    } finally {
+      await queryRunner.release();
     }
   }
 

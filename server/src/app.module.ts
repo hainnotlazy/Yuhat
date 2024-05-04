@@ -27,7 +27,7 @@ import { RedisModule } from '@nestjs-modules/ioredis';
     RedisModule.forRoot({
       type: "single",
       options: {
-        host: "localhost",
+        host: "redis",
         port: 6379
       }
     }),
